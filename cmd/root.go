@@ -19,16 +19,14 @@ var (
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "cloudavenue-cli",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	// Run: func(cmd *cobra.Command, args []string) { },
+	Short: "cloudavenue-cli is the Command Line Interface for CloudAvenue Platform",
+	Long: `cloudavenue-cli give you a different way to manage your IaaS without terraform command.
+	Is able to List, Show, Create and Delete resources.
+	For example: 
+	- cloudavenue-cli list edgegateway => will list all your VMs.
+	- cloudavenue-cli show edgegateway <id> => will show you the VM with the id <id>.
+	- cloudavenue-cli create edgegateway => will create a VM.
+	- cloudavenue-cli delete edgegateway <id> => will delete the VM with the id <id>.`,
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
