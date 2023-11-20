@@ -21,6 +21,7 @@ type JsonTemplate struct {
 func Format(j JsonTemplate) {
 	var inInterface []interface{}
 	inrec, err := json.Marshal(j.Data)
+	// log.Default().Println("inrec", string(inrec))
 	if err != nil {
 		panic(err)
 	}
@@ -36,7 +37,7 @@ func Format(j JsonTemplate) {
 			for _, v := range inInterface {
 				var row []string
 				for _, v2 := range j.Fields {
-					row = append(row, fmt.Sprintf("%s", v.(map[string]interface{})[v2]))
+					row = append(row, fmt.Sprintf("%v", v.(map[string]interface{})[v2]))
 				}
 				s = append(s, row)
 			}

@@ -1,40 +1,140 @@
 /*
 Copyright © 2023 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
 import (
 	"fmt"
+	"log"
 
+	jsontmpl "github.com/orange-cloudavenue/cloudavenue-cli/pkg/templates/json"
 	"github.com/spf13/cobra"
 )
 
 // edgegatewayCmd represents the edgegateway command
-var edgegatewayCmd = &cobra.Command{
-	Use:   "edgegateway",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("edgegateway called")
-	},
+var gwCmd = &cobra.Command{
+	Use:     "edgegateway",
+	Example: "edgegateway <list | create | delete>",
+	Short:   "Option to manage your edgeGateway NSX on CloudAvenue.",
 }
 
 func init() {
-	rootCmd.AddCommand(edgegatewayCmd)
+	rootCmd.AddCommand(gwCmd)
 
-	// Here you will define your flags and configuration settings.
+	// ? List command
+	gwCmd.Args = cobra.NoArgs
+	gwCmd.AddCommand(gwListCmd)
 
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// edgegatewayCmd.PersistentFlags().String("foo", "", "A help for foo")
+	// ? Delete command
+	gwCmd.AddCommand(gwDelCmd)
+	gwDelCmd.Args = cobra.MinimumNArgs(1)
 
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// edgegatewayCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// ? Create command
+	gwCmd.AddCommand(gwCreateCmd)
+	gwCreateCmd.PersistentFlags().String("vdc", "", "vdc name")
+	gwCreateCmd.PersistentFlags().String("t0", "", "t0 name")
+	if err := gwCreateCmd.MarkPersistentFlagRequired("vdc"); err != nil {
+		log.Default().Println("Error from Flag VDC, is require.", err)
+		return
+	}
+	if err := gwCreateCmd.MarkPersistentFlagRequired("t0"); err != nil {
+		log.Default().Println("Error from Flag T0, is require.", err)
+		return
+	}
+}
+
+// listCmd represents the list command
+var gwListCmd = &cobra.Command{
+	Use:   "list",
+	Short: "A brief list of your edgegateway resources",
+	Run: func(cmd *cobra.Command, args []string) {
+
+		edgeGateways, err := c.V1.EdgeGateway.List()
+		if err != nil {
+			log.Default().Println("Error from EdgeGateway", err)
+		}
+
+		jsontmpl.Format(jsontmpl.JsonTemplate{
+			Fields: []string{"edgeName", "edgeId", "ownerType", "ownerName", "rateLimit", "description"},
+			Data:   edgeGateways,
+		})
+
+	},
+}
+
+// deleteCmd represents the delete command
+var gwDelCmd = &cobra.Command{
+	Use:     "delete",
+	Example: "edgegateway delete <id or name> [<id or name>] [<id or name>] ...",
+	Short:   "Delete an edgeGateway (name or id)",
+
+	Run: func(cmd *cobra.Command, args []string) {
+
+		for _, arg := range args {
+			fmt.Println("delete EdgeGateway resource " + arg)
+			gw, err := c.V1.EdgeGateway.GetByName(arg)
+			if err != nil {
+				gw, err = c.V1.EdgeGateway.GetByID(arg)
+				if err != nil {
+					log.Default().Println("Unable to find EdgeGateway ID or Name", err)
+					return
+				}
+			}
+			job, err := gw.Delete()
+			if err != nil {
+				log.Default().Println("Unable to delete EdgeGateway", err)
+			}
+			err = job.Wait(15, 300)
+			if err != nil {
+				log.Default().Println("Error during EdgeGateway Deletion !!", err)
+			}
+			fmt.Println("EdgeGateway resource deleted " + arg + " successfully !!\n")
+			fmt.Println("EdgeGateway resource list after deletion:")
+			gwListCmd.Run(cmd, []string{})
+		}
+
+	},
+}
+
+// createCmd represents the create command
+var gwCreateCmd = &cobra.Command{
+	Use:     "create",
+	Short:   "Ceate an edgeGateway",
+	Example: "edgegateway create --vdc <vdc name> --t0 <t0 name>",
+
+	Run: func(cmd *cobra.Command, args []string) {
+
+		// Get the vdc name from the command line
+		vdc, err := cmd.Flags().GetString("vdc")
+		if err != nil {
+			log.Default().Println("Error from VDC", err)
+			return
+		}
+
+		// Get the t0 name from the command line
+		t0, err := cmd.Flags().GetString("t0")
+		if err != nil {
+			log.Default().Println("Error from T0", err)
+			return
+		}
+
+		// Create the edgeGateway
+		fmt.Println("create EdgeGateway resource")
+		fmt.Println("vdc name: " + vdc)
+		fmt.Println("t0 name: " + t0)
+		job, err := c.V1.EdgeGateway.New(vdc, t0)
+		if err != nil {
+			log.Default().Println("Error from EdgeGateway", err)
+			return
+		}
+		err = job.Wait(15, 300)
+		if err != nil {
+			log.Default().Println("Error during EdgeGateway Creation !!", err)
+			return
+		}
+		fmt.Println("EdgeGateway resource created successfully !")
+		fmt.Println("\nEdgeGateway resource list after creation:")
+		gwListCmd.Run(cmd, []string{})
+
+	},
 }
