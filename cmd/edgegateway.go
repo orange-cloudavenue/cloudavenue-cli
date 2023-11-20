@@ -83,10 +83,12 @@ var gwDelCmd = &cobra.Command{
 			job, err := gw.Delete()
 			if err != nil {
 				log.Default().Println("Unable to delete EdgeGateway", err)
+				return
 			}
 			err = job.Wait(15, 300)
 			if err != nil {
 				log.Default().Println("Error during EdgeGateway Deletion !!", err)
+				return
 			}
 			fmt.Println("EdgeGateway resource deleted " + arg + " successfully !!\n")
 			fmt.Println("EdgeGateway resource list after deletion:")

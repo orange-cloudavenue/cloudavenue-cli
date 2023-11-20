@@ -8,6 +8,7 @@ import (
 	"log"
 
 	jsontmpl "github.com/orange-cloudavenue/cloudavenue-cli/pkg/templates/json"
+	v1 "github.com/orange-cloudavenue/cloudavenue-sdk-go/v1"
 	"github.com/spf13/cobra"
 )
 
@@ -29,17 +30,11 @@ func init() {
 	vdcCmd.AddCommand(vdcDelCmd)
 	vdcDelCmd.Args = cobra.MinimumNArgs(1)
 
-	// TODO : Create command
 	// ? Create command
 	vdcCmd.AddCommand(vdcCreateCmd)
-	vdcCreateCmd.PersistentFlags().String("vdc", "", "vdc name")
-	vdcCreateCmd.PersistentFlags().String("t0", "", "t0 name")
-	if err := vdcCreateCmd.MarkPersistentFlagRequired("vdc"); err != nil {
-		log.Default().Println("Error from Flag VDC, is require.", err)
-		return
-	}
-	if err := vdcCreateCmd.MarkPersistentFlagRequired("t0"); err != nil {
-		log.Default().Println("Error from Flag T0, is require.", err)
+	vdcCreateCmd.PersistentFlags().String("name", "", "vdc name")
+	if err := vdcCreateCmd.MarkPersistentFlagRequired("name"); err != nil {
+		log.Default().Println("Error from Flag name, is require.", err)
 		return
 	}
 }
@@ -50,13 +45,15 @@ var vdcListCmd = &cobra.Command{
 	Short: "A brief list of your vdc resources",
 	Run: func(cmd *cobra.Command, args []string) {
 
+		// Get the list of vdc
 		vdcs, err := c.V1.VDC.List()
 		if err != nil {
 			log.Default().Println("Error from VDC List", err)
 			return
 		}
 
-		type printVdc = struct {
+		// Struct to print a basic view
+		type basicVdc = struct {
 			VdcGroup        string `json:"vdc_group"`
 			VdcName         string `json:"vdc_name"`
 			VcpuInMhz2      int    `json:"vcpu_in_mhz2"`
@@ -64,11 +61,11 @@ var vdcListCmd = &cobra.Command{
 			CPUAllocated    int    `json:"cpu_allocated"`
 			Description     string `json:"description"`
 		}
-		dimensionVdc := []*printVdc{}
+		basicVdcs := []*basicVdc{}
 
+		// Set the struct
 		for _, dc := range *vdcs {
-
-			x := &printVdc{
+			x := &basicVdc{
 				VdcGroup:        dc.VdcGroup,
 				VdcName:         dc.Vdc.Name,
 				VcpuInMhz2:      dc.Vdc.VcpuInMhz2,
@@ -76,12 +73,13 @@ var vdcListCmd = &cobra.Command{
 				CPUAllocated:    dc.Vdc.CPUAllocated,
 				Description:     dc.Vdc.Description,
 			}
-			dimensionVdc = append(dimensionVdc, x)
+			basicVdcs = append(basicVdcs, x)
 		}
 
+		// Print the result
 		jsontmpl.Format(jsontmpl.JsonTemplate{
 			Fields: []string{"vdc_name", "vdc_group", "vcpu_in_mhz2", "memory_allocated", "cpu_allocated", "description"},
-			Data:   dimensionVdc,
+			Data:   basicVdcs,
 		})
 	},
 }
@@ -104,10 +102,12 @@ var vdcDelCmd = &cobra.Command{
 			job, err := vdc.Delete()
 			if err != nil {
 				log.Default().Println("Unable to delete vdc", err)
+				return
 			}
 			err = job.Wait(15, 300)
 			if err != nil {
 				log.Default().Println("Error during vdc Deletion !!", err)
+				return
 			}
 			fmt.Println("vdc resource deleted " + arg + " successfully !!\n")
 			fmt.Println("vdc resource list after deletion:")
@@ -117,57 +117,49 @@ var vdcDelCmd = &cobra.Command{
 	},
 }
 
-// TODO : Create command
 // createCmd represents the create command
 var vdcCreateCmd = &cobra.Command{
 	Use:     "create",
 	Short:   "Ceate an vdc",
-	Example: "vdc create --vdc <vdc name> --t0 <t0 name>",
+	Example: "vdc create --name <vdc name>",
 
 	Run: func(cmd *cobra.Command, args []string) {
 
 		// Get the vdc name from the command line
-		vdc, err := cmd.Flags().GetString("vdc")
+		vdcName, err := cmd.Flags().GetString("vdc")
 		if err != nil {
-			log.Default().Println("Error from VDC", err)
-			return
-		}
-
-		// Get the t0 name from the command line
-		t0, err := cmd.Flags().GetString("t0")
-		if err != nil {
-			log.Default().Println("Error from T0", err)
+			log.Default().Println("Unknow VDC ", err)
 			return
 		}
 
 		// Create the vdc
-		fmt.Println("create vdc resource")
-		fmt.Println("vdc name: " + vdc)
-		fmt.Println("t0 name: " + t0)
-		// job, err := c.V1.VDC.New(&v1.CAVVirtualDataCenter{Vdc: v1.CAVVirtualDataCenterVDC{
-		// 	Name:                vdc,
-		// 	ServiceClass:        "STD",
-		// 	BillingModel:        "PAYG",
-		// 	CPUAllocated:        22000,
-		// 	VcpuInMhz2:          2200,
-		// 	Description:         "vdc created by cloudavenue-cli",
-		// 	MemoryAllocated:     30,
-		// 	DisponibilityClass:  "ONE-ROOM",
-		// 	StorageBillingModel: "PAYG",
-		// 	StorageProfiles: []v1.VDCStrorageProfile{
-		// 		Class:   ,
-		// 		Limit:   500,
-		// 		Default: true},
-		// }})
+		fmt.Println("create vdc resource (with basic value)")
+		fmt.Println("vdc name: " + vdcName)
+
+		_, err = c.V1.VDC.New(&v1.CAVVirtualDataCenter{Vdc: v1.CAVVirtualDataCenterVDC{
+			Name:                vdcName,
+			ServiceClass:        "STD",
+			BillingModel:        "PAYG",
+			CPUAllocated:        22000,
+			VcpuInMhz2:          2200,
+			Description:         "vdc created by cloudavenue-cli",
+			MemoryAllocated:     30,
+			DisponibilityClass:  "ONE-ROOM",
+			StorageBillingModel: "PAYG",
+			StorageProfiles: []v1.VDCStrorageProfile{
+				v1.VDCStrorageProfile{ //nolint
+					Class:   "gold",
+					Limit:   500,
+					Default: true,
+				},
+			},
+		}})
+
 		if err != nil {
 			log.Default().Println("Error from vdc", err)
 			return
 		}
-		// err = job.Wait(15, 300)
-		// if err != nil {
-		// 	log.Default().Println("Error during vdc Creation !!", err)
-		// 	return
-		// }
+
 		fmt.Println("vdc resource created successfully !")
 		fmt.Println("\nvdc resource list after creation:")
 		vdcListCmd.Run(cmd, []string{})

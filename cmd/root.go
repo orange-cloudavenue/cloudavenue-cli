@@ -28,10 +28,7 @@ func Execute() {
 
 	var err error
 	c, err = cloudavenue.New(cloudavenue.ClientOpts{
-		CloudAvenue: clientcloudavenue.Opts{
-			Debug:    false,
-			Username: "gaetan.ars",
-		},
+		CloudAvenue: &clientcloudavenue.Opts{},
 	})
 	if err != nil {
 		log.Fatal(err)
@@ -44,4 +41,6 @@ func Execute() {
 
 func init() {
 	// rootCmd.Args = cobra.MinimumNArgs(1)
+
+	// viper.AutomaticEnv() // read in environment variables that match
 }

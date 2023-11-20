@@ -9,9 +9,9 @@ import (
 	"github.com/fbiville/markdown-table-formatter/pkg/markdown"
 )
 
-const (
-	delimiter = "|"
-)
+// const (
+// 	delimiter = "|"
+// )
 
 type JsonTemplate struct {
 	Fields []string
