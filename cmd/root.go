@@ -41,6 +41,5 @@ func Execute() {
 
 func init() {
 	// rootCmd.Args = cobra.MinimumNArgs(1)
-
 	// viper.AutomaticEnv() // read in environment variables that match
 }
