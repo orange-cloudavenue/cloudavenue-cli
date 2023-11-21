@@ -1,0 +1,19 @@
+```release-note:feature
+`publicip` - Add List, Create, Delete operations for publicip.
+```
+
+```release-note:feature
+`s3` - Add List, Create, Delete operations for s3.
+```
+
+```release-note:feature
+`vdc` - Add List, Create, Delete operations for vdc.
+```
+
+```release-note:feature
+`edgegateway` - Add List, Create, Delete operations for edgegateway.
+```
+
+```release-note:dependency
+deps: bumps orange-cloudavenue/cloudavenue-sdk-go from 0.5.5 to 0.5.6
+```

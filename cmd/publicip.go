@@ -5,7 +5,6 @@ package cmd
 
 import (
 	"fmt"
-	"log"
 
 	jsontmpl "github.com/orange-cloudavenue/cloudavenue-cli/pkg/templates/json"
 	"github.com/spf13/cobra"
@@ -31,9 +30,9 @@ func init() {
 
 	// ? Create command
 	publicipCmd.AddCommand(publicipCreateCmd)
-	publicipCreateCmd.PersistentFlags().String("name", "", "vdc name")
+	publicipCreateCmd.PersistentFlags().String("name", "", "edge gateway name")
 	if err := publicipCreateCmd.MarkPersistentFlagRequired("name"); err != nil {
-		log.Default().Println("Error from Flag name, is require.", err)
+		fmt.Println("Error from Flag name, is require.", err)
 		return
 	}
 }
@@ -47,7 +46,7 @@ var publicipListCmd = &cobra.Command{
 		// Get the list of vdc
 		ips, err := c.V1.PublicIP.GetIPs()
 		if err != nil {
-			log.Default().Println("Error from IP List", err)
+			fmt.Println("Error from IP List", err)
 			return
 		}
 
@@ -80,7 +79,7 @@ var publicipListCmd = &cobra.Command{
 // deleteCmd represents the delete command
 var publicipDelCmd = &cobra.Command{
 	Use:     "delete",
-	Example: "publicip delete <name> [<name>] [<name>] ...",
+	Example: "publicip delete <ip> [<ip>] [<ip>] ...",
 	Short:   "Delete publicip resource(s)",
 
 	Run: func(cmd *cobra.Command, args []string) {
@@ -89,21 +88,21 @@ var publicipDelCmd = &cobra.Command{
 			fmt.Println("delete publicip resource " + arg)
 			ip, err := c.V1.PublicIP.GetIP(arg)
 			if err != nil {
-				log.Default().Println("Error from ip", err)
+				fmt.Println("Error from ip: ", err)
 				return
 			}
 			job, err := ip.Delete()
 			if err != nil {
-				log.Default().Println("Unable to delete ip", err)
+				fmt.Println("Unable to delete ip: ", err)
 				return
 			}
 			err = job.Wait(15, 300)
 			if err != nil {
-				log.Default().Println("Error during ip Deletion !!", err)
+				fmt.Println("Error during ip Deletion !!", err)
 				return
 			}
-			fmt.Println("ip resource deleted " + arg + " successfully !!\n")
-			fmt.Println("ip resource list after deletion:")
+			fmt.Println("ip resource deleted " + arg + " successfully !!")
+			fmt.Println("\nip resource list after deletion:")
 			publicipListCmd.Run(cmd, []string{})
 		}
 
@@ -121,49 +120,26 @@ var publicipCreateCmd = &cobra.Command{
 		// Get the name from the command line
 		gwName, err := cmd.Flags().GetString("name")
 		if err != nil {
-			log.Default().Println("Malformed EdgeGateway Name ", err)
+			fmt.Println("Malformed argument EdgeGateway Name ", err)
 			return
 		}
 
-		// // Get EdgeGateway from name
-		// gw, err := c.V1.EdgeGateway.GetByName(gwName)
-		// if err != nil {
-		// 	log.Default().Println("EdgeGateway not found", err)
-		// 	return
-		// }
-
-		// Create the vdc
+		// Create a public ip
 		fmt.Println("create public ip resource")
 		fmt.Println("for EdgeGateway name: " + gwName)
 
-		// c.V1.EdgeGateway.
-
-		// _, err = c.V1.VDC.New(&v1.CAVVirtualDataCenter{Vdc: v1.CAVVirtualDataCenterVDC{
-		// 	Name:                vdcName,
-		// 	ServiceClass:        "STD",
-		// 	BillingModel:        "PAYG",
-		// 	CPUAllocated:        22000,
-		// 	VcpuInMhz2:          2200,
-		// 	Description:         "vdc created by cloudavenue-cli",
-		// 	MemoryAllocated:     30,
-		// 	DisponibilityClass:  "ONE-ROOM",
-		// 	StorageBillingModel: "PAYG",
-		// 	StorageProfiles: []v1.VDCStrorageProfile{
-		// 		v1.VDCStrorageProfile{ //nolint
-		// 			Class:   "gold",
-		// 			Limit:   500,
-		// 			Default: true,
-		// 		},
-		// 	},
-		// }})
-
+		job, err := c.V1.PublicIP.New(gwName)
 		if err != nil {
-			log.Default().Println("Error from vdc", err)
+			fmt.Println("Unable to create public ip", err)
 			return
 		}
-
-		fmt.Println("vdc resource created successfully !")
-		fmt.Println("\nvdc resource list after creation:")
+		err = job.Wait(5, 300)
+		if err != nil {
+			fmt.Println("Error during public ip creation !!", err)
+			return
+		}
+		fmt.Println("public ip resource created successfully !")
+		fmt.Println("\npublic ip resource list after creation:")
 		publicipListCmd.Run(cmd, []string{})
 
 	},

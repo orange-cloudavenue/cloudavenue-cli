@@ -5,7 +5,6 @@ package cmd
 
 import (
 	"fmt"
-	"log"
 
 	jsontmpl "github.com/orange-cloudavenue/cloudavenue-cli/pkg/templates/json"
 	v1 "github.com/orange-cloudavenue/cloudavenue-sdk-go/v1"
@@ -34,7 +33,7 @@ func init() {
 	vdcCmd.AddCommand(vdcCreateCmd)
 	vdcCreateCmd.PersistentFlags().String("name", "", "vdc name")
 	if err := vdcCreateCmd.MarkPersistentFlagRequired("name"); err != nil {
-		log.Default().Println("Error from Flag name, is require.", err)
+		fmt.Println("Error from Flag name, is require.", err)
 		return
 	}
 }
@@ -48,7 +47,7 @@ var vdcListCmd = &cobra.Command{
 		// Get the list of vdc
 		vdcs, err := c.V1.VDC.List()
 		if err != nil {
-			log.Default().Println("Error from VDC List", err)
+			fmt.Println("Error from VDC List", err)
 			return
 		}
 
@@ -96,21 +95,21 @@ var vdcDelCmd = &cobra.Command{
 			fmt.Println("delete vdc resource " + arg)
 			vdc, err := c.V1.VDC.Get(arg)
 			if err != nil {
-				log.Default().Println("Error from vdc", err)
+				fmt.Println("Error from vdc", err)
 				return
 			}
 			job, err := vdc.Delete()
 			if err != nil {
-				log.Default().Println("Unable to delete vdc", err)
+				fmt.Println("Unable to delete vdc", err)
 				return
 			}
 			err = job.Wait(15, 300)
 			if err != nil {
-				log.Default().Println("Error during vdc Deletion !!", err)
+				fmt.Println("Error during vdc Deletion !!", err)
 				return
 			}
-			fmt.Println("vdc resource deleted " + arg + " successfully !!\n")
-			fmt.Println("vdc resource list after deletion:")
+			fmt.Println("vdc resource deleted " + arg + " successfully !!")
+			fmt.Println("\nvdc resource list after deletion:")
 			vdcListCmd.Run(cmd, []string{})
 		}
 
@@ -128,7 +127,7 @@ var vdcCreateCmd = &cobra.Command{
 		// Get the vdc name from the command line
 		vdcName, err := cmd.Flags().GetString("vdc")
 		if err != nil {
-			log.Default().Println("Malformed VDC name", err)
+			fmt.Println("Malformed VDC name", err)
 			return
 		}
 
@@ -156,7 +155,7 @@ var vdcCreateCmd = &cobra.Command{
 		}})
 
 		if err != nil {
-			log.Default().Println("Error from vdc", err)
+			fmt.Println("Error from vdc", err)
 			return
 		}
 

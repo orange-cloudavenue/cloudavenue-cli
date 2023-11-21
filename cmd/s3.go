@@ -5,7 +5,6 @@ package cmd
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/aws/aws-sdk-go/service/s3"
 	jsontmpl "github.com/orange-cloudavenue/cloudavenue-cli/pkg/templates/json"
@@ -35,7 +34,7 @@ func init() {
 	s3Cmd.AddCommand(s3CreateCmd)
 	s3CreateCmd.PersistentFlags().String("name", "", "s3 bucket name")
 	if err := s3CreateCmd.MarkPersistentFlagRequired("name"); err != nil {
-		log.Default().Println("Error from Flag name, is require.", err)
+		fmt.Println("Error from Flag name, is require.", err)
 		return
 	}
 }
@@ -52,7 +51,7 @@ var s3ListCmd = &cobra.Command{
 		// Get the list of buckets
 		output, err := s3Client.ListBuckets(&s3.ListBucketsInput{})
 		if err != nil {
-			log.Default().Println("Error from S3 List", err)
+			fmt.Println("Error from S3 List", err)
 			return
 		}
 
@@ -96,11 +95,11 @@ var s3DelCmd = &cobra.Command{
 			// Del the bucket
 			_, err := s3Client.DeleteBucket(&s3.DeleteBucketInput{Bucket: &args[i]})
 			if err != nil {
-				log.Default().Println("Error from S3 Delete", err)
+				fmt.Println("Error from S3 Delete", err)
 				return
 			}
-			fmt.Println("Bucket resource deleted " + arg + " successfully !!\n")
-			fmt.Println("Bucket resource list after deletion:")
+			fmt.Println("Bucket resource deleted " + arg + " successfully !!")
+			fmt.Println("\nBucket resource list after deletion:")
 		}
 		s3ListCmd.Run(cmd, []string{})
 
@@ -120,7 +119,7 @@ var s3CreateCmd = &cobra.Command{
 
 		bucketName, err := cmd.Flags().GetString("name")
 		if err != nil {
-			log.Default().Println("Unknow bucket name ", err)
+			fmt.Println("Malformed bucket name ", err)
 			return
 		}
 
@@ -130,7 +129,7 @@ var s3CreateCmd = &cobra.Command{
 
 		_, err = s3Client.CreateBucket(&s3.CreateBucketInput{Bucket: &bucketName})
 		if err != nil {
-			log.Default().Println("Error from S3 Create", err)
+			fmt.Println("Error from S3 Create", err)
 			return
 		}
 
