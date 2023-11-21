@@ -1,0 +1,11 @@
+``````release-note:feature
+`New edgegateway` - Add List, Create, Delete operations for edgegateway.
+```
+
+```release-note:feature
+`New vdc` - Add List, Create, Delete operations for vdc (Virtual Data Center).
+```
+
+```release-note:feature
+`New s3` - Add List, Create, Delete operations for s3 bucket (Object Storage).
+```
