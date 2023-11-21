@@ -128,7 +128,7 @@ var vdcCreateCmd = &cobra.Command{
 		// Get the vdc name from the command line
 		vdcName, err := cmd.Flags().GetString("vdc")
 		if err != nil {
-			log.Default().Println("Unknow VDC ", err)
+			log.Default().Println("Malformed VDC name", err)
 			return
 		}
 
