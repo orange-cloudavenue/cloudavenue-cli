@@ -5,7 +5,7 @@ go 1.21.3
 require (
 	github.com/aws/aws-sdk-go v1.47.9
 	github.com/fbiville/markdown-table-formatter v0.3.0
-	github.com/orange-cloudavenue/cloudavenue-sdk-go v0.5.4-0.20231120154256-3c8c8c214b94
+	github.com/orange-cloudavenue/cloudavenue-sdk-go v0.5.5
 	github.com/spf13/cobra v1.8.0
 )
 
