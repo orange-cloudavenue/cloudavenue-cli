@@ -5,6 +5,7 @@ package cmd
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/orange-cloudavenue/cloudavenue-sdk-go"
 	clientcloudavenue "github.com/orange-cloudavenue/cloudavenue-sdk-go/pkg/clients/cloudavenue"
@@ -48,4 +49,9 @@ func NewRootCmd() *cobra.Command {
 	// rootCmd.Args = cobra.MinimumNArgs(1)
 	// viper.AutomaticEnv() // read in environment variables that match
 	return rootCmd
+}
+
+func timeTrack(start time.Time, name string) {
+	elapsed := time.Since(start)
+	fmt.Printf("=== Command %s took %s second(s) ===", name, elapsed)
 }

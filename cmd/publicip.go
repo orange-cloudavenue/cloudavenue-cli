@@ -5,6 +5,7 @@ package cmd
 
 import (
 	"fmt"
+	"time"
 
 	jsontmpl "github.com/orange-cloudavenue/cloudavenue-cli/pkg/templates/json"
 	"github.com/spf13/cobra"
@@ -44,6 +45,7 @@ var publicipListCmd = &cobra.Command{
 	Use:   "list",
 	Short: "A brief list of your publicip resources",
 	Run: func(cmd *cobra.Command, args []string) {
+		defer timeTrack(time.Now(), cmd.CommandPath())
 
 		// Get the list of vdc
 		ips, err := c.V1.PublicIP.GetIPs()
@@ -85,6 +87,7 @@ var publicipDelCmd = &cobra.Command{
 	Short:   "Delete publicip resource(s)",
 
 	Run: func(cmd *cobra.Command, args []string) {
+		defer timeTrack(time.Now(), cmd.CommandPath())
 
 		for _, arg := range args {
 			fmt.Println("delete publicip resource " + arg)
@@ -118,6 +121,7 @@ var publicipCreateCmd = &cobra.Command{
 	Example: "ip create --name <edgegateway name>",
 
 	Run: func(cmd *cobra.Command, args []string) {
+		defer timeTrack(time.Now(), cmd.CommandPath())
 
 		// Get the name from the command line
 		gwName, err := cmd.Flags().GetString("name")

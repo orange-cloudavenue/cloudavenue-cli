@@ -5,6 +5,7 @@ package cmd
 
 import (
 	"fmt"
+	"time"
 
 	jsontmpl "github.com/orange-cloudavenue/cloudavenue-cli/pkg/templates/json"
 	v1 "github.com/orange-cloudavenue/cloudavenue-sdk-go/v1"
@@ -45,6 +46,7 @@ var vdcListCmd = &cobra.Command{
 	Use:   "list",
 	Short: "A brief list of your vdc resources",
 	Run: func(cmd *cobra.Command, args []string) {
+		defer timeTrack(time.Now(), cmd.CommandPath())
 
 		// Get the list of vdc
 		vdcs, err := c.V1.VDC.List()
@@ -92,6 +94,7 @@ var vdcDelCmd = &cobra.Command{
 	Short:   "Delete a vdc",
 
 	Run: func(cmd *cobra.Command, args []string) {
+		defer timeTrack(time.Now(), cmd.CommandPath())
 
 		for _, arg := range args {
 			fmt.Println("delete vdc resource " + arg)
@@ -121,10 +124,11 @@ var vdcDelCmd = &cobra.Command{
 // createCmd represents the create command
 var vdcCreateCmd = &cobra.Command{
 	Use:     "create",
-	Short:   "Ceate an vdc",
+	Short:   "Create an vdc",
 	Example: "vdc create --name <vdc name>",
 
 	Run: func(cmd *cobra.Command, args []string) {
+		defer timeTrack(time.Now(), cmd.CommandPath())
 
 		// Get the vdc name from the command line
 		vdcName, err := cmd.Flags().GetString("vdc")

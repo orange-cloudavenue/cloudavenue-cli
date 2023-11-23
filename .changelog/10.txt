@@ -1,0 +1,3 @@
+```release-note:feature
+`timetracking` - Add elapsed time per command.
+```
