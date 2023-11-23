@@ -11,10 +11,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const VDC = "vdc"
+
 // vdcCmd represents the vdc command
 var vdcCmd = &cobra.Command{
-	Use:     "vdc",
-	Example: "vdc <list | create | delete>",
+	Use:     VDC,
+	Example: VDC + " <list | create | delete>",
 	Short:   "Option to manage your vdc (Virtual Data Center) on CloudAvenue.",
 }
 
@@ -103,15 +105,15 @@ var vdcDelCmd = &cobra.Command{
 				fmt.Println("Unable to delete vdc", err)
 				return
 			}
-			err = job.Wait(15, 300)
+			err = job.Wait(3, 300)
 			if err != nil {
 				fmt.Println("Error during vdc Deletion !!", err)
 				return
 			}
 			fmt.Println("vdc resource deleted " + arg + " successfully !!")
-			fmt.Println("\nvdc resource list after deletion:")
-			vdcListCmd.Run(cmd, []string{})
 		}
+		fmt.Println("\nvdc resource list after deletion:")
+		vdcListCmd.Run(cmd, []string{})
 
 	},
 }
