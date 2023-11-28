@@ -5,6 +5,7 @@ package cmd
 
 import (
 	"fmt"
+	"time"
 
 	jsontmpl "github.com/orange-cloudavenue/cloudavenue-cli/pkg/templates/json"
 	"github.com/spf13/cobra"
@@ -49,6 +50,7 @@ var gwListCmd = &cobra.Command{
 	Use:   "list",
 	Short: "A brief list of your edgegateway resources",
 	Run: func(cmd *cobra.Command, args []string) {
+		defer timeTrack(time.Now(), cmd.CommandPath())
 
 		edgeGateways, err := c.V1.EdgeGateway.List()
 		if err != nil {
@@ -70,6 +72,7 @@ var gwDelCmd = &cobra.Command{
 	Short:   "Delete an edgeGateway (name or id)",
 
 	Run: func(cmd *cobra.Command, args []string) {
+		defer timeTrack(time.Now(), cmd.CommandPath())
 
 		for _, arg := range args {
 			fmt.Println("delete EdgeGateway resource " + arg)
@@ -102,10 +105,11 @@ var gwDelCmd = &cobra.Command{
 // createCmd represents the create command
 var gwCreateCmd = &cobra.Command{
 	Use:     "create",
-	Short:   "Ceate an edgeGateway",
+	Short:   "Create an edgeGateway",
 	Example: "edgegateway create --vdc <vdc name> --t0 <t0 name>",
 
 	Run: func(cmd *cobra.Command, args []string) {
+		defer timeTrack(time.Now(), cmd.CommandPath())
 
 		// Get the vdc name from the command line
 		vdc, err := cmd.Flags().GetString("vdc")

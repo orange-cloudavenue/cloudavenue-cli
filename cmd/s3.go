@@ -5,6 +5,7 @@ package cmd
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/aws/aws-sdk-go/service/s3"
 	jsontmpl "github.com/orange-cloudavenue/cloudavenue-cli/pkg/templates/json"
@@ -46,6 +47,7 @@ var s3ListCmd = &cobra.Command{
 	Use:   "list",
 	Short: "A brief list of your s3 resources",
 	Run: func(cmd *cobra.Command, args []string) {
+		defer timeTrack(time.Now(), cmd.CommandPath())
 
 		// init client
 		s3Client := c.V1.S3()
@@ -88,6 +90,7 @@ var s3DelCmd = &cobra.Command{
 	Short:   "Delete a vdc",
 
 	Run: func(cmd *cobra.Command, args []string) {
+		defer timeTrack(time.Now(), cmd.CommandPath())
 
 		// init client
 		s3Client := c.V1.S3()
@@ -111,10 +114,11 @@ var s3DelCmd = &cobra.Command{
 // createCmd represents the create command
 var s3CreateCmd = &cobra.Command{
 	Use:     "create",
-	Short:   "Ceate an bucket",
+	Short:   "Create an bucket",
 	Example: "vdc create --name <bucket name>",
 
 	Run: func(cmd *cobra.Command, args []string) {
+		defer timeTrack(time.Now(), cmd.CommandPath())
 
 		// init client
 		s3Client := c.V1.S3()
