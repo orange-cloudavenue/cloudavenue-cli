@@ -11,10 +11,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const S3 = "s3"
+
 // s3Cmd represents the vdc command
 var s3Cmd = &cobra.Command{
-	Use:     "s3",
-	Example: "s3 <list | create | delete>",
+	Use:     S3,
+	Example: S3 + " <list | create | delete>",
 	Short:   "Option to manage your s3 (Object Storage) on CloudAvenue.",
 }
 

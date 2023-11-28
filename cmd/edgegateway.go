@@ -10,10 +10,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const EDGEGATEWAY = "edgegateway"
+
 // edgegatewayCmd represents the edgegateway command
 var gwCmd = &cobra.Command{
-	Use:     "edgegateway",
-	Example: "edgegateway <list | create | delete>",
+	Use:     EDGEGATEWAY,
+	Example: EDGEGATEWAY + " <list | create | delete>",
 	Short:   "Option to manage your edgeGateway NSX on CloudAvenue.",
 }
 
@@ -84,7 +86,7 @@ var gwDelCmd = &cobra.Command{
 				fmt.Println("Unable to delete EdgeGateway", err)
 				return
 			}
-			err = job.Wait(15, 300)
+			err = job.Wait(3, 300)
 			if err != nil {
 				fmt.Println("Error during EdgeGateway Deletion !!", err)
 				return
@@ -128,7 +130,7 @@ var gwCreateCmd = &cobra.Command{
 			fmt.Println("Error from EdgeGateway", err)
 			return
 		}
-		err = job.Wait(15, 300)
+		err = job.Wait(3, 300)
 		if err != nil {
 			fmt.Println("Error during EdgeGateway Creation !!", err)
 			return
