@@ -11,12 +11,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const VDC = "vdc"
+const CmdVDC = "vdc"
 
 // vdcCmd represents the vdc command
 var vdcCmd = &cobra.Command{
-	Use:     VDC,
-	Example: VDC + " <list | create | delete>",
+	Use:     CmdVDC,
+	Example: CmdVDC + " <list | create | delete>",
 	Short:   "Option to manage your vdc (Virtual Data Center) on CloudAvenue.",
 }
 

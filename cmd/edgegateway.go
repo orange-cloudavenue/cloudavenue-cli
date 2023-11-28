@@ -10,12 +10,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const EDGEGATEWAY = "edgegateway"
+const CmdEdgeGateway = "edgegateway"
 
 // edgegatewayCmd represents the edgegateway command
 var gwCmd = &cobra.Command{
-	Use:     EDGEGATEWAY,
-	Example: EDGEGATEWAY + " <list | create | delete>",
+	Use:     CmdEdgeGateway,
+	Example: CmdEdgeGateway + " <list | create | delete>",
 	Short:   "Option to manage your edgeGateway NSX on CloudAvenue.",
 }
 

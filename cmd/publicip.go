@@ -10,12 +10,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const PUBLICIP = "publicip"
+const CmdPublicIP = "publicip"
 
 // publicipCmd represents the vdc command
 var publicipCmd = &cobra.Command{
-	Use:     PUBLICIP,
-	Example: PUBLICIP + " <list | create | delete>",
+	Use:     CmdPublicIP,
+	Example: CmdPublicIP + " <list | create | delete>",
 	Short:   "Option to manage your public ip on CloudAvenue.",
 }
 

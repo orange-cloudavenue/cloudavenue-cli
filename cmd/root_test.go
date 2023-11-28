@@ -9,6 +9,12 @@ import (
 	"github.com/orange-cloudavenue/cloudavenue-cli/cmd"
 )
 
+const (
+	list   string = "list"
+	create string = "create"
+	delete string = "delete"
+)
+
 type tt struct {
 	name string
 	args []string
@@ -42,69 +48,68 @@ func TestRootCmd(t *testing.T) {
 	if len(allCmd) == 0 {
 		panic("No command found")
 	}
-	for _, cmd := range allCmd {
+	for _, oneCmd := range allCmd {
 
 		// ? Test all subcommands
-		subCmd := cmd.Commands()
+		subCmd := oneCmd.Commands()
 		for _, cmdSubCmd := range subCmd {
 			tests := tts{}
 			switch cmdSubCmd.Use {
 			// ? Test list argument
-			case "list":
+			case list:
 				tests = tts{
 					{
-						name: cmd.Use + "_" + cmdSubCmd.Use + " without args",
-						args: []string{cmd.Use, cmdSubCmd.Use},
+						name: oneCmd.Use + "_" + cmdSubCmd.Use + " without args",
+						args: []string{oneCmd.Use, cmdSubCmd.Use},
 					},
 					{
-						name: cmd.Use + "_" + cmdSubCmd.Use + " with a whatever flag",
-						args: []string{cmd.Use, cmdSubCmd.Use, "--whatever"},
+						name: oneCmd.Use + "_" + cmdSubCmd.Use + " with a whatever flag",
+						args: []string{oneCmd.Use, cmdSubCmd.Use, "--whatever"},
 						fail: true,
 					},
 				}
 
 			// ? Test delete argument
-			case "delete":
+			case delete:
 				tests = tts{
 					{
-						name: cmd.Use + "_" + cmdSubCmd.Use + " without args",
-						args: []string{cmd.Use, cmdSubCmd.Use},
+						name: oneCmd.Use + "_" + cmdSubCmd.Use + " without args",
+						args: []string{oneCmd.Use, cmdSubCmd.Use},
 						fail: true,
 					},
 					{
-						name: cmd.Use + "_" + cmdSubCmd.Use + " with a whatever argument",
-						args: []string{cmd.Use, cmdSubCmd.Use, "whatever"},
+						name: oneCmd.Use + "_" + cmdSubCmd.Use + " with a whatever argument",
+						args: []string{oneCmd.Use, cmdSubCmd.Use, "whatever"},
 					},
 				}
 
 			// ? Test all subcommands
-			case "create":
+			case create:
 				tests = tts{
 					{
-						name: cmd.Use + "_" + cmdSubCmd.Use + " without flag",
-						args: []string{cmd.Use, cmdSubCmd.Use},
+						name: oneCmd.Use + "_" + cmdSubCmd.Use + " without flag",
+						args: []string{oneCmd.Use, cmdSubCmd.Use},
 						fail: true,
 					},
 					{
-						name: cmd.Use + "_" + cmdSubCmd.Use + " with a unknow flag with argument",
-						args: []string{cmd.Use, cmdSubCmd.Use, "--unknow", "whatever"},
+						name: oneCmd.Use + "_" + cmdSubCmd.Use + " with a unknow flag with argument",
+						args: []string{oneCmd.Use, cmdSubCmd.Use, "--unknow", "whatever"},
 						fail: true,
 					},
 					{
-						name: cmd.Use + "_" + cmdSubCmd.Use + " with a good flag without argument",
-						args: []string{cmd.Use, cmdSubCmd.Use, "--name"},
+						name: oneCmd.Use + "_" + cmdSubCmd.Use + " with a good flag without argument",
+						args: []string{oneCmd.Use, cmdSubCmd.Use, "--name"},
 						fail: true,
 					},
 					{
-						name: cmd.Use + "_" + cmdSubCmd.Use + " with a good flag with argument",
-						args: []string{cmd.Use, cmdSubCmd.Use, "--name", "whatever"},
+						name: oneCmd.Use + "_" + cmdSubCmd.Use + " with a good flag with argument",
+						args: []string{oneCmd.Use, cmdSubCmd.Use, "--name", "whatever"},
 					},
 				}
-				if strings.Contains(cmd.Use, "edgegateway") {
-					// append(tests[1].args, "--t0")
+				if strings.Contains(oneCmd.Use, cmd.CmdEdgeGateway) {
 					tests[3] = tt{
-						name: cmd.Use + "_" + cmdSubCmd.Use + " with good flags with argument",
-						args: []string{cmd.Use, cmdSubCmd.Use, "--vdc", "whatever", "--t0", "1"},
+						name: oneCmd.Use + "_" + cmdSubCmd.Use + " with good flags with argument",
+						args: []string{oneCmd.Use, cmdSubCmd.Use, "--vdc", "whatever", "--t0", "1"},
 						fail: true,
 					}
 				}
