@@ -21,6 +21,29 @@ builds:
       # Default: [ 'darwin', 'linux', 'windows' ]
       # Default: [ '386', 'amd64', 'arm64' ]
     binary: '{{ .ProjectName }}'
+
+universal_binaries:
+  - replace: true
+
+nfpms:
+  - maintainer: Carlos A Becker <root@carlosbecker.dev>
+    description: cloudavenue-cli is a terminal app built to give a basic view to manage your Cloud Avenue IaC.
+    homepage: https://github.com/orange-cloudavenue/cloudavenue-cli
+    license: MIT
+    formats:
+      - deb
+      - rpm
+      - apk
+
+brews:
+  - name: cloudavenue-cli
+    homepage: https://github.com/orange-cloudavenue/cloudavenue-cli
+    goarm: 6
+    goamd64: v1
+    repository: 
+      owner: orange-cloudavenue
+      name: orange-cloudavenue/cloudavenue-cli
+
 archives:
   - format: zip
     # this name template makes the OS and Arch compatible with the results of `uname`.
