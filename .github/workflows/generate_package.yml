@@ -12,12 +12,6 @@ jobs:
       - uses: actions/setup-go@v4.0.1 # v4.0.0
         with:
           go-version-file: 'go.mod'
-      - id: release-notes-download
-        name: Release Notes Download
-        uses: actions/download-artifact@9bc31d5ccc31df68ecc42ccf4149144866c47d8a # v3.0.2
-        with:
-          name: release-notes
-          path: /tmp
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@7ec5c2b0c6cdda6e8bbb49444bc797dd33d74dd8 # v5.0.0
         with:
