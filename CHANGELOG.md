@@ -4,6 +4,7 @@
 
 * `New s3` - Add List, Create, Delete operations for s3 bucket (Object Storage). (GH-22)
 * `New vdc` - Add List, Create, Delete operations for vdc (Virtual Data Center). (GH-22)
+* `binary` - Add packaging distribution. (GH-26)
 * `edgegateway` - Add List, Create, Delete operations for edgegateway. (GH-22)
 * `publicip` - Add List, Create, Delete operations for publicip. (GH-22)
 * `s3` - Add List, Create, Delete operations for s3. (GH-22)
