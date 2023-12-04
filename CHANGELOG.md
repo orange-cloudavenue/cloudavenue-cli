@@ -1,5 +1,4 @@
 ## 0.1.0 (Unreleased)
-## 0.0.3 (December  4, 2023)
 
 ### :rocket: **New Features**
 
