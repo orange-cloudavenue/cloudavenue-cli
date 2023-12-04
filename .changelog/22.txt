@@ -1,0 +1,39 @@
+``````release-note:feature
+`New edgegateway` - Add List, Create, Delete operations for edgegateway.
+```
+
+```release-note:feature
+`New vdc` - Add List, Create, Delete operations for vdc (Virtual Data Center).
+```
+
+```release-note:feature
+`New s3` - Add List, Create, Delete operations for s3 bucket (Object Storage).
+```
+
+```release-note:feature
+`publicip` - Add List, Create, Delete operations for publicip.
+```
+
+```release-note:feature
+`s3` - Add List, Create, Delete operations for s3.
+```
+
+```release-note:feature
+`vdc` - Add List, Create, Delete operations for vdc.
+```
+
+```release-note:feature
+`edgegateway` - Add List, Create, Delete operations for edgegateway.
+```
+
+```release-note:dependency
+deps: bumps orange-cloudavenue/cloudavenue-sdk-go from 0.5.5 to 0.5.6
+```
+
+```release-note:feature
+`test` - Add Unit Test.
+```
+
+```release-note:feature
+`timetracking` - Add elapsed time per command.
+```
