@@ -47,6 +47,7 @@ brews:
     repository: 
       owner: orange-cloudavenue
       name: orange-cloudavenue/cloudavenue-cli
+      branch: main
 
 archives:
   - format: zip
