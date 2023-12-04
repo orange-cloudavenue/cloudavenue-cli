@@ -1,0 +1,3 @@
+```release-note:feature
+`binary` - Add packaging distribution.
+```

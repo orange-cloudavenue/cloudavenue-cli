@@ -3,6 +3,8 @@
 
 # install
 
+You can download from github page the good Assets for you and unzip binary, or if you have go binary installed (see below):
+
 ```
 go install github.com/orange-cloudavenue/cloudavenue-cli@latest
 ```
