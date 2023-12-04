@@ -1,0 +1,27 @@
+name: Generate PACKAGES
+on:
+  workflow_dispatch:
+jobs:
+  goreleaser:
+    runs-on: ubuntu-latest 
+    steps:
+      - uses: actions/checkout@v4 # v3.5.3 
+        with:
+          # Allow goreleaser to access older tag information.
+          fetch-depth: 0
+      - uses: actions/setup-go@v4.0.1 # v4.0.0
+        with:
+          go-version-file: 'go.mod'
+      - id: release-notes-download
+        name: Release Notes Download
+        uses: actions/download-artifact@9bc31d5ccc31df68ecc42ccf4149144866c47d8a # v3.0.2
+        with:
+          name: release-notes
+          path: /tmp
+      - name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@7ec5c2b0c6cdda6e8bbb49444bc797dd33d74dd8 # v5.0.0
+        with:
+          args: release --clean --release-notes=${{ steps.release-notes-download.outputs.download-path }}/release-notes.txt
+        env:
+          # GitHub sets the GITHUB_TOKEN secret automatically.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
