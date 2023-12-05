@@ -14,7 +14,7 @@ import (
 
 var (
 	c       *cloudavenue.Client
-	version = "v0.0.4"
+	version = "v0.0.5"
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -48,8 +48,6 @@ func Execute() error {
 
 // NewRootCmd returns the root command
 func NewRootCmd() *cobra.Command {
-	// rootCmd.Args = cobra.MinimumNArgs(1)
-	// viper.AutomaticEnv() // read in environment variables that match
 	return rootCmd
 }
 
