@@ -13,13 +13,15 @@ import (
 )
 
 var (
-	c *cloudavenue.Client
+	c       *cloudavenue.Client
+	version = "v0.0.4"
 )
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "cloudavenue-cli",
-	Short: "cloudavenue-cli is the Command Line Interface for CloudAvenue Platform",
+	Use:     "cloudavenue-cli",
+	Short:   "cloudavenue-cli is the Command Line Interface for CloudAvenue Platform",
+	Version: version,
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
