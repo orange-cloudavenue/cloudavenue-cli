@@ -46,7 +46,7 @@ brews:
     goamd64: v1
     repository: 
       owner: orange-cloudavenue
-      name: orange-cloudavenue/cloudavenue-cli
+      name: cloudavenue-cli
       branch: main
 
 archives:
