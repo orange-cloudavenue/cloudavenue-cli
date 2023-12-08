@@ -18,11 +18,7 @@ Ensure to use a good commit hygiene and follow the [conventional commits](https:
 
 ##  Contributing documentation
 
-Documentation is generated from the code using [tfplugindocs](https://github.com/hashicorp/terraform-plugin-docs), you don't need to update the documentation manually in the `docs/` folder.
-
-If you must make manual changes to the documentation, please ensure to edit template in `templates/` folder and run `make generate` to update the documentation.
-
-To add examples or import command in documentation, please add them in the `examples/` folder.
+Documentation is generated from the code using, you don't need to update the documentation manually in the `docs/` folder.
 
 ##  Development environment
 
@@ -32,13 +28,13 @@ Get git submodules:
 make submodules
 ```
 
-Run doc generation:
+Build packages generation:
 
 ```console
-make generate
+make build
 ```
 
-Install provider locally:
+Install CLI locally:
 
 ```console
 make install
@@ -50,15 +46,11 @@ Run tests:
 make test
 ```
 
-Run acceptance tests:
-
+Test and Build
 ```console
-export CLOUDAVENUE_ORG=your-org
-export CLOUDAVENUE_USER=your-user
-export CLOUDAVENUE_PASSWORD=your-password
-export CLOUDAVENUE_VDC=your-vdc
-TF_ACC=1 go test -v -count=1 ./internal/tests/your_test_folder
+make generate
 ```
+
 
 ##  Changelog format
 
@@ -78,68 +70,58 @@ The CHANGELOG is intended to show operator-impacting changes to the codebase for
 
 ### Changes that should have a CHANGELOG entry
 
-#### New resource
+#### New feature
 
-A new resource entry should only contain the name of the resource, and use the `release-note:new-resource` header.
+A new feature entry should only contain the name of the feat, and use the `release-note:feature` header.
 
 ``````markdown
-```release-note:new-resource
-cloudavenue_alb_pool
+```release-note:feature
+New vdc
 ```
 ``````
 
-#### New data source
+#### Bug fixes
 
-A new data source entry should only contain the name of the data source, and use the `release-note:new-data-source` header.
-
-``````markdown
-```release-note:new-data-source
-cloudavenue_alb_pool
-```
-``````
-
-#### Resource and provider bug fixes
-
-A new bug entry should use the `release-note:bug` header and have a prefix indicating the resource or data source it corresponds to, a colon, then followed by a brief summary. Use a `provider` prefix for provider level fixes.
+A new bug entry should use the `release-note:bug` header and have a prefix indicating the command and subcommand it corresponds to, a colon, then followed by a brief summary.
 
 ``````markdown
 ```release-note:bug
-resource/cloudavenue_alb_pool: Fix argument being optional
+s3/List: Fix wrong print
 ```
 ``````
 
 #### Resource and provider enhancements
 
-A new enhancement entry should use the `release-note:enhancement` header and have a prefix indicating the resource or data source it corresponds to, a colon, then followed by a brief summary. Use a `provider` prefix for provider level enhancements.
+A new enhancement entry should use the `release-note:enhancement` header and have a prefix indicating the command and subcommand it corresponds to, a colon, then followed by a brief summary.
 
 ``````markdown
 ```release-note:enhancement
-resource/cloudavenue_alb_pool: Add new argument
+vdc/create: Add new argument
 ```
 ``````
 
 #### Deprecations
 
-A deprecation entry should use the `release-note:note` header and have a prefix indicating the resource or data source it corresponds to, a colon, then followed by a brief summary. Use a `provider` prefix for provider level changes.
+A deprecation entry should use the `release-note:note` header and have a prefix indicating the command and subcommand it corresponds to, a colon, then followed by a brief summary.
 
 ``````markdown
 ```release-note:note
-resource/cloudavenue_alb_pool: The old_attribute is being deprecated in favor of the new_attribute to support new feature
+t0/create: The old_subcommand create is being deprecated in favor of the new_subcommand add to support new feature
 ```
 ``````
 
 #### Breaking changes and removals
 
-A breaking-change entry should use the `release-note:breaking-change` header and have a prefix indicating the resource or data source it corresponds to, a colon, then followed by a brief summary. Use a `provider` prefix for provider level changes.
+A breaking-change entry should use the `release-note:breaking-change` header and have a prefix indicating the command and subcommand it corresponds to, a colon, then followed by a brief summary.
 
 ``````markdown
 ```release-note:breaking-change
-resource/cloudavenue_alb_pool: This is a breaking change
+vdc/delete: This is a breaking change
 ```
 ``````
 
 ### Changes that should _not_ have a CHANGELOG entry
 
-- Resource and provider documentation updates
+- Documentation updates
 - Testing updates
 - Code refactoring

@@ -13,11 +13,11 @@ go install github.com/orange-cloudavenue/cloudavenue-cli@latest
 * Navigation commands :
   
 ```shell
-$> cloudavenue-cli
-cloudavenue-cli is the Command Line Interface for CloudAvenue Platform
+$> cav
+cav is the Command Line Interface for CloudAvenue Platform
 
 Usage:
-  cloudavenue-cli [command]
+  cav [command]
 
 Available Commands:
   completion  Generate the autocompletion script for the specified shell
@@ -27,15 +27,15 @@ Available Commands:
   vdc         Option to manage your vdc (Virtual Data Center) on CloudAvenue.
 
 Flags:
-  -h, --help   help for cloudavenue-cli
+  -h, --help   help for cav
 
-Use "cloudavenue-cli [command] --help" for more information about a command.
+Use "cav [command] --help" for more information about a command.
 ```
 
 * list edge gateway:
 
 ```shell
-$> cloudavenue-cli edgegateway list
+$> cav edgegateway list
 | edgeName                | edgeId                               | ownerType | ownerName       | rateLimit | description                                      |
 | ----------------------- | ------------------------------------ | --------- | --------------- | --------- | ------------------------------------------------ |
 | tn01e02xxx00062xxspt101 | dde5d31a-2f32-xxxx-b3b3-127245958298 | vdc-group | Shared          | 250       | Edge Gateway for customer with BSS ID ocb0006205 |

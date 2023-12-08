@@ -19,8 +19,8 @@ var (
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:     "cloudavenue-cli",
-	Short:   "cloudavenue-cli is the Command Line Interface for CloudAvenue Platform",
+	Use:     "cav",
+	Short:   "cav is the Command Line Interface for CloudAvenue Platform",
 	Version: version,
 }
 
