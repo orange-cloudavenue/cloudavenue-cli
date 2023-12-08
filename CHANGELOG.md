@@ -1,5 +1,10 @@
 ## 0.1.0 (Unreleased)
 
+### :rocket: **New Features**
+
+* `New t0` - Add List operation for t0 (Internet Gateway). (GH-33)
+* `New t0` - Add List operation for t0 (Internet Gateway). (GH-6)
+
 ## 0.0.4 (December  4, 2023)
 
 ### :rocket: **New Features**
