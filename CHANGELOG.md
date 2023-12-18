@@ -5,6 +5,10 @@
 * `New t0` - Add List operation for t0 (Internet Gateway). (GH-33)
 * `New t0` - Add List operation for t0 (Internet Gateway). (GH-6)
 
+### :tada: **Improvements**
+
+* `Refacto` - rename CLI: cav. (GH-35)
+
 ## 0.0.4 (December  4, 2023)
 
 ### :rocket: **New Features**
