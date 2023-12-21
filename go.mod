@@ -3,6 +3,7 @@ module github.com/orange-cloudavenue/cloudavenue-cli
 go 1.21
 
 require (
+	github.com/adampresley/sigint v0.0.0-20150906022118-7e8d2ad16a94
 	github.com/aws/aws-sdk-go v1.47.9
 	github.com/fbiville/markdown-table-formatter v0.3.0
 	github.com/orange-cloudavenue/cloudavenue-sdk-go v0.5.6
