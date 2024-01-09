@@ -1,0 +1,3 @@
+```release-note:chore
+`command` - Add interrupt `ctrl-c` in `cav` command.
+```

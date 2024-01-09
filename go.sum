@@ -1,3 +1,5 @@
+github.com/adampresley/sigint v0.0.0-20150906022118-7e8d2ad16a94 h1:+ZZxOAOgtc5xZjeh4bt2JDKqYH5r91h8dVXF1KZabsU=
+github.com/adampresley/sigint v0.0.0-20150906022118-7e8d2ad16a94/go.mod h1:Z78z6BReSpl2eqVy/IxspW8YxnSkIcK3hXoxhiaaGZ8=
 github.com/aws/aws-sdk-go v1.47.9 h1:rarTsos0mA16q+huicGx0e560aYRtOucV5z2Mw23JRY=
 github.com/aws/aws-sdk-go v1.47.9/go.mod h1:LF8svs817+Nz+DmiMQKTO3ubZ/6IaTpq3TjupRn3Eqk=
 github.com/cpuguy83/go-md2man/v2 v2.0.3/go.mod h1:tgQtvFlXSQOSOSIRvRPT7W67SCa46tRHOmNcaadrF8o=
