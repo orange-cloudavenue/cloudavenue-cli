@@ -1,9 +1,9 @@
 ```release-note:chore
-`command` - Add new option `--output` in `cav` command.
+`command` - Add new option `--output` to improve result in `cav` command.
 ```
     
 ```release-note:enhancement
-`command` - improve printed result for vdc list command.
+`command` - improve speed of printed result for vdc list command.
 ```
 
 ```release-note:dependency
