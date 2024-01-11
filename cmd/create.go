@@ -10,16 +10,25 @@ import (
 )
 
 var (
+<<<<<<< HEAD
 	exampleCreate1 = `
 	#List all T0
 	cav create vdc --name myvdc`
+=======
+	excrea1 = "#List all T0\ncav create vdc --name myvdc\n\n"
+	// excrea2 = "#List all T0 in wide format\ncav create t0 -o wide\n\n"
+>>>>>>> 09b59f7 (chore: Add Get command)
 )
 
 // getCmd represents the t0 command
 var createCmd = &cobra.Command{
 	Use:     "create",
 	Aliases: []string{"new", "add"},
+<<<<<<< HEAD
 	Example: exampleCreate1,
+=======
+	Example: excrea1, // + excrea2,
+>>>>>>> 09b59f7 (chore: Add Get command)
 	Short:   "Create resource to CloudAvenue.",
 }
 
@@ -44,6 +53,13 @@ func init() {
 		fmt.Println("Error from Flag VDC, is require.", err)
 		return
 	}
+<<<<<<< HEAD
+=======
+	if err := createEdgeGatewayCmd.MarkFlagRequired("t0"); err != nil {
+		fmt.Println("Error from Flag T0, is require.", err)
+		return
+	}
+>>>>>>> 09b59f7 (chore: Add Get command)
 
 	// ? Options for publicip
 	createPublicIPCmd.Flags().String("name", "", "public ip address")
@@ -158,10 +174,16 @@ var createVDCCmd = &cobra.Command{
 
 // createCmd represents the create command
 var createEdgeGatewayCmd = &cobra.Command{
+<<<<<<< HEAD
 	Use:     "edgegateway",
 	Short:   "Create an edgeGateway",
 	Aliases: []string{"gw", "egw"},
 	Example: "edgegateway create --vdc <vdc name> [--t0 <t0 name>]",
+=======
+	Use:     "edegateway",
+	Short:   "Create an edgeGateway",
+	Example: "edgegateway create --vdc <vdc name> --t0 <t0 name>",
+>>>>>>> 09b59f7 (chore: Add Get command)
 
 	Run: func(cmd *cobra.Command, args []string) {
 		// Check if time flag is set
@@ -176,6 +198,7 @@ var createEdgeGatewayCmd = &cobra.Command{
 			return
 		}
 
+<<<<<<< HEAD
 		// Get the t0 name
 		// if flag not precise, get the first t0
 		var t0 string
@@ -195,6 +218,17 @@ var createEdgeGatewayCmd = &cobra.Command{
 		}
 		// Create the edgeGateway
 		fmt.Println("Creating EdgeGateway resource")
+=======
+		// Get the t0 name from the command line
+		t0, err := cmd.Flags().GetString("t0")
+		if err != nil {
+			fmt.Println("Error from T0", err)
+			return
+		}
+
+		// Create the edgeGateway
+		fmt.Println("create EdgeGateway resource")
+>>>>>>> 09b59f7 (chore: Add Get command)
 		fmt.Println("vdc name: " + vdc)
 		fmt.Println("t0 name: " + t0)
 		job, err := c.V1.EdgeGateway.New(vdc, t0)
@@ -223,6 +257,12 @@ var createS3Cmd = &cobra.Command{
 			defer timeTrack(time.Now(), cmd.CommandPath())
 		}
 
+<<<<<<< HEAD
+=======
+		// init client
+		s3Client := c.V1.S3()
+
+>>>>>>> 09b59f7 (chore: Add Get command)
 		bucketName, err := cmd.Flags().GetString("name")
 		if err != nil {
 			fmt.Println("Malformed bucket name ", err)
@@ -233,7 +273,11 @@ var createS3Cmd = &cobra.Command{
 		fmt.Println("create a bucket resource (with basic value)")
 		fmt.Println("bucket name: " + bucketName)
 
+<<<<<<< HEAD
 		_, err = c.V1.S3().CreateBucket(&s3.CreateBucketInput{Bucket: &bucketName})
+=======
+		_, err = s3Client.CreateBucket(&s3.CreateBucketInput{Bucket: &bucketName})
+>>>>>>> 09b59f7 (chore: Add Get command)
 		if err != nil {
 			fmt.Println("Error from S3 Create", err)
 			return

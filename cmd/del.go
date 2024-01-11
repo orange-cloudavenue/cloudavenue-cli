@@ -5,8 +5,11 @@ import (
 	"time"
 
 	"github.com/aws/aws-sdk-go/service/s3"
+<<<<<<< HEAD
 	"github.com/orange-cloudavenue/cloudavenue-sdk-go/pkg/uuid"
 	v1 "github.com/orange-cloudavenue/cloudavenue-sdk-go/v1"
+=======
+>>>>>>> 09b59f7 (chore: Add Get command)
 	"github.com/spf13/cobra"
 )
 
@@ -116,7 +119,10 @@ var delS3Cmd = &cobra.Command{
 // deleteCmd represents the delete command
 var delEdgeGatewayCmd = &cobra.Command{
 	Use:     "edgegateway",
+<<<<<<< HEAD
 	Aliases: []string{"egw", "gw"},
+=======
+>>>>>>> 09b59f7 (chore: Add Get command)
 	Example: "delete edgegateway <id or name> [<id or name>] [<id or name>] ...",
 	Short:   "Delete an edgeGateway (name or id)",
 
@@ -125,6 +131,7 @@ var delEdgeGatewayCmd = &cobra.Command{
 		if cmd.Flag("time").Value.String() == "true" {
 			defer timeTrack(time.Now(), cmd.CommandPath())
 		}
+<<<<<<< HEAD
 		var (
 			gw  *v1.EdgeGw
 			err error
@@ -138,6 +145,14 @@ var delEdgeGatewayCmd = &cobra.Command{
 				gw, err = c.V1.EdgeGateway.GetByName(arg)
 			}
 			if err != nil {
+=======
+
+		for _, arg := range args {
+			fmt.Println("delete EdgeGateway resource " + arg)
+			gw, err := c.V1.EdgeGateway.GetByName(arg)
+			if err != nil {
+				gw, err = c.V1.EdgeGateway.GetByID(arg)
+>>>>>>> 09b59f7 (chore: Add Get command)
 				if err != nil {
 					fmt.Println("Unable to find EdgeGateway ID or Name", err)
 					return
@@ -153,7 +168,10 @@ var delEdgeGatewayCmd = &cobra.Command{
 				fmt.Println("Error during EdgeGateway Deletion !!", err)
 				return
 			}
+<<<<<<< HEAD
 
+=======
+>>>>>>> 09b59f7 (chore: Add Get command)
 			fmt.Println("EdgeGateway resource deleted " + arg + " successfully !!")
 		}
 
@@ -190,6 +208,10 @@ var delPublicIPCmd = &cobra.Command{
 				return
 			}
 			fmt.Println("ip resource deleted " + arg + " successfully !!")
+<<<<<<< HEAD
+=======
+			fmt.Println("\nip resource list after deletion:")
+>>>>>>> 09b59f7 (chore: Add Get command)
 		}
 
 	},
