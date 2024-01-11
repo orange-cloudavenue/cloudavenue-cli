@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"time"
 
-	jsontmpl "github.com/orange-cloudavenue/cloudavenue-cli/pkg/templates/json"
+	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/print"
 	"github.com/spf13/cobra"
 )
 
@@ -26,6 +26,7 @@ func init() {
 	// ? List command
 	publicipCmd.Args = cobra.NoArgs
 	publicipCmd.AddCommand(publicipListCmd)
+	publicipCmd.PersistentFlags().StringP("output", "o", "", "Print all resources informations")
 
 	// ? Delete command
 	publicipCmd.AddCommand(publicipDelCmd)
@@ -42,10 +43,14 @@ func init() {
 
 // listCmd represents the list command
 var publicipListCmd = &cobra.Command{
-	Use:   "list",
-	Short: "A brief list of your publicip resources",
+	Use:     "list",
+	Aliases: []string{"ls", "get"},
+	Short:   "A brief list of your publicip resources",
+	Long:    "A complete list information of your Public IP resources in your CloudAvenue account.",
 	Run: func(cmd *cobra.Command, args []string) {
-		defer timeTrack(time.Now(), cmd.CommandPath())
+		if cmd.Flag("time").Value.String() == "true" {
+			defer timeTrack(time.Now(), cmd.CommandPath())
+		}
 
 		// Get the list of vdc
 		ips, err := c.V1.PublicIP.GetIPs()
@@ -54,29 +59,22 @@ var publicipListCmd = &cobra.Command{
 			return
 		}
 
-		// Struct to print a basic view
-		type basicIP = struct {
-			IP              string `json:"ip"`
-			IPnat           string `json:"ip_nat"`
-			EdgeGatewayName string `json:"edge_gateway_name"`
-		}
-		basicIPs := []*basicIP{}
-
-		// Set the struct
-		for _, ip := range ips.NetworkConfig {
-			x := &basicIP{
-				IP:              ip.UplinkIP,
-				IPnat:           ip.TranslatedIP,
-				EdgeGatewayName: ip.EdgeGatewayName,
-			}
-			basicIPs = append(basicIPs, x)
-		}
-
 		// Print the result
-		jsontmpl.Format(jsontmpl.JsonTemplate{
-			Fields: []string{"ip", "ip_nat", "edge_gateway_name"},
-			Data:   basicIPs,
-		})
+		flag := cmd.Flag("output").Value
+		w := print.New()
+		switch flag.String() {
+		case "wide":
+			w.SetHeader("public ip", "edge gateway name", "ip natted")
+			for _, i := range ips.NetworkConfig {
+				w.AddFields(i.UplinkIP, i.EdgeGatewayName, i.TranslatedIP)
+			}
+		default:
+			w.SetHeader("public ip", "edge gateway name")
+			for _, i := range ips.NetworkConfig {
+				w.AddFields(i.UplinkIP, i.EdgeGatewayName)
+			}
+		}
+		w.PrintTable()
 	},
 }
 

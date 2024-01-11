@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/aws/aws-sdk-go/service/s3"
-	jsontmpl "github.com/orange-cloudavenue/cloudavenue-cli/pkg/templates/json"
+	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/print"
 	"github.com/spf13/cobra"
 )
 
@@ -28,6 +28,7 @@ func init() {
 	// ? List command
 	s3Cmd.Args = cobra.NoArgs
 	s3Cmd.AddCommand(s3ListCmd)
+	s3Cmd.PersistentFlags().StringP("output", "o", "", "Print all resources informations")
 
 	// ? Delete command
 	s3Cmd.AddCommand(s3DelCmd)
@@ -44,10 +45,14 @@ func init() {
 
 // listCmd represents the list command
 var s3ListCmd = &cobra.Command{
-	Use:   "list",
-	Short: "A brief list of your s3 resources",
+	Use:     "list",
+	Aliases: []string{"ls", "get"},
+	Short:   "A brief list of your s3 resources",
+	Long:    "A complete list information of your s3 resources in your CloudAvenue account.",
 	Run: func(cmd *cobra.Command, args []string) {
-		defer timeTrack(time.Now(), cmd.CommandPath())
+		if cmd.Flag("time").Value.String() == "true" {
+			defer timeTrack(time.Now(), cmd.CommandPath())
+		}
 
 		// init client
 		s3Client := c.V1.S3()
@@ -59,27 +64,22 @@ var s3ListCmd = &cobra.Command{
 			return
 		}
 
-		// Struct to print a basic view
-		type basicBucket = struct {
-			BucketName string `json:"bucket_name"`
-			Owner      string `json:"owner"`
-		}
-		basicBuckets := []*basicBucket{}
-
-		// Set the struct
-		for _, buck := range output.Buckets {
-			x := &basicBucket{
-				BucketName: *buck.Name,
-			}
-			x.Owner = *output.Owner.DisplayName
-			basicBuckets = append(basicBuckets, x)
-		}
-
 		// Print the result
-		jsontmpl.Format(jsontmpl.JsonTemplate{
-			Fields: []string{"bucket_name", "owner"},
-			Data:   basicBuckets,
-		})
+		flag := cmd.Flag("output").Value
+		w := print.New()
+		switch flag.String() {
+		case "wide":
+			w.SetHeader("name", "owner", "creation date", "owner id")
+			for _, b := range output.Buckets {
+				w.AddFields(*b.Name, *output.Owner.DisplayName, *b.CreationDate, *output.Owner.ID)
+			}
+		default:
+			w.SetHeader("name", "owner")
+			for _, b := range output.Buckets {
+				w.AddFields(*b.Name, *output.Owner.DisplayName)
+			}
+		}
+		w.PrintTable()
 	},
 }
 
