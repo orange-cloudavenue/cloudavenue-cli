@@ -1,11 +1,18 @@
 ## 0.1.0 (Unreleased)
 
+### :tada: **Improvements**
+
+* `command` - improve speed of printed result for vdc list command. (GH-43)
+
+### :dependabot: **Dependencies**
+
+* deps: bumps orange-cloudavenue/cloudavenue-sdk-go from 0.5.6 to 0.7.0 (GH-43)
+
 ## 0.0.5 (December  21, 2023)
 
 ### :rocket: **New Features**
 
 * `New t0` - Add List operation for t0 (Internet Gateway). (GH-33)
-* `New t0` - Add List operation for t0 (Internet Gateway). (GH-6)
 
 ### :tada: **Improvements**
 
