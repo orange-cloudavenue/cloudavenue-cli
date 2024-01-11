@@ -4,11 +4,10 @@ Copyright © 2023 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"fmt"
 	"log"
-	"os"
-	"text/tabwriter"
+	"time"
 
+	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/print"
 	"github.com/spf13/cobra"
 )
 
@@ -25,14 +24,20 @@ func init() {
 	// ? List command
 	t0Cmd.Args = cobra.NoArgs
 	t0Cmd.AddCommand(t0ListCmd)
+	t0Cmd.PersistentFlags().StringP("output", "o", "", "Print all resources informations")
 
 }
 
 // listCmd represents the list command
 var t0ListCmd = &cobra.Command{
-	Use:   "list",
-	Short: "A brief list of your t0 resources",
+	Use:     "list",
+	Aliases: []string{"ls", "get"},
+	Short:   "A brief list of your t0 resources",
+	Long:    "A complete list information of your T0 resources in your CloudAvenue account.",
 	Run: func(cmd *cobra.Command, args []string) {
+		if cmd.Flag("time").Value.String() == "true" {
+			defer timeTrack(time.Now(), cmd.CommandPath())
+		}
 
 		// Get the list of t0
 		t0s, err := c.V1.T0.GetT0s()
@@ -42,36 +47,20 @@ var t0ListCmd = &cobra.Command{
 		}
 
 		// Print the result
-		w := tabwriter.NewWriter(os.Stdout, 10, 1, 5, ' ', 0)
-		fs := "%s\t%s\t%s\n"
-		fmt.Fprintf(w, fs, "NAME", "PROVIDER", "CLASS_SERVICE")
-		for _, t := range *t0s {
-			fmt.Fprintf(w, fs, t.Tier0Vrf, t.Tier0Provider, t.Tier0ClassService)
+		flag := cmd.Flag("output").Value
+		w := print.New()
+		switch flag.String() {
+		case "wide":
+			w.SetHeader("name", "t0 provider name", "t0 class service", "services", "class service")
+			for _, t0 := range *t0s {
+				w.AddFields(t0.Tier0Vrf, t0.Tier0Provider, t0.Tier0ClassService, t0.Services, t0.ClassService)
+			}
+		default:
+			w.SetHeader("name", "t0 provider name")
+			for _, t0 := range *t0s {
+				w.AddFields(t0.Tier0Vrf, t0.Tier0Provider)
+			}
 		}
-		w.Flush()
-
-		// // Struct to print a basic view
-		// type basict0 = struct {
-		// 	T0Vrf          string `json:"t0_vrf"`
-		// 	T0Provider     string `json:"t0_provider"`
-		// 	T0ClassService string `json:"t0_class_service"`
-		// }
-		// basict0s := []*basict0{}
-
-		// // Set the struct
-		// for _, t0 := range *t0s {
-		// 	x := &basict0{
-		// 		T0Vrf:          t0.Tier0Vrf,
-		// 		T0Provider:     t0.Tier0Provider,
-		// 		T0ClassService: t0.Tier0ClassService,
-		// 	}
-		// 	basict0s = append(basict0s, x)
-		// }
-
-		// // Print the result
-		// jsontmpl.Format(jsontmpl.JsonTemplate{
-		// 	Fields: []string{"t0_vrf", "t0_provider", "t0_class_service"},
-		// 	Data:   basict0s,
-		// })
+		w.PrintTable()
 	},
 }

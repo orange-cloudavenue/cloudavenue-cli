@@ -60,5 +60,9 @@ func NewRootCmd() *cobra.Command {
 
 func timeTrack(start time.Time, name string) {
 	elapsed := time.Since(start)
-	fmt.Printf("=== Command %s took %s second(s) ===", name, elapsed)
+	fmt.Printf("\n=== Command %s took %s second(s) ===", name, elapsed)
+}
+
+func init() {
+	rootCmd.PersistentFlags().BoolP("time", "t", false, "time elapsed for command")
 }

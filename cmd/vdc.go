@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"time"
 
-	jsontmpl "github.com/orange-cloudavenue/cloudavenue-cli/pkg/templates/json"
-	v1 "github.com/orange-cloudavenue/cloudavenue-sdk-go/v1"
+	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/print"
+	"github.com/orange-cloudavenue/cloudavenue-sdk-go/v1/infrapi"
 	"github.com/spf13/cobra"
 )
 
@@ -27,6 +27,7 @@ func init() {
 	// ? List command
 	vdcCmd.Args = cobra.NoArgs
 	vdcCmd.AddCommand(vdcListCmd)
+	vdcCmd.PersistentFlags().StringP("output", "o", "", "Print all resources informations")
 
 	// ? Delete command
 	vdcCmd.AddCommand(vdcDelCmd)
@@ -43,47 +44,38 @@ func init() {
 
 // listCmd represents the list command
 var vdcListCmd = &cobra.Command{
-	Use:   "list",
-	Short: "A brief list of your vdc resources",
+	Use:     "list",
+	Aliases: []string{"ls", "get"},
+	Short:   "A brief list of your vdc resources",
+	Long:    "A complete list information of your s3 resources in your CloudAvenue account.",
 	Run: func(cmd *cobra.Command, args []string) {
-		defer timeTrack(time.Now(), cmd.CommandPath())
+		if cmd.Flag("time").Value.String() == "true" {
+			defer timeTrack(time.Now(), cmd.CommandPath())
+		}
 
 		// Get the list of vdc
-		vdcs, err := c.V1.VDC.List()
+		vdcs, err := c.V1.Querier().List().VDC()
 		if err != nil {
 			fmt.Println("Error from VDC List", err)
 			return
 		}
 
-		// Struct to print a basic view
-		type basicVdc = struct {
-			VdcGroup        string `json:"vdc_group"`
-			VdcName         string `json:"vdc_name"`
-			VcpuInMhz2      int    `json:"vcpu_in_mhz2"`
-			MemoryAllocated int    `json:"memory_allocated"`
-			CPUAllocated    int    `json:"cpu_allocated"`
-			Description     string `json:"description"`
-		}
-		basicVdcs := []*basicVdc{}
-
-		// Set the struct
-		for _, dc := range *vdcs {
-			x := &basicVdc{
-				VdcGroup:        dc.VdcGroup,
-				VdcName:         dc.Vdc.Name,
-				VcpuInMhz2:      dc.Vdc.VcpuInMhz2,
-				MemoryAllocated: dc.Vdc.MemoryAllocated,
-				CPUAllocated:    dc.Vdc.CPUAllocated,
-				Description:     dc.Vdc.Description,
-			}
-			basicVdcs = append(basicVdcs, x)
-		}
-
 		// Print the result
-		jsontmpl.Format(jsontmpl.JsonTemplate{
-			Fields: []string{"vdc_name", "vdc_group", "vcpu_in_mhz2", "memory_allocated", "cpu_allocated", "description"},
-			Data:   basicVdcs,
-		})
+		flag := cmd.Flag("output").Value
+		w := print.New()
+		switch flag.String() {
+		case "wide":
+			w.SetHeader("name", "status", "cpu used (mhz)", "memory used (mb)", "storage used (mb)", "number of vm(s)", "number of vapp(s)")
+			for _, v := range vdcs {
+				w.AddFields(v.Name, v.Status, *v.CpuUsedMhz, *v.MemoryUsedMB, *v.StorageUsedMB, *v.NumberOfVMs, *v.NumberOfVApps)
+			}
+		default:
+			w.SetHeader("name", "status")
+			for _, v := range vdcs {
+				w.AddFields(v.Name, v.Status)
+			}
+		}
+		w.PrintTable()
 	},
 }
 
@@ -98,7 +90,8 @@ var vdcDelCmd = &cobra.Command{
 
 		for _, arg := range args {
 			fmt.Println("delete vdc resource " + arg)
-			vdc, err := c.V1.VDC.Get(arg)
+			// vdc, err := c.V1.VDC.Get(arg)
+			vdc, err := c.V1.VDC().GetVDC(arg)
 			if err != nil {
 				fmt.Println("Error from vdc", err)
 				return
@@ -141,24 +134,25 @@ var vdcCreateCmd = &cobra.Command{
 		fmt.Println("create vdc resource (with basic value)")
 		fmt.Println("vdc name: " + vdcName)
 
-		_, err = c.V1.VDC.New(&v1.CAVVirtualDataCenter{Vdc: v1.CAVVirtualDataCenterVDC{
+		_, err = c.V1.VDC().New(&infrapi.CAVVirtualDataCenter{VDC: infrapi.CAVVirtualDataCenterVDC{
 			Name:                vdcName,
 			ServiceClass:        "STD",
 			BillingModel:        "PAYG",
 			CPUAllocated:        22000,
-			VcpuInMhz2:          2200,
+			VCPUInMhz:           2200,
 			Description:         "vdc created by cloudavenue-cli",
 			MemoryAllocated:     30,
 			DisponibilityClass:  "ONE-ROOM",
 			StorageBillingModel: "PAYG",
-			StorageProfiles: []v1.VDCStrorageProfile{
-				v1.VDCStrorageProfile{ //nolint
+			StorageProfiles: []infrapi.StorageProfile{
+				{
 					Class:   "gold",
 					Limit:   500,
 					Default: true,
 				},
 			},
-		}})
+		},
+		})
 
 		if err != nil {
 			fmt.Println("Error from vdc", err)

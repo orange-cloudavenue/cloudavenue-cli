@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"time"
 
-	jsontmpl "github.com/orange-cloudavenue/cloudavenue-cli/pkg/templates/json"
+	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/print"
 	"github.com/spf13/cobra"
 )
 
@@ -26,6 +26,7 @@ func init() {
 	// ? List command
 	gwCmd.Args = cobra.NoArgs
 	gwCmd.AddCommand(gwListCmd)
+	gwCmd.PersistentFlags().StringP("output", "o", "", "Print all resources informations")
 
 	// ? Delete command
 	gwCmd.AddCommand(gwDelCmd)
@@ -47,21 +48,36 @@ func init() {
 
 // listCmd represents the list command
 var gwListCmd = &cobra.Command{
-	Use:   "list",
-	Short: "A brief list of your edgegateway resources",
+	Use:     "list",
+	Aliases: []string{"ls", "get"},
+	Short:   "A brief list of your edgegateway resources",
+	Long:    "A conplete list information of your EdgeGateway resources in your CloudAvenue account.",
 	Run: func(cmd *cobra.Command, args []string) {
-		defer timeTrack(time.Now(), cmd.CommandPath())
+		if cmd.Flag("time").Value.String() == "true" {
+			defer timeTrack(time.Now(), cmd.CommandPath())
+		}
 
 		edgeGateways, err := c.V1.EdgeGateway.List()
 		if err != nil {
 			fmt.Println("Error from EdgeGateway", err)
 		}
 
-		jsontmpl.Format(jsontmpl.JsonTemplate{
-			Fields: []string{"edgeName", "edgeId", "ownerType", "ownerName", "rateLimit", "description"},
-			Data:   edgeGateways,
-		})
-
+		// Print the result
+		flag := cmd.Flag("output").Value
+		w := print.New()
+		switch flag.String() {
+		case "wide":
+			w.SetHeader("name", "id", "owner name", "owner type", "ratelimit (mb/s)", "description", "tier0 vrf name")
+			for _, e := range *edgeGateways {
+				w.AddFields(e.EdgeName, e.EdgeID, e.OwnerName, e.OwnerType, e.Bandwidth, e.Description, e.Tier0VrfName)
+			}
+		default:
+			w.SetHeader("name", "owner")
+			for _, e := range *edgeGateways {
+				w.AddFields(e.EdgeName, e.OwnerName)
+			}
+		}
+		w.PrintTable()
 	},
 }
 
