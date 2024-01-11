@@ -48,9 +48,9 @@ func (w Writer) SetHeader(fields ...any) {
 	}
 	fs := format(fields...)
 	for i, field := range fields {
-		switch field.(type) {
+		switch field.(type) { //nolint:gosimple
 		case string:
-			fields[i] = strings.ToUpper(field.(string))
+			fields[i] = strings.ToUpper(field.(string)) //nolint:gosimple
 		}
 	}
 	fmt.Fprintf(w.tw, fs, fields...)
