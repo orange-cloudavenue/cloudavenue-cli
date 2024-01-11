@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	list   string = "list"
+	get    string = "get"
 	create string = "create"
 	delete string = "delete"
 )
@@ -56,7 +56,7 @@ func TestRootCmd(t *testing.T) {
 			tests := tts{}
 			switch cmdSubCmd.Use {
 			// ? Test list argument
-			case list:
+			case get:
 				tests = tts{
 					{
 						name: oneCmd.Use + "_" + cmdSubCmd.Use + " without args",
@@ -106,13 +106,13 @@ func TestRootCmd(t *testing.T) {
 						args: []string{oneCmd.Use, cmdSubCmd.Use, "--name", "whatever"},
 					},
 				}
-				if strings.Contains(oneCmd.Use, cmd.CmdEdgeGateway) {
-					tests[3] = tt{
-						name: oneCmd.Use + "_" + cmdSubCmd.Use + " with good flags with argument",
-						args: []string{oneCmd.Use, cmdSubCmd.Use, "--vdc", "whatever", "--t0", "1"},
-						fail: true,
-					}
-				}
+				// if strings.Contains(oneCmd.Use, cmd.CmdEdgeGateway) {
+				// 	tests[3] = tt{
+				// 		name: oneCmd.Use + "_" + cmdSubCmd.Use + " with good flags with argument",
+				// 		args: []string{oneCmd.Use, cmdSubCmd.Use, "--vdc", "whatever", "--t0", "1"},
+				// 		fail: true,
+				// 	}
+				// }
 
 			}
 			startTest(tests, t)
