@@ -1,0 +1,11 @@
+```release-note:chore
+`command` - Add new option `--output` in `cav` command.
+```
+    
+```release-note:enhancement
+`command` - improve printed result for vdc list command.
+```
+
+```release-note:dependency
+deps: bumps orange-cloudavenue/cloudavenue-sdk-go from 0.5.6 to 0.7.0
+```
