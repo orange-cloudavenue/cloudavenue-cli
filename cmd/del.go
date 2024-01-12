@@ -5,6 +5,8 @@ import (
 	"time"
 
 	"github.com/aws/aws-sdk-go/service/s3"
+	"github.com/orange-cloudavenue/cloudavenue-sdk-go/pkg/uuid"
+	v1 "github.com/orange-cloudavenue/cloudavenue-sdk-go/v1"
 	"github.com/spf13/cobra"
 )
 
@@ -123,12 +125,19 @@ var delEdgeGatewayCmd = &cobra.Command{
 		if cmd.Flag("time").Value.String() == "true" {
 			defer timeTrack(time.Now(), cmd.CommandPath())
 		}
+		var (
+			gw  *v1.EdgeGw
+			err error
+		)
 
 		for _, arg := range args {
 			fmt.Println("delete EdgeGateway resource " + arg)
-			gw, err := c.V1.EdgeGateway.GetByName(arg)
-			if err != nil {
+			if uuid.IsUUIDV4(arg) {
 				gw, err = c.V1.EdgeGateway.GetByID(arg)
+			} else {
+				gw, err = c.V1.EdgeGateway.GetByName(arg)
+			}
+			if err != nil {
 				if err != nil {
 					fmt.Println("Unable to find EdgeGateway ID or Name", err)
 					return
@@ -144,6 +153,7 @@ var delEdgeGatewayCmd = &cobra.Command{
 				fmt.Println("Error during EdgeGateway Deletion !!", err)
 				return
 			}
+
 			fmt.Println("EdgeGateway resource deleted " + arg + " successfully !!")
 		}
 
