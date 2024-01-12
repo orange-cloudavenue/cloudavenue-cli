@@ -177,21 +177,14 @@ var createEdgeGatewayCmd = &cobra.Command{
 		}
 
 		// Get the t0 name
-		t0s, err := c.V1.T0.GetT0s()
-		if err != nil {
-			fmt.Println("Error from T0 List", err)
-			return
-		}
-		if len(*t0s) == 0 {
-			fmt.Println("No T0 found, please create one before")
-			return
-		}
-		if len(*t0s) > 1 && cmd.Flag("t0").Value.String() == "" {
-			fmt.Println("More than one T0 found, please specify one")
-			return
-		}
+		// if flag not precise, get the first t0
 		var t0 string
-		if len(*t0s) == 1 {
+		if cmd.Flag("t0").Value.String() == "" {
+			t0s, err := c.V1.T0.GetT0s()
+			if err != nil {
+				fmt.Println("Error from T0 List", err)
+				return
+			}
 			t0 = (*t0s)[0].Tier0Vrf
 		} else {
 			t0, err = cmd.Flags().GetString("t0")
@@ -200,7 +193,6 @@ var createEdgeGatewayCmd = &cobra.Command{
 				return
 			}
 		}
-
 		// Create the edgeGateway
 		fmt.Println("Creating EdgeGateway resource")
 		fmt.Println("vdc name: " + vdc)
