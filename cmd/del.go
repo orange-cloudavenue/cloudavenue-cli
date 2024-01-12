@@ -114,6 +114,7 @@ var delS3Cmd = &cobra.Command{
 // deleteCmd represents the delete command
 var delEdgeGatewayCmd = &cobra.Command{
 	Use:     "edgegateway",
+	Aliases: []string{"egw", "gw"},
 	Example: "delete edgegateway <id or name> [<id or name>] [<id or name>] ...",
 	Short:   "Delete an edgeGateway (name or id)",
 

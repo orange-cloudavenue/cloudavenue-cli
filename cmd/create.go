@@ -43,10 +43,6 @@ func init() {
 		fmt.Println("Error from Flag VDC, is require.", err)
 		return
 	}
-	if err := createEdgeGatewayCmd.MarkFlagRequired("t0"); err != nil {
-		fmt.Println("Error from Flag T0, is require.", err)
-		return
-	}
 
 	// ? Options for publicip
 	createPublicIPCmd.Flags().String("name", "", "public ip address")
@@ -161,9 +157,10 @@ var createVDCCmd = &cobra.Command{
 
 // createCmd represents the create command
 var createEdgeGatewayCmd = &cobra.Command{
-	Use:     "edegateway",
+	Use:     "edgegateway",
 	Short:   "Create an edgeGateway",
-	Example: "edgegateway create --vdc <vdc name> --t0 <t0 name>",
+	Aliases: []string{"gw", "egw"},
+	Example: "edgegateway create --vdc <vdc name> [--t0 <t0 name>]",
 
 	Run: func(cmd *cobra.Command, args []string) {
 		// Check if time flag is set
@@ -178,11 +175,29 @@ var createEdgeGatewayCmd = &cobra.Command{
 			return
 		}
 
-		// Get the t0 name from the command line
-		t0, err := cmd.Flags().GetString("t0")
+		// Get the t0 name
+		t0s, err := c.V1.T0.GetT0s()
 		if err != nil {
-			fmt.Println("Error from T0", err)
+			fmt.Println("Error from T0 List", err)
 			return
+		}
+		if len(*t0s) == 0 {
+			fmt.Println("No T0 found, please create one before")
+			return
+		}
+		if len(*t0s) > 1 && cmd.Flag("t0").Value.String() == "" {
+			fmt.Println("More than one T0 found, please specify one")
+			return
+		}
+		var t0 string
+		if len(*t0s) == 1 {
+			t0 = (*t0s)[0].Tier0Vrf
+		} else {
+			t0, err = cmd.Flags().GetString("t0")
+			if err != nil {
+				fmt.Println("Error to retrieve T0", err)
+				return
+			}
 		}
 
 		// Create the edgeGateway
