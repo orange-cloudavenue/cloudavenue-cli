@@ -10,25 +10,16 @@ import (
 )
 
 var (
-<<<<<<< HEAD
 	exampleCreate1 = `
 	#List all T0
 	cav create vdc --name myvdc`
-=======
-	excrea1 = "#List all T0\ncav create vdc --name myvdc\n\n"
-	// excrea2 = "#List all T0 in wide format\ncav create t0 -o wide\n\n"
->>>>>>> 09b59f7 (chore: Add Get command)
 )
 
-// getCmd represents the t0 command
+// createCmd create a CAV resource
 var createCmd = &cobra.Command{
 	Use:     "create",
 	Aliases: []string{"new", "add"},
-<<<<<<< HEAD
 	Example: exampleCreate1,
-=======
-	Example: excrea1, // + excrea2,
->>>>>>> 09b59f7 (chore: Add Get command)
 	Short:   "Create resource to CloudAvenue.",
 }
 
@@ -53,13 +44,6 @@ func init() {
 		fmt.Println("Error from Flag VDC, is require.", err)
 		return
 	}
-<<<<<<< HEAD
-=======
-	if err := createEdgeGatewayCmd.MarkFlagRequired("t0"); err != nil {
-		fmt.Println("Error from Flag T0, is require.", err)
-		return
-	}
->>>>>>> 09b59f7 (chore: Add Get command)
 
 	// ? Options for publicip
 	createPublicIPCmd.Flags().String("name", "", "public ip address")
@@ -83,7 +67,7 @@ func init() {
 	}
 }
 
-// createCmd represents the create command
+// createPublicIPCmd create a public ip resource(s)
 var createPublicIPCmd = &cobra.Command{
 	Use:     "publicip",
 	Short:   "Create an ip",
@@ -120,7 +104,7 @@ var createPublicIPCmd = &cobra.Command{
 	},
 }
 
-// createCmd represents the create command
+// createVDCCmd create a vdc resource(s)
 var createVDCCmd = &cobra.Command{
 	Use:     "vdc",
 	Short:   "Create an vdc",
@@ -143,27 +127,26 @@ var createVDCCmd = &cobra.Command{
 		fmt.Println("create vdc resource (with basic value)")
 		fmt.Println("vdc name: " + vdcName)
 
-		_, err = c.V1.VDC().New(&infrapi.CAVVirtualDataCenter{VDC: infrapi.CAVVirtualDataCenterVDC{
-			Name:                vdcName,
-			ServiceClass:        "STD",
-			BillingModel:        "PAYG",
-			CPUAllocated:        22000,
-			VCPUInMhz:           2200,
-			Description:         "vdc created by cloudavenue-cli",
-			MemoryAllocated:     30,
-			DisponibilityClass:  "ONE-ROOM",
-			StorageBillingModel: "PAYG",
-			StorageProfiles: []infrapi.StorageProfile{
-				{
-					Class:   "gold",
-					Limit:   500,
-					Default: true,
+		if _, err = c.V1.VDC().New(&infrapi.CAVVirtualDataCenter{
+			VDC: infrapi.CAVVirtualDataCenterVDC{
+				Name:                vdcName,
+				ServiceClass:        "STD",
+				BillingModel:        "PAYG",
+				CPUAllocated:        22000,
+				VCPUInMhz:           2200,
+				Description:         "vdc created by cloudavenue-cli",
+				MemoryAllocated:     30,
+				DisponibilityClass:  "ONE-ROOM",
+				StorageBillingModel: "PAYG",
+				StorageProfiles: []infrapi.StorageProfile{
+					{
+						Class:   "gold",
+						Limit:   500,
+						Default: true,
+					},
 				},
 			},
-		},
-		})
-
-		if err != nil {
+		}); err != nil {
 			fmt.Println("Error from vdc", err)
 			return
 		}
@@ -172,18 +155,12 @@ var createVDCCmd = &cobra.Command{
 	},
 }
 
-// createCmd represents the create command
+// createEdgeGatewayCmd create a edgegateway resource(s)
 var createEdgeGatewayCmd = &cobra.Command{
-<<<<<<< HEAD
 	Use:     "edgegateway",
 	Short:   "Create an edgeGateway",
 	Aliases: []string{"gw", "egw"},
 	Example: "edgegateway create --vdc <vdc name> [--t0 <t0 name>]",
-=======
-	Use:     "edegateway",
-	Short:   "Create an edgeGateway",
-	Example: "edgegateway create --vdc <vdc name> --t0 <t0 name>",
->>>>>>> 09b59f7 (chore: Add Get command)
 
 	Run: func(cmd *cobra.Command, args []string) {
 		// Check if time flag is set
@@ -198,14 +175,13 @@ var createEdgeGatewayCmd = &cobra.Command{
 			return
 		}
 
-<<<<<<< HEAD
 		// Get the t0 name
-		// if flag not precise, get the first t0
+		// if flag is not precise, get the first one
 		var t0 string
 		if cmd.Flag("t0").Value.String() == "" {
 			t0s, err := c.V1.T0.GetT0s()
 			if err != nil {
-				fmt.Println("Error from T0 List", err)
+				fmt.Println("Error to retrieve your first T0", err)
 				return
 			}
 			t0 = (*t0s)[0].Tier0Vrf
@@ -218,17 +194,6 @@ var createEdgeGatewayCmd = &cobra.Command{
 		}
 		// Create the edgeGateway
 		fmt.Println("Creating EdgeGateway resource")
-=======
-		// Get the t0 name from the command line
-		t0, err := cmd.Flags().GetString("t0")
-		if err != nil {
-			fmt.Println("Error from T0", err)
-			return
-		}
-
-		// Create the edgeGateway
-		fmt.Println("create EdgeGateway resource")
->>>>>>> 09b59f7 (chore: Add Get command)
 		fmt.Println("vdc name: " + vdc)
 		fmt.Println("t0 name: " + t0)
 		job, err := c.V1.EdgeGateway.New(vdc, t0)
@@ -245,7 +210,7 @@ var createEdgeGatewayCmd = &cobra.Command{
 	},
 }
 
-// createCmd represents the create command
+// createS3Cmd create a s3 bucket resource(s)
 var createS3Cmd = &cobra.Command{
 	Use:     "s3",
 	Short:   "Create an S3 bucket",
@@ -257,12 +222,6 @@ var createS3Cmd = &cobra.Command{
 			defer timeTrack(time.Now(), cmd.CommandPath())
 		}
 
-<<<<<<< HEAD
-=======
-		// init client
-		s3Client := c.V1.S3()
-
->>>>>>> 09b59f7 (chore: Add Get command)
 		bucketName, err := cmd.Flags().GetString("name")
 		if err != nil {
 			fmt.Println("Malformed bucket name ", err)
@@ -273,11 +232,7 @@ var createS3Cmd = &cobra.Command{
 		fmt.Println("create a bucket resource (with basic value)")
 		fmt.Println("bucket name: " + bucketName)
 
-<<<<<<< HEAD
 		_, err = c.V1.S3().CreateBucket(&s3.CreateBucketInput{Bucket: &bucketName})
-=======
-		_, err = s3Client.CreateBucket(&s3.CreateBucketInput{Bucket: &bucketName})
->>>>>>> 09b59f7 (chore: Add Get command)
 		if err != nil {
 			fmt.Println("Error from S3 Create", err)
 			return

@@ -5,24 +5,25 @@ import (
 	"time"
 
 	"github.com/aws/aws-sdk-go/service/s3"
-<<<<<<< HEAD
 	"github.com/orange-cloudavenue/cloudavenue-sdk-go/pkg/uuid"
 	v1 "github.com/orange-cloudavenue/cloudavenue-sdk-go/v1"
-=======
->>>>>>> 09b59f7 (chore: Add Get command)
 	"github.com/spf13/cobra"
 )
 
 var (
-	exdel1 = "#Delete a Public IP\ncav del ip 192.168.0.2\n\n"
-	exdel2 = "#Delete several vdc named xxxx and yyyy\ncav del vdc --name xxxx yyyy\n\n"
+	exampleDelete1 = `
+	#Delete a Public IP
+	cav del ip 192.168.0.2`
+	exampleDelete2 = `
+	#Delete several vdc named xxxx and yyyy
+	cav del vdc --name xxxx yyyy`
 )
 
-// getCmd represents the t0 command
+// delCmd delete a CAV resource
 var delCmd = &cobra.Command{
 	Use:     "delete",
 	Aliases: []string{"del", "rm"},
-	Example: exdel1 + exdel2,
+	Example: exampleDelete1 + exampleDelete2,
 	Short:   "Delete resource from CloudAvenue.",
 }
 
@@ -50,7 +51,7 @@ func init() {
 
 }
 
-// delVDCCmd represents the delete command
+// delVDCCmd delete a vdc resource(s)
 var delVDCCmd = &cobra.Command{
 	Use:     "vdc",
 	Example: "del vdc <name> [<name>] [<name>] ...",
@@ -64,7 +65,6 @@ var delVDCCmd = &cobra.Command{
 
 		for _, arg := range args {
 			fmt.Println("delete vdc resource " + arg)
-			// vdc, err := c.V1.VDC.Get(arg)
 			vdc, err := c.V1.VDC().GetVDC(arg)
 			if err != nil {
 				fmt.Println("Error from vdc", err)
@@ -86,7 +86,7 @@ var delVDCCmd = &cobra.Command{
 	},
 }
 
-// deleteCmd represents the delete command
+// deleteCmd delete a s3 bucket resource(s)
 var delS3Cmd = &cobra.Command{
 	Use:     "s3",
 	Example: "delete s3 <name> [<name>] [<name>] ...",
@@ -98,13 +98,10 @@ var delS3Cmd = &cobra.Command{
 			defer timeTrack(time.Now(), cmd.CommandPath())
 		}
 
-		// init client
-		s3Client := c.V1.S3()
-
 		for i, arg := range args {
 			fmt.Println("delete bucket resource " + arg)
 			// Del the bucket
-			_, err := s3Client.DeleteBucket(&s3.DeleteBucketInput{Bucket: &args[i]})
+			_, err := c.V1.S3().DeleteBucket(&s3.DeleteBucketInput{Bucket: &args[i]})
 			if err != nil {
 				fmt.Println("Error from S3 Delete", err)
 				return
@@ -116,13 +113,10 @@ var delS3Cmd = &cobra.Command{
 	},
 }
 
-// deleteCmd represents the delete command
+// deleteCmd delete a edgeGateway resource(s)
 var delEdgeGatewayCmd = &cobra.Command{
 	Use:     "edgegateway",
-<<<<<<< HEAD
 	Aliases: []string{"egw", "gw"},
-=======
->>>>>>> 09b59f7 (chore: Add Get command)
 	Example: "delete edgegateway <id or name> [<id or name>] [<id or name>] ...",
 	Short:   "Delete an edgeGateway (name or id)",
 
@@ -131,7 +125,6 @@ var delEdgeGatewayCmd = &cobra.Command{
 		if cmd.Flag("time").Value.String() == "true" {
 			defer timeTrack(time.Now(), cmd.CommandPath())
 		}
-<<<<<<< HEAD
 		var (
 			gw  *v1.EdgeGw
 			err error
@@ -145,14 +138,6 @@ var delEdgeGatewayCmd = &cobra.Command{
 				gw, err = c.V1.EdgeGateway.GetByName(arg)
 			}
 			if err != nil {
-=======
-
-		for _, arg := range args {
-			fmt.Println("delete EdgeGateway resource " + arg)
-			gw, err := c.V1.EdgeGateway.GetByName(arg)
-			if err != nil {
-				gw, err = c.V1.EdgeGateway.GetByID(arg)
->>>>>>> 09b59f7 (chore: Add Get command)
 				if err != nil {
 					fmt.Println("Unable to find EdgeGateway ID or Name", err)
 					return
@@ -168,17 +153,13 @@ var delEdgeGatewayCmd = &cobra.Command{
 				fmt.Println("Error during EdgeGateway Deletion !!", err)
 				return
 			}
-<<<<<<< HEAD
-
-=======
->>>>>>> 09b59f7 (chore: Add Get command)
 			fmt.Println("EdgeGateway resource deleted " + arg + " successfully !!")
 		}
 
 	},
 }
 
-// deleteCmd represents the delete command
+// deleteCmd delete a public ip resource(s)
 var delPublicIPCmd = &cobra.Command{
 	Use:     "publicip",
 	Example: "delete publicip <ip> [<ip>] [<ip>] ...",
@@ -208,10 +189,6 @@ var delPublicIPCmd = &cobra.Command{
 				return
 			}
 			fmt.Println("ip resource deleted " + arg + " successfully !!")
-<<<<<<< HEAD
-=======
-			fmt.Println("\nip resource list after deletion:")
->>>>>>> 09b59f7 (chore: Add Get command)
 		}
 
 	},

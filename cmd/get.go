@@ -11,15 +11,18 @@ import (
 )
 
 var (
-	exget1 = "#List all T0\ncav get t0\n\n"
-	exget2 = "#List all T0 in wide format\ncav get t0 -o wide\n\n"
+	exampleGet1 = `
+	#List all T0\ncav get t0`
+	exampleGet2 = `
+	#List all T0 in wide format
+	cav get t0 -o wide`
 )
 
-// getCmd represents the t0 command
+// getCmd list a CAV resource
 var getCmd = &cobra.Command{
 	Use:     "get",
 	Aliases: []string{"ls", "list"},
-	Example: exget1 + exget2,
+	Example: exampleGet1 + exampleGet2,
 	Short:   "Get resource to retrieve information from CloudAvenue.",
 }
 
@@ -37,14 +40,13 @@ func init() {
 
 }
 
-// getT0Cmd represents the Get of T0 command
+// getT0Cmd return a list of your t0 resource(s)
 var getT0Cmd = &cobra.Command{
-	Use: "t0",
-	// Aliases: []string{"t0s"},
+	Use:   "t0",
 	Short: "A brief list of your t0 resources",
 	Long:  "A complete list information of your T0 resources in your CloudAvenue account.",
 	Run: func(cmd *cobra.Command, args []string) {
-		// Check if time flag is set
+		// Check if time flag is set and print time elapsed
 		if cmd.Flag("time").Value.String() == "true" {
 			defer timeTrack(time.Now(), cmd.CommandPath())
 		}
@@ -75,14 +77,14 @@ var getT0Cmd = &cobra.Command{
 	},
 }
 
-// listCmd represents the list command
+// getPublicIPCmd return a list of your publicip
 var getPublicIPCmd = &cobra.Command{
 	Use:     "publicip",
 	Aliases: []string{"ip"},
 	Short:   "A brief list of your public ip resources",
 	Long:    "A complete list information of your Public IP resources in your CloudAvenue account.",
 	Run: func(cmd *cobra.Command, args []string) {
-		// Check if time flag is set
+		// Check if time flag is set and print time elapsed
 		if cmd.Flag("time").Value.String() == "true" {
 			defer timeTrack(time.Now(), cmd.CommandPath())
 		}
@@ -113,23 +115,20 @@ var getPublicIPCmd = &cobra.Command{
 	},
 }
 
-// getS3Cmd represents the list command
+// getS3Cmd return a list of your s3 (bucket) resource(s)
 var getS3Cmd = &cobra.Command{
 	Use:     "s3",
-	Aliases: []string{"ls", "get"},
+	Aliases: []string{"bucket"},
 	Short:   "A brief list of your s3 resources",
 	Long:    "A complete list information of your s3 resources in your CloudAvenue account.",
 	Run: func(cmd *cobra.Command, args []string) {
-		// Check if time flag is set
+		// Check if time flag is set and print time elapsed
 		if cmd.Flag("time").Value.String() == "true" {
 			defer timeTrack(time.Now(), cmd.CommandPath())
 		}
 
-		// init client
-		s3Client := c.V1.S3()
-
 		// Get the list of buckets
-		output, err := s3Client.ListBuckets(&s3.ListBucketsInput{})
+		output, err := c.V1.S3().ListBuckets(&s3.ListBucketsInput{})
 		if err != nil {
 			fmt.Println("Error from S3 List", err)
 			return
@@ -154,13 +153,14 @@ var getS3Cmd = &cobra.Command{
 	},
 }
 
-// getEdgeGatewayCmd represents the list command
+// getEdgeGatewayCmd return a list of your edgegateway resource(s)
 var getEdgeGatewayCmd = &cobra.Command{
 	Use:     "edgegateway",
 	Aliases: []string{"gw", "egw"},
 	Short:   "A brief list of your edgegateway resources",
-	Long:    "A conplete list information of your EdgeGateway resources in your CloudAvenue account.",
+	Long:    "A complete list information of your EdgeGateway resources in your CloudAvenue account.",
 	Run: func(cmd *cobra.Command, args []string) {
+		// Check if time flag is set and print time elapsed
 		if cmd.Flag("time").Value.String() == "true" {
 			defer timeTrack(time.Now(), cmd.CommandPath())
 		}
@@ -189,17 +189,13 @@ var getEdgeGatewayCmd = &cobra.Command{
 	},
 }
 
-// listCmd represents the list command
+// getVDCCmd return a list of your vdc resource(s)
 var getVDCCmd = &cobra.Command{
-<<<<<<< HEAD
 	Use:   "vdc",
-=======
-	Use: "vdc",
-	// Aliases: []string{"ls", "get"},
->>>>>>> 09b59f7 (chore: Add Get command)
 	Short: "A brief list of your vdc resources",
 	Long:  "A complete list information of your s3 resources in your CloudAvenue account.",
 	Run: func(cmd *cobra.Command, args []string) {
+		// Check if time flag is set and print time elapsed
 		if cmd.Flag("time").Value.String() == "true" {
 			defer timeTrack(time.Now(), cmd.CommandPath())
 		}
