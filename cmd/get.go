@@ -191,8 +191,7 @@ var getEdgeGatewayCmd = &cobra.Command{
 
 // listCmd represents the list command
 var getVDCCmd = &cobra.Command{
-	Use: "vdc",
-	// Aliases: []string{"ls", "get"},
+	Use:   "vdc",
 	Short: "A brief list of your vdc resources",
 	Long:  "A complete list information of your s3 resources in your CloudAvenue account.",
 	Run: func(cmd *cobra.Command, args []string) {

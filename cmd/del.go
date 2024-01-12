@@ -180,7 +180,6 @@ var delPublicIPCmd = &cobra.Command{
 				return
 			}
 			fmt.Println("ip resource deleted " + arg + " successfully !!")
-			fmt.Println("\nip resource list after deletion:")
 		}
 
 	},

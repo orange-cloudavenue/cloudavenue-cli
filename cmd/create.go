@@ -10,15 +10,16 @@ import (
 )
 
 var (
-	excrea1 = "#List all T0\ncav create vdc --name myvdc\n\n"
-	// excrea2 = "#List all T0 in wide format\ncav create t0 -o wide\n\n"
+	exampleCreate1 = `
+	#List all T0
+	cav create vdc --name myvdc`
 )
 
 // getCmd represents the t0 command
 var createCmd = &cobra.Command{
 	Use:     "create",
 	Aliases: []string{"new", "add"},
-	Example: excrea1, // + excrea2,
+	Example: exampleCreate1,
 	Short:   "Create resource to CloudAvenue.",
 }
 
@@ -201,7 +202,7 @@ var createEdgeGatewayCmd = &cobra.Command{
 		}
 
 		// Create the edgeGateway
-		fmt.Println("create EdgeGateway resource")
+		fmt.Println("Creating EdgeGateway resource")
 		fmt.Println("vdc name: " + vdc)
 		fmt.Println("t0 name: " + t0)
 		job, err := c.V1.EdgeGateway.New(vdc, t0)
@@ -230,9 +231,6 @@ var createS3Cmd = &cobra.Command{
 			defer timeTrack(time.Now(), cmd.CommandPath())
 		}
 
-		// init client
-		s3Client := c.V1.S3()
-
 		bucketName, err := cmd.Flags().GetString("name")
 		if err != nil {
 			fmt.Println("Malformed bucket name ", err)
@@ -243,7 +241,7 @@ var createS3Cmd = &cobra.Command{
 		fmt.Println("create a bucket resource (with basic value)")
 		fmt.Println("bucket name: " + bucketName)
 
-		_, err = s3Client.CreateBucket(&s3.CreateBucketInput{Bucket: &bucketName})
+		_, err = c.V1.S3().CreateBucket(&s3.CreateBucketInput{Bucket: &bucketName})
 		if err != nil {
 			fmt.Println("Error from S3 Create", err)
 			return
