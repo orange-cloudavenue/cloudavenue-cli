@@ -40,15 +40,16 @@ nfpms:
     bindir: /usr/bin
     section: default
 
-brews:
-  - name: cloudavenue-cli
-    homepage: https://github.com/orange-cloudavenue/cloudavenue-cli
-    goarm: 6
-    goamd64: v1
-    repository: 
-      owner: orange-cloudavenue
-      name: cloudavenue-cli
-      branch: main
+## Need to move to pull request (ref: https://goreleaser.com/customization/homebrew/#pull-requests)
+# brews:
+#   - name: cloudavenue-cli
+#     homepage: https://github.com/orange-cloudavenue/cloudavenue-cli
+#     goarm: 6
+#     goamd64: v1
+#     repository: 
+#       owner: orange-cloudavenue
+#       name: cloudavenue-cli
+#       branch: main
 
 archives:
   - format: zip
