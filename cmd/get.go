@@ -73,6 +73,7 @@ var getT0Cmd = &cobra.Command{
 				w.AddFields(t0.Tier0Vrf, t0.Tier0Provider)
 			}
 		}
+		s.Stop()
 		w.PrintTable()
 	},
 }
@@ -111,6 +112,7 @@ var getPublicIPCmd = &cobra.Command{
 				w.AddFields(i.UplinkIP, i.EdgeGatewayName)
 			}
 		}
+		s.Stop()
 		w.PrintTable()
 	},
 }
@@ -135,6 +137,7 @@ var getS3Cmd = &cobra.Command{
 		}
 
 		// Print the result
+		s.Stop()
 		flag := cmd.Flag("output").Value
 		w := print.New()
 		switch flag.String() {
@@ -185,6 +188,7 @@ var getEdgeGatewayCmd = &cobra.Command{
 				w.AddFields(e.EdgeName, e.OwnerName)
 			}
 		}
+		s.Stop()
 		w.PrintTable()
 	},
 }
@@ -221,6 +225,7 @@ var getVDCCmd = &cobra.Command{
 				w.AddFields(v.Name, v.Status)
 			}
 		}
+		s.Stop()
 		w.PrintTable()
 	},
 }

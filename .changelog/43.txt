@@ -1,4 +1,4 @@
-```release-note:chore
+```release-note:enhancement
 `command` - Add new option `--output` to improve result in `cav` command.
 ```
     
