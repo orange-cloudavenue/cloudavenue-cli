@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/aws/aws-sdk-go/service/s3"
-	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/print"
+	"github.com/orange-cloudavenue/common-go/print"
 	"github.com/spf13/cobra"
 )
 
