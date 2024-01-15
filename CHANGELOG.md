@@ -2,6 +2,9 @@
 
 ### :tada: **Improvements**
 
+* `command` - Add animation during command execution time. (GH-47)
+* `command` - Add new option `--output` to improve result in `cav` command. (GH-43)
+* `command` - improve and change order of command management. (GH-44)
 * `command` - improve speed of printed result for vdc list command. (GH-43)
 
 ### :dependabot: **Dependencies**
