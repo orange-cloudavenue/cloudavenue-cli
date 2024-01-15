@@ -9,6 +9,7 @@
 
 ### :dependabot: **Dependencies**
 
+* deps: bumps github.com/cloudflare/circl from 1.3.3 to 1.3.7 (GH-49)
 * deps: bumps orange-cloudavenue/cloudavenue-sdk-go from 0.5.6 to 0.7.0 (GH-43)
 
 ## 0.0.5 (December  21, 2023)
