@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/adampresley/sigint"
+	"github.com/briandowns/spinner"
 	"github.com/orange-cloudavenue/cloudavenue-sdk-go"
 	clientcloudavenue "github.com/orange-cloudavenue/cloudavenue-sdk-go/pkg/clients/cloudavenue"
 	"github.com/spf13/cobra"
@@ -17,6 +18,7 @@ import (
 var (
 	c       *cloudavenue.Client
 	version = "v0.0.5"
+	s       = spinner.New(spinner.CharSets[43], 100*time.Millisecond)
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -64,5 +66,6 @@ func timeTrack(start time.Time, name string) {
 }
 
 func init() {
+	s.Start()
 	rootCmd.PersistentFlags().BoolP("time", "t", false, "time elapsed for command")
 }

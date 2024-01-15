@@ -100,6 +100,7 @@ var createPublicIPCmd = &cobra.Command{
 			fmt.Println("Error during public ip creation !!", err)
 			return
 		}
+		s.Stop()
 		fmt.Println("public ip resource created successfully !")
 	},
 }
@@ -150,7 +151,7 @@ var createVDCCmd = &cobra.Command{
 			fmt.Println("Error from vdc", err)
 			return
 		}
-
+		s.Stop()
 		fmt.Println("vdc resource created successfully !")
 	},
 }
@@ -206,6 +207,7 @@ var createEdgeGatewayCmd = &cobra.Command{
 			fmt.Println("Error during EdgeGateway Creation !!", err)
 			return
 		}
+		s.Stop()
 		fmt.Println("EdgeGateway resource created successfully !")
 	},
 }
@@ -237,7 +239,7 @@ var createS3Cmd = &cobra.Command{
 			fmt.Println("Error from S3 Create", err)
 			return
 		}
-
+		s.Stop()
 		fmt.Println("Bucket resource created successfully !")
 	},
 }

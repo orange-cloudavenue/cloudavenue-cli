@@ -80,6 +80,7 @@ var delVDCCmd = &cobra.Command{
 				fmt.Println("Error during vdc Deletion !!", err)
 				return
 			}
+			s.Stop()
 			fmt.Println("vdc resource deleted " + arg + " successfully !!")
 		}
 
@@ -106,8 +107,8 @@ var delS3Cmd = &cobra.Command{
 				fmt.Println("Error from S3 Delete", err)
 				return
 			}
+			s.Stop()
 			fmt.Println("Bucket resource deleted " + arg + " successfully !!")
-			fmt.Println("\nBucket resource list after deletion:")
 		}
 
 	},
@@ -153,6 +154,7 @@ var delEdgeGatewayCmd = &cobra.Command{
 				fmt.Println("Error during EdgeGateway Deletion !!", err)
 				return
 			}
+			s.Stop()
 			fmt.Println("EdgeGateway resource deleted " + arg + " successfully !!")
 		}
 
@@ -188,6 +190,7 @@ var delPublicIPCmd = &cobra.Command{
 				fmt.Println("Error during ip Deletion !!", err)
 				return
 			}
+			s.Stop()
 			fmt.Println("ip resource deleted " + arg + " successfully !!")
 		}
 

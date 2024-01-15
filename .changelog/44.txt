@@ -1,3 +1,4 @@
-```release-note:chore
+```release-note:enhancement
 `command` - improve and change order of command management.
 ```
+
