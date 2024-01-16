@@ -1,4 +1,10 @@
 ## 0.1.0 (Unreleased)
+
+### :bug: **Bug Fixes**
+
+* goreleaser: Fix - Darwin binary name with `cav`name and right arch. (GH-51)
+* version: Fix - Now return the right version compiled. (GH-51)
+
 ## 0.0.6 (January 15, 2024)
 
 ### :tada: **Improvements**
