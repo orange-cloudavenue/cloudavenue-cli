@@ -22,15 +22,18 @@ builds:
       # Default: [ '386', 'amd64', 'arm64' ]
     #binary: '{{ .ProjectName }}_{{ .Version }}'
     binary: cav
+    ldflags:
+      - '-s -w -X github.com/orange-cloudavenue/cloudavenue-cli/cmd.version={{.Version}} -X github.com/orange-cloudavenue/cloudavenue-cli/cmd.commit={{.Commit}} -X github.com/orange-cloudavenue/cloudavenue-cli/cmd.date={{.Date}} -X github.com/orange-cloudavenue/cloudavenue-cli/cmd.builtBy=goreleaser'
 
 universal_binaries:
   - replace: true
+    name_template: 'cav'
 
 nfpms:
   - file_name_template: '{{ .ProjectName }}_{{ .Version }}_{{ .Arch }}'
     maintainer: https://github.com/orgs/orange-cloudavenue/teams
     description: >-
-      cloudavenue-cli is a terminal app built to give a basic view to manage your Cloud Avenue IaaS.
+      cav is a CLI terminal app built to give a basic view to manage your Cloud Avenue IaaS.
     homepage: https://github.com/orange-cloudavenue/cloudavenue-cli
     license: MIT
     formats:

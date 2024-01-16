@@ -1,0 +1,7 @@
+```release-note:bug
+version: Fix - Now return the right version compiled.
+```
+
+```release-note:bug
+goreleaser: Fix - Darwin binary name with `cav`name.
+```
