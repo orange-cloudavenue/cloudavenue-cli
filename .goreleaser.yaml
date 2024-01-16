@@ -25,10 +25,6 @@ builds:
     ldflags:
       - '-s -w -X github.com/orange-cloudavenue/cloudavenue-cli/cmd.version={{.Version}} -X github.com/orange-cloudavenue/cloudavenue-cli/cmd.commit={{.Commit}} -X github.com/orange-cloudavenue/cloudavenue-cli/cmd.date={{.Date}} -X github.com/orange-cloudavenue/cloudavenue-cli/cmd.builtBy=goreleaser'
 
-universal_binaries:
-  - replace: true
-    name_template: 'cav'
-
 nfpms:
   - file_name_template: '{{ .ProjectName }}_{{ .Version }}_{{ .Arch }}'
     maintainer: https://github.com/orgs/orange-cloudavenue/teams
