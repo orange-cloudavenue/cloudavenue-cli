@@ -17,15 +17,17 @@ import (
 
 var (
 	c       *cloudavenue.Client
-	version = "v0.0.5"
+	version = "dev"
+	commit  = "none"
+	date    = "unknown"
+	builtBy = "unknown"
 	s       = spinner.New(spinner.CharSets[43], 100*time.Millisecond)
 )
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:     "cav",
-	Short:   "cav is the Command Line Interface for CloudAvenue Platform",
-	Version: version,
+	Use:   "cav",
+	Short: "cav is the Command Line Interface for CloudAvenue Platform",
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -68,4 +70,18 @@ func timeTrack(start time.Time, name string) {
 func init() {
 	s.Start()
 	rootCmd.PersistentFlags().BoolP("time", "t", false, "time elapsed for command")
+	rootCmd.AddCommand(versionCmd())
+}
+
+// func versionCmd() return the version of the CLI
+func versionCmd() *cobra.Command {
+	return &cobra.Command{
+		Use:   "version",
+		Short: "Print the version number of cav",
+		Long:  `All software has versions. This is cav's`,
+		Run: func(cmd *cobra.Command, args []string) {
+			s.Stop()
+			fmt.Printf("Version: %s\nCommit: %s\nBuilt at: %s\nBuilt by: %s\n", version, commit, date, builtBy)
+		},
+	}
 }
