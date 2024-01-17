@@ -34,7 +34,7 @@ export CLOUDAVENUE_PASSWORD="my-password"
 
 ### Automatic
 ```bash
-curl -sSfL https://raw.githubusercontent.com/orange-cloudavenue/cloudavenue-cli/main/scripts/install.sh | sh
+curl -sSfL https://raw.githubusercontent.com/orange-cloudavenue/cloudavenue-cli/main/scripts/install.sh | sudo sh
 ```
 
 ### Manual Debian / Ubuntu
