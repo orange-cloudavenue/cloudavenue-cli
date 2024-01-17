@@ -1,0 +1,7 @@
+```release-note:enhancement
+installation: Add automatic installation.
+```
+
+```release-note:enhancement
+doc: Improve README and Getting Start.
+```

@@ -45,7 +45,7 @@ func Execute() error {
 		CloudAvenue: &clientcloudavenue.Opts{},
 	})
 	if err != nil {
-		fmt.Println("Error in CloudAvenue parameter", err)
+		fmt.Println("Error in CloudAvenue parameter, please check your configuration (https://github.com/orange-cloudavenue/cloudavenue-cli/blob/main/docs/index.md)", err)
 		return err
 	}
 
