@@ -17,7 +17,7 @@ You can create, list or delete some basic infrastructure.
 
  -> Note : If you need more information about Cloud Avenue, please visit [Cloud Avenue documentation](https://wiki.cloudavenue.orange-business.com/w/index.php/Accueil).
 
-## Prerequisite
+## Configuration
 
 ### Environment Variables
 
@@ -31,16 +31,21 @@ export CLOUDAVENUE_USER="my-user"
 export CLOUDAVENUE_PASSWORD="my-password"
 ```
 
-## Download
+## Install
 
-### Debian / Ubuntu
+### Automatic
+```bash
+curl -sSfL https://raw.githubusercontent.com/orange-cloudavenue/cloudavenue-cli/main/scripts/install.sh | sh
+```
+
+### Manual Debian / Ubuntu
 ```bash
 curl -LO https://github.com/orange-cloudavenue/cloudavenue-cli/releases/download/v0.0.4/cloudavenue-cli_0.0.4_checksums.txt \
 && curl -LO https://github.com/orange-cloudavenue/cloudavenue-cli/releases/download/v0.0.4/cloudavenue-cli_0.0.4_386.deb \
 && sha256sum --ignore-missing -c cloudavenue-cli_0.0.4_checksums.txt
 ```
 
-### RedHat / CentOS
+### Manual RedHat / CentOS
 ```bash
 curl -LO https://github.com/orange-cloudavenue/cloudavenue-cli/releases/download/v0.0.4/cloudavenue-cli_0.0.4_checksums.txt \
 && curl -LO https://github.com/orange-cloudavenue/cloudavenue-cli/releases/download/v0.0.4/cloudavenue-cli_0.0.4_386.rpm \

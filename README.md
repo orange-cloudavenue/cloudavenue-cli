@@ -1,15 +1,11 @@
 :warning: This tool is under development, Big improvements or changes may appear.
 
 # cloudavenue-cli
-`cloudavenue-cli` is a terminal app built to give a basic view to manage your Cloud Avenue IaaS.
+`cav` is a CLI terminal app built to give a basic view to manage your Cloud Avenue IaaS.
 
-# install
+# Install
 
-You can download from github page the good Assets for you and unzip binary, or if you have go binary installed (see below):
-
-```
-go install github.com/orange-cloudavenue/cloudavenue-cli@latest
-```
+Please Go in Getting Start: https://github.com/orange-cloudavenue/cloudavenue-cli/blob/main/docs/index.md
 
 # usage
 * Navigation commands :
@@ -23,13 +19,15 @@ Usage:
 
 Available Commands:
   completion  Generate the autocompletion script for the specified shell
-  edgegateway Option to manage your edgeGateway NSX on CloudAvenue.
+  create      Create resource to CloudAvenue.
+  delete      Delete resource from CloudAvenue.
+  get         Get resource to retrieve information from CloudAvenue.
   help        Help about any command
-  s3          Option to manage your s3 (Object Storage) on CloudAvenue.
-  vdc         Option to manage your vdc (Virtual Data Center) on CloudAvenue.
 
 Flags:
-  -h, --help   help for cav
+  -h, --help      help for cav
+  -t, --time      time elapsed for command
+  -v, --version   version for cav
 
 Use "cav [command] --help" for more information about a command.
 ```
@@ -37,9 +35,9 @@ Use "cav [command] --help" for more information about a command.
 * list edge gateway:
 
 ```shell
-$> cav edgegateway list
-| edgeName                | edgeId                               | ownerType | ownerName       | rateLimit | description                                      |
-| ----------------------- | ------------------------------------ | --------- | --------------- | --------- | ------------------------------------------------ |
-| tn01e02xxx00062xxspt101 | dde5d31a-2f32-xxxx-b3b3-127245958298 | vdc-group | Shared          | 250       | Edge Gateway for customer with BSS ID ocb0006205 |
-| tn01e02xxx00062xxspt103 | 4c76e96e-12e2-xxxx-b998-d9c4aa197999 | vdc       | ModuleTF        | 5         | Edge Gateway for customer with BSS ID ocb0006205 |
-``````
+$> cav get egw
+NAME                        OWNER               
+tn01e02ocbxxxxxxspt101     Shared     
+tn01e02ocbxxxxxxspt102     PRODUCTION          
+tn01e02ocbxxxxxxspt103     STAGING
+```

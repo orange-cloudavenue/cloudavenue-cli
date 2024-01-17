@@ -51,7 +51,15 @@ nfpms:
 #       branch: main
 
 archives:
-  - format: zip
+  - format: tar.gz
+    format_overrides:
+      - format: zip
+        goos: 'windows'
+    wrap_in_directory: true
     # this name template makes the OS and Arch compatible with the results of `uname`.
     name_template: '{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}'
+    files:
+      - LICENSE
+      - README.md
+      - CHANGELOG.md
 
