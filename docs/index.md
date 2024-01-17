@@ -4,9 +4,8 @@
 [![GoDoc](https://godoc.org/github.com/orange-cloudavenue/cloudavenue-cli?status.svg)](https://godoc.org/github.com/orange-cloudavenue/cloudavenue-cli)
 
 ## Table of Contents
-1. [Prerequisites](#Prerequisites)
-2. [Download](#download)
-3. [Installation](#installation)
+1. [Configuration](#Configuration)
+3. [Installation](#Installation)
 4. [Use](#use)
 
 ## Description
@@ -31,7 +30,7 @@ export CLOUDAVENUE_USER="my-user"
 export CLOUDAVENUE_PASSWORD="my-password"
 ```
 
-## Install
+## Installation
 
 ### Automatic
 ```bash
@@ -83,7 +82,7 @@ sudo dpkg -i cloudavenue-cli_0.0.5._386.deb
 sudo rpm -i cloudavenue-cli_0.0.5._386.rpm
 ```
 
-### Mac OS X
+### Mac OS X (comming soon)
 
 ```bash
 brew install cloudavenue-cli
@@ -102,13 +101,15 @@ Usage:
 
 Available Commands:
   completion  Generate the autocompletion script for the specified shell
-  edgegateway Option to manage your edgeGateway NSX on CloudAvenue.
+  create      Create resource to CloudAvenue.
+  delete      Delete resource from CloudAvenue.
+  get         Get resource to retrieve information from CloudAvenue.
   help        Help about any command
-  s3          Option to manage your s3 (Object Storage) on CloudAvenue.
-  vdc         Option to manage your vdc (Virtual Data Center) on CloudAvenue.
 
 Flags:
-  -h, --help   help for cav
+  -h, --help      help for cav
+  -t, --time      time elapsed for command
+  -v, --version   version for cav
 
 Use "cav [command] --help" for more information about a command.
 ```
