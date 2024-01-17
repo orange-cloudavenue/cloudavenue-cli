@@ -1,5 +1,10 @@
 ## 0.1.0 (Unreleased)
 
+### :tada: **Improvements**
+
+* doc: Improve README and Getting Start. (GH-56)
+* installation: Add automatic installation. (GH-56)
+
 ### :bug: **Bug Fixes**
 
 * goreleaser: Fix - Darwin binary name with `cav`name and right arch. (GH-51)
