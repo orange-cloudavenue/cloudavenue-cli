@@ -70,6 +70,9 @@ func Execute() (err error) {
 		if err = viper.SafeWriteConfig(); err != nil {
 			return err
 		}
+		s.FinalMSG = "Configuration file created in " + home + "/.cav/config.yaml \nPlease fill it with your credentials and re-run the command.\n"
+		s.Stop()
+		os.Exit(0)
 	}
 
 	// check if variable is set if not, use configuration file
