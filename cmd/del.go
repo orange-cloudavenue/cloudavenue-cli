@@ -23,7 +23,7 @@ var (
 var delCmd = &cobra.Command{
 	Use:     "delete",
 	Aliases: []string{"del", "rm"},
-	Example: exampleDelete1 + exampleDelete2,
+	Example: exampleDelete1 + "\n" + exampleDelete2,
 	Short:   "Delete resource from CloudAvenue.",
 }
 

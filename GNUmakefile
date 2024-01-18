@@ -9,7 +9,7 @@ lintWithFix:
 
 install:
 	golangci-lint run
-	go build -o cav . 
+	go build -o /usr/local/bin/cav .
 
 run:
 	go run .

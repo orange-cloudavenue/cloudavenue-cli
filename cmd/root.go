@@ -6,22 +6,28 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/adampresley/sigint"
 	"github.com/briandowns/spinner"
-	"github.com/orange-cloudavenue/cloudavenue-sdk-go"
+	cloudavenue "github.com/orange-cloudavenue/cloudavenue-sdk-go"
 	clientcloudavenue "github.com/orange-cloudavenue/cloudavenue-sdk-go/pkg/clients/cloudavenue"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 var (
-	c       *cloudavenue.Client
-	version = "dev"
-	commit  = "none"
-	date    = "unknown"
-	builtBy = "unknown"
-	s       = spinner.New(spinner.CharSets[43], 100*time.Millisecond)
+	c                   *cloudavenue.Client
+	version             = "dev"
+	commit              = "none"
+	date                = "unknown"
+	builtBy             = "unknown"
+	s                   = spinner.New(spinner.CharSets[43], 100*time.Millisecond)
+	cloudavenueOrg      string
+	cloudavenueUsername string
+	cloudavenuePassword string
+	cloudavenueDebug    bool
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -39,10 +45,58 @@ func Execute() error {
 		os.Exit(0)
 	})
 
+	// Set default file configuration and create it if not exist
+	home := os.Getenv("HOME")
+	viper.SetConfigName("config")
+	viper.SetConfigType("yaml")
+	viper.AddConfigPath("$HOME/.cav")
+	if home == "" {
+		return fmt.Errorf("Error in Get HOME Directory")
+	}
+	if _, err := os.Stat(home + "/.cav/config.yaml"); os.IsNotExist(err) {
+		if err := os.MkdirAll(home+"/.cav", 0755); err != nil {
+			return err
+		}
+		viper.SetDefault("cloudavenue_username", "")
+		viper.SetDefault("cloudavenue_password", "")
+		viper.SetDefault("cloudavenue_org", "")
+		viper.AutomaticEnv()
+		viper.SetDefault("cloudavenue_debug", false)
+
+		if err := viper.SafeWriteConfig(); err != nil {
+			return err
+		}
+	}
+
+	// check if variable is set if not, use configuration file
+	if os.Getenv("CLOUDAVENUE_USERNAME") == "" || os.Getenv("CLOUDAVENUE_PASSWORD") == "" || os.Getenv("CLOUDAVENUE_ORG") == "" {
+		if err := viper.ReadInConfig(); err != nil {
+			return err
+		}
+		cloudavenueUsername = viper.GetString("cloudavenue_username")
+		cloudavenuePassword = viper.GetString("cloudavenue_password")
+		cloudavenueOrg = viper.GetString("cloudavenue_org")
+		cloudavenueDebug = viper.GetBool("cloudavenue_debug")
+	} else {
+		cloudavenueUsername = os.Getenv("CLOUDAVENUE_USERNAME")
+		cloudavenuePassword = os.Getenv("CLOUDAVENUE_PASSWORD")
+		cloudavenueOrg = os.Getenv("CLOUDAVENUE_ORG")
+		x, err := strconv.ParseBool(os.Getenv("CLOUDAVENUE_DEBUG"))
+		if err != nil {
+			return err
+		}
+		cloudavenueDebug = x
+	}
+
 	// Set client CloudAvenue
 	var err error
 	c, err = cloudavenue.New(cloudavenue.ClientOpts{
-		CloudAvenue: &clientcloudavenue.Opts{},
+		CloudAvenue: &clientcloudavenue.Opts{
+			Username: cloudavenueUsername,
+			Password: cloudavenuePassword,
+			Org:      cloudavenueOrg,
+			Debug:    cloudavenueDebug,
+		},
 	})
 	if err != nil {
 		s.Stop()
