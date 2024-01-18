@@ -71,7 +71,7 @@ func init() {
 var createPublicIPCmd = &cobra.Command{
 	Use:     "publicip",
 	Short:   "Create an ip",
-	Example: "ip create --name <>",
+	Example: "ip create --name <EdgeGateway>",
 
 	Run: func(cmd *cobra.Command, args []string) {
 		// Check if time flag is set
