@@ -79,13 +79,14 @@ Two ways possible to configure your CLI.
 
 ### Configuration File
 
-The first is to use the config file, generate on the first use of your CLI, ex: 
+On the first try, a config file locate in your home directory, under the following path `.cav/config.yaml` will be generated.
 
 ```shell
-cav
+> cav
+Configuration file created in /root/.cav/config.yaml 
+Please fill it with your credentials and re-run the command.
 ```
 
-The first try, it's generate a config file locate in your home directory, under the following path `.cav/config.yaml`
 You can set your credentials like this:
 
 ```yaml
