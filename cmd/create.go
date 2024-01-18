@@ -87,8 +87,10 @@ var createPublicIPCmd = &cobra.Command{
 		}
 
 		// Create a public ip
+		s.Stop()
 		fmt.Println("create public ip resource")
 		fmt.Println("for EdgeGateway name: " + gwName)
+		s.Restart()
 
 		job, err := c.V1.PublicIP.New(gwName)
 		if err != nil {
@@ -100,8 +102,8 @@ var createPublicIPCmd = &cobra.Command{
 			fmt.Println("Error during public ip creation !!", err)
 			return
 		}
+		s.FinalMSG = "public ip resource created successfully !!"
 		s.Stop()
-		fmt.Println("public ip resource created successfully !")
 	},
 }
 
@@ -125,8 +127,10 @@ var createVDCCmd = &cobra.Command{
 		}
 
 		// Create the vdc
+		s.Stop()
 		fmt.Println("create vdc resource (with basic value)")
 		fmt.Println("vdc name: " + vdcName)
+		s.Restart()
 
 		if _, err = c.V1.VDC().New(&infrapi.CAVVirtualDataCenter{
 			VDC: infrapi.CAVVirtualDataCenterVDC{
@@ -151,8 +155,8 @@ var createVDCCmd = &cobra.Command{
 			fmt.Println("Error from vdc", err)
 			return
 		}
+		s.FinalMSG = "vdc resource created successfully !!\n"
 		s.Stop()
-		fmt.Println("vdc resource created successfully !")
 	},
 }
 
@@ -194,9 +198,11 @@ var createEdgeGatewayCmd = &cobra.Command{
 			}
 		}
 		// Create the edgeGateway
+		s.Stop()
 		fmt.Println("Creating EdgeGateway resource")
 		fmt.Println("vdc name: " + vdc)
 		fmt.Println("t0 name: " + t0)
+		s.Restart()
 		job, err := c.V1.EdgeGateway.New(vdc, t0)
 		if err != nil {
 			fmt.Println("Error from EdgeGateway", err)
@@ -207,8 +213,8 @@ var createEdgeGatewayCmd = &cobra.Command{
 			fmt.Println("Error during EdgeGateway Creation !!", err)
 			return
 		}
+		s.FinalMSG = "EdgeGateway resource created successfully !!"
 		s.Stop()
-		fmt.Println("EdgeGateway resource created successfully !")
 	},
 }
 
@@ -231,15 +237,17 @@ var createS3Cmd = &cobra.Command{
 		}
 
 		// Create the bucket
+		s.Stop()
 		fmt.Println("create a bucket resource (with basic value)")
 		fmt.Println("bucket name: " + bucketName)
+		s.Restart()
 
 		_, err = c.V1.S3().CreateBucket(&s3.CreateBucketInput{Bucket: &bucketName})
 		if err != nil {
 			fmt.Println("Error from S3 Create", err)
 			return
 		}
+		s.FinalMSG = "Bucket resource created successfully !!"
 		s.Stop()
-		fmt.Println("Bucket resource created successfully !")
 	},
 }

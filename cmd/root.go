@@ -11,6 +11,7 @@ import (
 
 	"github.com/adampresley/sigint"
 	"github.com/briandowns/spinner"
+	"github.com/mitchellh/go-homedir"
 	cloudavenue "github.com/orange-cloudavenue/cloudavenue-sdk-go"
 	clientcloudavenue "github.com/orange-cloudavenue/cloudavenue-sdk-go/pkg/clients/cloudavenue"
 	"github.com/spf13/cobra"
@@ -38,7 +39,7 @@ var rootCmd = &cobra.Command{
 
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
-func Execute() error {
+func Execute() (err error) {
 	// ctrl+c handler
 	sigint.ListenForSIGINT(func() {
 		fmt.Println("SIGINT received. Exiting...")
@@ -46,15 +47,18 @@ func Execute() error {
 	})
 
 	// Set default file configuration and create it if not exist
-	home := os.Getenv("HOME")
+	home, err := homedir.Dir()
+	if err != nil {
+		return err
+	}
 	viper.SetConfigName("config")
 	viper.SetConfigType("yaml")
-	viper.AddConfigPath("$HOME/.cav")
+	viper.AddConfigPath(home + "/.cav")
 	if home == "" {
 		return fmt.Errorf("Error in Get HOME Directory")
 	}
-	if _, err := os.Stat(home + "/.cav/config.yaml"); os.IsNotExist(err) {
-		if err := os.MkdirAll(home+"/.cav", 0755); err != nil {
+	if _, err = os.Stat(home + "/.cav/config.yaml"); os.IsNotExist(err) {
+		if err = os.MkdirAll(home+"/.cav", 0755); err != nil {
 			return err
 		}
 		viper.SetDefault("cloudavenue_username", "")
@@ -63,14 +67,14 @@ func Execute() error {
 		viper.AutomaticEnv()
 		viper.SetDefault("cloudavenue_debug", false)
 
-		if err := viper.SafeWriteConfig(); err != nil {
+		if err = viper.SafeWriteConfig(); err != nil {
 			return err
 		}
 	}
 
 	// check if variable is set if not, use configuration file
 	if os.Getenv("CLOUDAVENUE_USERNAME") == "" || os.Getenv("CLOUDAVENUE_PASSWORD") == "" || os.Getenv("CLOUDAVENUE_ORG") == "" {
-		if err := viper.ReadInConfig(); err != nil {
+		if err = viper.ReadInConfig(); err != nil {
 			return err
 		}
 		cloudavenueUsername = viper.GetString("cloudavenue_username")
@@ -89,7 +93,6 @@ func Execute() error {
 	}
 
 	// Set client CloudAvenue
-	var err error
 	c, err = cloudavenue.New(cloudavenue.ClientOpts{
 		CloudAvenue: &clientcloudavenue.Opts{
 			Username: cloudavenueUsername,
@@ -99,14 +102,11 @@ func Execute() error {
 		},
 	})
 	if err != nil {
-		s.Stop()
-		fmt.Println("Error in CloudAvenue parameter, please check your configuration (https://github.com/orange-cloudavenue/cloudavenue-cli/blob/main/docs/index.md)", err)
 		return err
 	}
 
 	// Execute root command
-	if err := rootCmd.Execute(); err != nil {
-		s.Stop()
+	if err = rootCmd.Execute(); err != nil {
 		fmt.Println("Error in Command", err)
 		return err
 	}
@@ -136,8 +136,8 @@ func versionCmd() *cobra.Command {
 		Short: "Print the version number of cav",
 		Long:  `All software has versions. This is cav's`,
 		Run: func(cmd *cobra.Command, args []string) {
+			s.FinalMSG = "Version: " + version + "\nCommit: " + commit + "\nBuilt at: " + date + "\nBuilt by: " + builtBy
 			s.Stop()
-			fmt.Printf("Version: %s\nCommit: %s\nBuilt at: %s\nBuilt by: %s\n", version, commit, date, builtBy)
 		},
 	}
 }

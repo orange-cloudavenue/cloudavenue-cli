@@ -153,6 +153,7 @@ var getS3Cmd = &cobra.Command{
 				w.AddFields(*b.Name, *output.Owner.DisplayName)
 			}
 		}
+		s.Stop()
 		w.PrintTable()
 	},
 }
