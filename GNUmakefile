@@ -20,6 +20,16 @@ build:
 test:
 	go test -v  -coverprofile=coverage.out ./cmd/... && go tool cover -func=coverage.out
 
+# doc:
+# 	func init() {
+# 		@echo "Generating docs"
+# 		err := doc.GenMarkdownTree(cmd, "/tmp")
+# 		if err != nil {
+# 			log.Fatal(err)
+# 		}
+# 	}
+	
+
 generate:
 	golangci-lint run 
 	go test -v  -coverprofile=coverage.out ./cmd/... && go tool cover -func=coverage.out

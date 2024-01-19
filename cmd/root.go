@@ -40,6 +40,10 @@ var rootCmd = &cobra.Command{
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() (err error) {
+	// err = doc.GenMarkdownTree(rootCmd, "./docs/command")
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 	// ctrl+c handler
 	sigint.ListenForSIGINT(func() {
 		fmt.Println("SIGINT received. Exiting...")
