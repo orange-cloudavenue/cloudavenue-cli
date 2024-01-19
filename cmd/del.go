@@ -23,7 +23,7 @@ var (
 var delCmd = &cobra.Command{
 	Use:     "delete",
 	Aliases: []string{"del", "rm"},
-	Example: exampleDelete1 + exampleDelete2,
+	Example: exampleDelete1 + "\n" + exampleDelete2,
 	Short:   "Delete resource from CloudAvenue.",
 }
 
@@ -64,7 +64,9 @@ var delVDCCmd = &cobra.Command{
 		}
 
 		for _, arg := range args {
+			s.Stop()
 			fmt.Println("delete vdc resource " + arg)
+			s.Restart()
 			vdc, err := c.V1.VDC().GetVDC(arg)
 			if err != nil {
 				fmt.Println("Error from vdc", err)
@@ -80,8 +82,8 @@ var delVDCCmd = &cobra.Command{
 				fmt.Println("Error during vdc Deletion !!", err)
 				return
 			}
+			s.FinalMSG = "vdc resource deleted " + arg + " successfully !!\n"
 			s.Stop()
-			fmt.Println("vdc resource deleted " + arg + " successfully !!")
 		}
 
 	},
@@ -100,15 +102,17 @@ var delS3Cmd = &cobra.Command{
 		}
 
 		for i, arg := range args {
-			fmt.Println("delete bucket resource " + arg)
+			s.Stop()
+			fmt.Println("delete bucket resource... " + arg)
+			s.Restart()
 			// Del the bucket
 			_, err := c.V1.S3().DeleteBucket(&s3.DeleteBucketInput{Bucket: &args[i]})
 			if err != nil {
 				fmt.Println("Error from S3 Delete", err)
 				return
 			}
+			s.FinalMSG = "Bucket resource deleted " + arg + " successfully !!\n"
 			s.Stop()
-			fmt.Println("Bucket resource deleted " + arg + " successfully !!")
 		}
 
 	},
@@ -132,7 +136,9 @@ var delEdgeGatewayCmd = &cobra.Command{
 		)
 
 		for _, arg := range args {
+			s.Stop()
 			fmt.Println("delete EdgeGateway resource " + arg)
+			s.Restart()
 			if uuid.IsUUIDV4(arg) {
 				gw, err = c.V1.EdgeGateway.GetByID(arg)
 			} else {
@@ -154,8 +160,8 @@ var delEdgeGatewayCmd = &cobra.Command{
 				fmt.Println("Error during EdgeGateway Deletion !!", err)
 				return
 			}
+			s.FinalMSG = "EdgeGateway resource deleted " + arg + " successfully !!\n"
 			s.Stop()
-			fmt.Println("EdgeGateway resource deleted " + arg + " successfully !!")
 		}
 
 	},
@@ -174,7 +180,9 @@ var delPublicIPCmd = &cobra.Command{
 		}
 
 		for _, arg := range args {
+			s.Stop()
 			fmt.Println("delete publicip resource " + arg)
+			s.Restart()
 			ip, err := c.V1.PublicIP.GetIP(arg)
 			if err != nil {
 				fmt.Println("Error from ip: ", err)
@@ -190,8 +198,8 @@ var delPublicIPCmd = &cobra.Command{
 				fmt.Println("Error during ip Deletion !!", err)
 				return
 			}
+			s.FinalMSG = "ip resource deleted " + arg + " successfully !!\n"
 			s.Stop()
-			fmt.Println("ip resource deleted " + arg + " successfully !!")
 		}
 
 	},

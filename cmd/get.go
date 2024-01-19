@@ -12,7 +12,8 @@ import (
 
 var (
 	exampleGet1 = `
-	#List all T0\ncav get t0`
+	#List all T0
+	cav get t0`
 	exampleGet2 = `
 	#List all T0 in wide format
 	cav get t0 -o wide`
@@ -22,7 +23,7 @@ var (
 var getCmd = &cobra.Command{
 	Use:     "get",
 	Aliases: []string{"ls", "list"},
-	Example: exampleGet1 + exampleGet2,
+	Example: exampleGet1 + "\n" + exampleGet2,
 	Short:   "Get resource to retrieve information from CloudAvenue.",
 }
 
@@ -152,6 +153,7 @@ var getS3Cmd = &cobra.Command{
 				w.AddFields(*b.Name, *output.Owner.DisplayName)
 			}
 		}
+		s.Stop()
 		w.PrintTable()
 	},
 }

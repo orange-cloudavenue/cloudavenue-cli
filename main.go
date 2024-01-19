@@ -12,6 +12,7 @@ import (
 func main() {
 	if err := cmd.Execute(); err != nil {
 		fmt.Println("Error in Execute main Command", err)
+		fmt.Println("Please check your configuration (https://github.com/orange-cloudavenue/cloudavenue-cli/blob/main/docs/index.md)")
 	}
 
 }

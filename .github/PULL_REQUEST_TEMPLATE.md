@@ -23,7 +23,7 @@ If you submit change in the provider code, please make sure to:
 
 ### How has this code been coverage and tested
 ```
-go test -v  -coverprofile=coverage.out ./cmd/... && go tool cover -func=coverage.out
+go test -coverprofile=coverage.out ./cmd/... && go tool cover -func=coverage.out
 .... <PUSH YOUR RESULT HERE>
 ```
 

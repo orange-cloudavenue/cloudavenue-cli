@@ -1,13 +1,17 @@
 :warning: This tool is under development, Big improvements or changes may appear.
 
-# cloudavenue-cli
+# Whatis cav
 `cav` is a CLI terminal app built to give a basic view to manage your Cloud Avenue IaaS.
 
 # Install
 
-Please Go in Getting Start: https://github.com/orange-cloudavenue/cloudavenue-cli/blob/main/docs/index.md
+Please see Install chapter in Getting Start: https://github.com/orange-cloudavenue/cloudavenue-cli/blob/main/docs/index.md#Installation
 
-# usage
+# Configuration
+
+Please see Configuration chapter in Getting Start: https://github.com/orange-cloudavenue/cloudavenue-cli/blob/main/docs/index.md#Configuration
+
+# Usage
 * Navigation commands :
   
 ```shell
