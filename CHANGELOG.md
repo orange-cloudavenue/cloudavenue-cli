@@ -1,4 +1,5 @@
 ## 0.1.0 (Unreleased)
+## 0.0.8 (January 19, 2024)
 ## 0.0.7 (January 17, 2024)
 
 ### :tada: **Improvements**
