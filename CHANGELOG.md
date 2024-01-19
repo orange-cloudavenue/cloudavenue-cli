@@ -1,5 +1,11 @@
 ## 0.1.0 (Unreleased)
 ## 0.0.8 (January 19, 2024)
+
+### :rocket: **New Features**
+
+* `New config` -  Add a config file configuration. (GH-57)
+
+
 ## 0.0.7 (January 17, 2024)
 
 ### :tada: **Improvements**

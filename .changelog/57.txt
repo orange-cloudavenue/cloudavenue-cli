@@ -1,3 +1,3 @@
 ```release-note:feature
-config: Add a config file configuration.
+`config` - Add a config file configuration.
 ```
