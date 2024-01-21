@@ -16,10 +16,8 @@ can uncomment the below line to indicate which issue your PR fixes, for example
 
 If you submit change in the provider code, please make sure to:
 
-- [ ] Write or modify examples in `examples/` directory
 - [ ] If Needed add a changelog file
 - [ ] Write or modify coverage tests
-- [ ] Run `make generate` to ensure the doc was updated properly
 
 ### How has this code been coverage and tested
 ```

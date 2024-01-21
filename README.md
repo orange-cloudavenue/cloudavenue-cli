@@ -1,7 +1,11 @@
 :warning: This tool is under development, Big improvements or changes may appear.
 
-# Whatis cav
+# What is cav
 `cav` is a CLI terminal app built to give a basic view to manage your Cloud Avenue IaaS.
+It give you a quick view of your cloudavenue resources.
+You can List, Create and Delete some resources.
+Actually we can manage VMware resource based on pos VCD (Virtual Cloud Center), like VDC, VM, VAPP
+
 
 # Install
 

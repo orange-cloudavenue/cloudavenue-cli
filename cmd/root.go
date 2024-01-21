@@ -15,6 +15,7 @@ import (
 	cloudavenue "github.com/orange-cloudavenue/cloudavenue-sdk-go"
 	clientcloudavenue "github.com/orange-cloudavenue/cloudavenue-sdk-go/pkg/clients/cloudavenue"
 	"github.com/spf13/cobra"
+	"github.com/spf13/cobra/doc"
 	"github.com/spf13/viper"
 )
 
@@ -40,6 +41,10 @@ var rootCmd = &cobra.Command{
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() (err error) {
+	// err = doc.GenMarkdownTree(rootCmd, "./docs/command")
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 	// ctrl+c handler
 	sigint.ListenForSIGINT(func() {
 		fmt.Println("SIGINT received. Exiting...")
@@ -130,6 +135,7 @@ func init() {
 	s.Start()
 	rootCmd.PersistentFlags().BoolP("time", "t", false, "time elapsed for command")
 	rootCmd.AddCommand(versionCmd())
+	rootCmd.AddCommand(genDocCmd())
 }
 
 // func versionCmd() return the version of the CLI
@@ -141,6 +147,21 @@ func versionCmd() *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 			s.FinalMSG = "Version: " + version + "\nCommit: " + commit + "\nBuilt at: " + date + "\nBuilt by: " + builtBy
 			s.Stop()
+		},
+	}
+}
+
+func genDocCmd() *cobra.Command {
+	return &cobra.Command{
+		Use:   "gen-doc",
+		Short: "Generate documentation for cav",
+		Long:  `Generate technical documentation for cav command line interface`,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			err := doc.GenMarkdownTree(rootCmd, "./docs/command")
+			if err != nil {
+				return err
+			}
+			return nil
 		},
 	}
 }

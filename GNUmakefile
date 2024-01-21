@@ -18,11 +18,16 @@ build:
 	goreleaser release --snapshot --clean
 
 test:
-	go test -v  -coverprofile=coverage.out ./cmd/... && go tool cover -func=coverage.out
+	go test -coverprofile=coverage.out ./cmd/... && go tool cover -func=coverage.out
+
+ doc:
+	@echo "Generating documentation..."
+	go run main.go gen-doc	
 
 generate:
-	golangci-lint run 
-	go test -v  -coverprofile=coverage.out ./cmd/... && go tool cover -func=coverage.out
+	golangci-lint run
+	go run main.go gen-doc
+	go test -coverprofile=coverage.out ./cmd/... && go tool cover -func=coverage.out
 	goreleaser release --snapshot --clean
 
 submodules:

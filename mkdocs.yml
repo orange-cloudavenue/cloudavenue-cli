@@ -1,0 +1,58 @@
+site_name: CAV (Cloud Avenue CLI)
+theme:
+  name: material
+  features:
+    - navigation.instant
+    - navigation.footer
+    - navigation.tabs
+    #- navigation.expand
+  palette: 
+    scheme: slate
+    primary: deep orange
+    accent: indigo
+  icon:
+    logo: fontawesome/solid/terminal
+
+nav:
+  - Home: index.md
+  - Getting Started:
+    - Installation: getting-started/installation.md
+    - Configuration: getting-started/configuration.md
+  - Command:
+    - command/cav.md
+    - get: 
+      - command/cav_get.md
+      - VDC: command/cav_get_vdc.md
+      - S3: command/cav_get_s3.md
+      - T0: command/cav_get_t0.md
+      - Public IP: command/cav_get_publicip.md
+      - EdgeGateway: command/cav_get_edgegateway.md
+    - create: 
+      - command/cav_create.md
+      - VDC: command/cav_create_vdc.md
+      - S3: command/cav_create_s3.md
+      - Public IP: command/cav_create_publicip.md
+      - EdgeGateway: command/cav_create_edgegateway.md
+    - delete:
+      - command/cav_delete.md
+      - VDC: command/cav_delete_vdc.md
+      - S3: command/cav_delete_s3.md
+      - Public IP: command/cav_delete_publicip.md
+      - EdgeGateway: command/cav_delete_edgegateway.md
+    - completion:
+      - command/cav_completion.md
+      - bash: command/cav_completion_bash.md
+      - zsh: command/cav_completion_zsh.md
+      - fish: command/cav_completion_fish.md
+      - powershell: command/cav_completion_powershell.md
+    - gen-doc:
+      - command/cav_gen-doc.md
+    - version: command/cav_version.md
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/orange-cloudavenue/cloudavenue-cli
+
+copyright: Copyright &copy; 2023 - 2024 Orange - Cloud Avenue
+
