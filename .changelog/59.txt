@@ -1,0 +1,11 @@
+```release-note:enhancement
+`documentation` - Add markdown documentation.
+```
+
+```release-note:feature
+`gen-doc` - Add technical generation command.
+```
+
+```release-note:feature
+`completion` - Add completion command.
+```

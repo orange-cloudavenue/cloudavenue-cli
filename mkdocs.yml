@@ -39,6 +39,14 @@ nav:
       - S3: command/cav_delete_s3.md
       - Public IP: command/cav_delete_publicip.md
       - EdgeGateway: command/cav_delete_edgegateway.md
+    - completion:
+      - command/cav_completion.md
+      - bash: command/cav_completion_bash.md
+      - zsh: command/cav_completion_zsh.md
+      - fish: command/cav_completion_fish.md
+      - powershell: command/cav_completion_powershell.md
+    - gen-doc:
+      - command/cav_gen-doc.md
     - version: command/cav_version.md
 
 extra:

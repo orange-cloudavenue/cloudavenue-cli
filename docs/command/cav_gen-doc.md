@@ -1,19 +1,19 @@
-## cav version
+## cav gen-doc
 
-Print the version number of cav
+Generate documentation for cav
 
 ### Synopsis
 
-All software has versions. This is cav's
+Generate technical documentation for cav command line interface
 
 ```
-cav version [flags]
+cav gen-doc [flags]
 ```
 
 ### Options
 
 ```
-  -h, --help   help for version
+  -h, --help   help for gen-doc
 ```
 
 ### Options inherited from parent commands
