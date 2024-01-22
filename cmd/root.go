@@ -35,8 +35,9 @@ var RootCmd = rootCmd
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "cav",
-	Short: "cav is the Command Line Interface for CloudAvenue Platform",
+	Use:               "cav",
+	Short:             "cav is the Command Line Interface for CloudAvenue Platform",
+	DisableAutoGenTag: true,
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -138,9 +139,10 @@ func init() {
 // func versionCmd() return the version of the CLI
 func versionCmd() *cobra.Command {
 	return &cobra.Command{
-		Use:   "version",
-		Short: "Print the version number of cav",
-		Long:  `All software has versions. This is cav's`,
+		Use:               "version",
+		Short:             "Print the version number of cav",
+		Long:              `All software has versions. This is cav's`,
+		DisableAutoGenTag: true,
 		Run: func(cmd *cobra.Command, args []string) {
 			s.FinalMSG = "Version: " + version + "\nCommit: " + commit + "\nBuilt at: " + date + "\nBuilt by: " + builtBy
 			s.Stop()
@@ -151,8 +153,9 @@ func versionCmd() *cobra.Command {
 // func completionCmd() return the completion of the CLI
 func completionCmd() *cobra.Command {
 	return &cobra.Command{
-		Use:   "completion",
-		Short: "Generate the autocompletion script for the specified shell",
+		Use:               "completion",
+		Short:             "Generate the autocompletion script for the specified shell",
+		DisableAutoGenTag: true,
 		Run: func(cmd *cobra.Command, args []string) {
 			s.FinalMSG = "Please see the documentation for more information about how to use autocompletion: (https://orange-cloudavenue.github.io/cloudavenue-cli/)"
 			s.Stop()

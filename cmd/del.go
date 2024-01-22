@@ -21,10 +21,11 @@ var (
 
 // delCmd delete a CAV resource
 var delCmd = &cobra.Command{
-	Use:     "delete",
-	Aliases: []string{"del", "rm"},
-	Example: exampleDelete1 + "\n" + exampleDelete2,
-	Short:   "Delete resource from CloudAvenue.",
+	Use:               "delete",
+	Aliases:           []string{"del", "rm"},
+	Example:           exampleDelete1 + "\n" + exampleDelete2,
+	Short:             "Delete resource from CloudAvenue.",
+	DisableAutoGenTag: true,
 }
 
 func init() {
@@ -53,10 +54,10 @@ func init() {
 
 // delVDCCmd delete a vdc resource(s)
 var delVDCCmd = &cobra.Command{
-	Use:     "vdc",
-	Example: "del vdc <name> [<name>] [<name>] ...",
-	Short:   "Delete a vdc",
-
+	Use:               "vdc",
+	Example:           "del vdc <name> [<name>] [<name>] ...",
+	Short:             "Delete a vdc",
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Check if time flag is set
 		if cmd.Flag("time").Value.String() == "true" {
@@ -91,10 +92,10 @@ var delVDCCmd = &cobra.Command{
 
 // deleteCmd delete a s3 bucket resource(s)
 var delS3Cmd = &cobra.Command{
-	Use:     "s3",
-	Example: "delete s3 <name> [<name>] [<name>] ...",
-	Short:   "Delete a s3 bucket",
-
+	Use:               "s3",
+	Example:           "delete s3 <name> [<name>] [<name>] ...",
+	Short:             "Delete a s3 bucket",
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Check if time flag is set
 		if cmd.Flag("time").Value.String() == "true" {
@@ -120,11 +121,11 @@ var delS3Cmd = &cobra.Command{
 
 // deleteCmd delete a edgeGateway resource(s)
 var delEdgeGatewayCmd = &cobra.Command{
-	Use:     "edgegateway",
-	Aliases: []string{"egw", "gw"},
-	Example: "delete edgegateway <id or name> [<id or name>] [<id or name>] ...",
-	Short:   "Delete an edgeGateway (name or id)",
-
+	Use:               "edgegateway",
+	Aliases:           []string{"egw", "gw"},
+	Example:           "delete edgegateway <id or name> [<id or name>] [<id or name>] ...",
+	Short:             "Delete an edgeGateway (name or id)",
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Check if time flag is set
 		if cmd.Flag("time").Value.String() == "true" {
@@ -169,10 +170,10 @@ var delEdgeGatewayCmd = &cobra.Command{
 
 // deleteCmd delete a public ip resource(s)
 var delPublicIPCmd = &cobra.Command{
-	Use:     "publicip",
-	Example: "delete publicip <ip> [<ip>] [<ip>] ...",
-	Short:   "Delete public ip resource(s)",
-
+	Use:               "publicip",
+	Example:           "delete publicip <ip> [<ip>] [<ip>] ...",
+	Short:             "Delete public ip resource(s)",
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Check if time flag is set
 		if cmd.Flag("time").Value.String() == "true" {

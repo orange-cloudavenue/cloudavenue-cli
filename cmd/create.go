@@ -17,10 +17,11 @@ var (
 
 // createCmd create a CAV resource
 var createCmd = &cobra.Command{
-	Use:     "create",
-	Aliases: []string{"new", "add"},
-	Example: exampleCreate1,
-	Short:   "Create resource to CloudAvenue.",
+	Use:               "create",
+	Aliases:           []string{"new", "add"},
+	Example:           exampleCreate1,
+	Short:             "Create resource to CloudAvenue.",
+	DisableAutoGenTag: true,
 }
 
 func init() {
@@ -69,10 +70,10 @@ func init() {
 
 // createPublicIPCmd create a public ip resource(s)
 var createPublicIPCmd = &cobra.Command{
-	Use:     "publicip",
-	Short:   "Create an ip",
-	Example: "ip create --name <EdgeGateway>",
-
+	Use:               "publicip",
+	Short:             "Create an ip",
+	Example:           "ip create --name <EdgeGateway>",
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Check if time flag is set
 		if cmd.Flag("time").Value.String() == "true" {
@@ -109,10 +110,10 @@ var createPublicIPCmd = &cobra.Command{
 
 // createVDCCmd create a vdc resource(s)
 var createVDCCmd = &cobra.Command{
-	Use:     "vdc",
-	Short:   "Create an vdc",
-	Example: "vdc create --name <vdc name>",
-
+	Use:               "vdc",
+	Short:             "Create an vdc",
+	Example:           "vdc create --name <vdc name>",
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Check if time flag is set
 		if cmd.Flag("time").Value.String() == "true" {
@@ -162,11 +163,11 @@ var createVDCCmd = &cobra.Command{
 
 // createEdgeGatewayCmd create a edgegateway resource(s)
 var createEdgeGatewayCmd = &cobra.Command{
-	Use:     "edgegateway",
-	Short:   "Create an edgeGateway",
-	Aliases: []string{"gw", "egw"},
-	Example: "edgegateway create --vdc <vdc name> [--t0 <t0 name>]",
-
+	Use:               "edgegateway",
+	Short:             "Create an edgeGateway",
+	Aliases:           []string{"gw", "egw"},
+	Example:           "edgegateway create --vdc <vdc name> [--t0 <t0 name>]",
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Check if time flag is set
 		if cmd.Flag("time").Value.String() == "true" {
@@ -220,10 +221,10 @@ var createEdgeGatewayCmd = &cobra.Command{
 
 // createS3Cmd create a s3 bucket resource(s)
 var createS3Cmd = &cobra.Command{
-	Use:     "s3",
-	Short:   "Create an S3 bucket",
-	Example: "create s3 --name <bucket name>",
-
+	Use:               "s3",
+	Short:             "Create an S3 bucket",
+	Example:           "create s3 --name <bucket name>",
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Check if time flag is set
 		if cmd.Flag("time").Value.String() == "true" {
