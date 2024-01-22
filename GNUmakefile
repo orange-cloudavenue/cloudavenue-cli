@@ -22,7 +22,7 @@ test:
 
  doc:
 	@echo "Generating documentation..."
-	go run main.go gen-doc	
+	go generate ./...	
 
 generate:
 	golangci-lint run

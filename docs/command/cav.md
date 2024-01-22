@@ -11,6 +11,7 @@ cav is the Command Line Interface for CloudAvenue Platform
 
 ### SEE ALSO
 
+* [cav completion](cav_completion.md)	 - Generate completion script
 * [cav create](cav_create.md)	 - Create resource to CloudAvenue.
 * [cav delete](cav_delete.md)	 - Delete resource from CloudAvenue.
 * [cav get](cav_get.md)	 - Get resource to retrieve information from CloudAvenue.

@@ -132,6 +132,7 @@ func init() {
 	s.Start()
 	rootCmd.PersistentFlags().BoolP("time", "t", false, "time elapsed for command")
 	rootCmd.AddCommand(versionCmd())
+	rootCmd.AddCommand(completionCmd())
 }
 
 // func versionCmd() return the version of the CLI
@@ -143,6 +144,26 @@ func versionCmd() *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 			s.FinalMSG = "Version: " + version + "\nCommit: " + commit + "\nBuilt at: " + date + "\nBuilt by: " + builtBy
 			s.Stop()
+		},
+	}
+}
+
+// func completionCmd() return the completion of the CLI
+func completionCmd() *cobra.Command {
+	return &cobra.Command{
+		Use:   "completion",
+		Short: "Generate completion script",
+		Long: `To load completion run
+
+	. <(cav completion)
+
+	To configure your bash shell to load completions for each session add to your bashrc
+
+	# ~/.bashrc or ~/.profile
+	. <(cav completion)
+	`,
+		Run: func(cmd *cobra.Command, args []string) {
+			_ = cmd.Root().GenBashCompletion(os.Stdout)
 		},
 	}
 }
