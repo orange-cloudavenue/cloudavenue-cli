@@ -1,18 +1,6 @@
 ## cav completion
 
-Generate completion script
-
-### Synopsis
-
-To load completion run
-
-	. <(cav completion)
-
-	To configure your bash shell to load completions for each session add to your bashrc
-
-	# ~/.bashrc or ~/.profile
-	. <(cav completion)
-	
+Generate the autocompletion script for the specified shell
 
 ```
 cav completion [flags]

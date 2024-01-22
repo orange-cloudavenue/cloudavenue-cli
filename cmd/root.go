@@ -152,18 +152,10 @@ func versionCmd() *cobra.Command {
 func completionCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "completion",
-		Short: "Generate completion script",
-		Long: `To load completion run
-
-	. <(cav completion)
-
-	To configure your bash shell to load completions for each session add to your bashrc
-
-	# ~/.bashrc or ~/.profile
-	. <(cav completion)
-	`,
+		Short: "Generate the autocompletion script for the specified shell",
 		Run: func(cmd *cobra.Command, args []string) {
-			_ = cmd.Root().GenBashCompletion(os.Stdout)
+			s.FinalMSG = "Please see the documentation for more information about how to use autocompletion: (https://orange-cloudavenue.github.io/cloudavenue-cli/)"
+			s.Stop()
 		},
 	}
 }
