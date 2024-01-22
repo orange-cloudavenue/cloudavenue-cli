@@ -1,6 +1,3 @@
-/*
-Copyright © 2023 NAME HERE <EMAIL ADDRESS>
-*/
 package main
 
 import (
@@ -8,6 +5,8 @@ import (
 
 	"github.com/orange-cloudavenue/cloudavenue-cli/cmd"
 )
+
+//go:generate go run tools/tools.go
 
 func main() {
 	if err := cmd.Execute(); err != nil {
