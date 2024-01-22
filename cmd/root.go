@@ -149,16 +149,3 @@ func versionCmd() *cobra.Command {
 		},
 	}
 }
-
-// // func completionCmd() return the completion of the CLI
-// func completionCmd() *cobra.Command {
-// 	return &cobra.Command{
-// 		Use:               "completion",
-// 		Short:             "Generate the autocompletion script for the specified shell",
-// 		DisableAutoGenTag: true,
-// 		Run: func(cmd *cobra.Command, args []string) {
-// 			s.FinalMSG = "Please see the documentation for more information about how to use autocompletion: (https://orange-cloudavenue.github.io/cloudavenue-cli/)"
-// 			s.Stop()
-// 		},
-// 	}
-// }
