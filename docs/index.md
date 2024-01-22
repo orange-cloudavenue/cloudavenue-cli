@@ -5,7 +5,7 @@ Is a terminal app built to give a basic view to your Cloud Avenue IaaS.
 You can create, list or delete some basic infrastructure.
 
 !!! info
-    If you need more information about Cloud Avenue, please visit [Cloud Avenue documentation](https://wiki.cloudavenue.orange-business.com/w/index.php/Accueil).
+    If you need more information about Cloud Avenue, please visit [Cloud Avenue documentation](https://wiki.cloudavenue.orange-business.com/wiki/Welcome).
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/orange-cloudavenue/cloudavenue-cli)](https://goreportcard.com/report/github.com/orange-cloudavenue/cloudavenue-cli)
 [![GoDoc](https://godoc.org/github.com/orange-cloudavenue/cloudavenue-cli?status.svg)](https://godoc.org/github.com/orange-cloudavenue/cloudavenue-cli)

@@ -22,11 +22,11 @@ test:
 
  doc:
 	@echo "Generating documentation..."
-	go generate ./...	
+	rm -rf ./docs/command/* && go generate ./...	
 
 generate:
 	golangci-lint run
-	go generate ./...
+	rm -rf ./docs/command/* && go generate ./...
 
 submodules:
 	@git submodule sync
