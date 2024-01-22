@@ -1,11 +1,11 @@
 ```release-note:enhancement
-`documentation` - Add markdown documentation.
+`documentation`: Add github pages documentation.
 ```
 
 ```release-note:feature
-`gen-doc` - Add technical generation command.
+`gen-doc`: Add technical generation command.
 ```
 
 ```release-note:feature
-`completion` - Add completion command.
+`completion`: Add completion command.
 ```

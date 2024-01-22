@@ -33,4 +33,5 @@ export CLOUDAVENUE_USER="my-user"
 export CLOUDAVENUE_PASSWORD="my-password"
 ```
 
-:warning: If all variables are set, the CLI override the file configuration to use credentials setted in variables.
+!!! warning
+    If all variables are set, the CLI override the file configuration to use credentials setted in variables.

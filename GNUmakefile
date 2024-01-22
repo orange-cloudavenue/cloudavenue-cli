@@ -26,9 +26,7 @@ test:
 
 generate:
 	golangci-lint run
-	go run main.go gen-doc
-	go test -coverprofile=coverage.out ./cmd/... && go tool cover -func=coverage.out
-	goreleaser release --snapshot --clean
+	go generate ./...
 
 submodules:
 	@git submodule sync

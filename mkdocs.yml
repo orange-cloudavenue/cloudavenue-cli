@@ -5,7 +5,6 @@ theme:
     - navigation.instant
     - navigation.footer
     - navigation.tabs
-    #- navigation.expand
   palette: 
     scheme: slate
     primary: deep orange
@@ -45,14 +44,48 @@ nav:
       - zsh: command/cav_completion_zsh.md
       - fish: command/cav_completion_fish.md
       - powershell: command/cav_completion_powershell.md
-    - gen-doc:
-      - command/cav_gen-doc.md
     - version: command/cav_version.md
+
+markdown_extensions:
+  # Python Markdown
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - toc:
+      permalink: true
+
+  # Python Markdown Extensions
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
 
 extra:
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/orange-cloudavenue/cloudavenue-cli
+
+repo_url: https://github.com/orange-cloudavenue/cloudavenue-cli
+repo_name: orange-cloudavenue/cloudavenue-cli
 
 copyright: Copyright &copy; 2023 - 2024 Orange - Cloud Avenue
 
