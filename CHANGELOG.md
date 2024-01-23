@@ -1,4 +1,13 @@
 ## 0.1.0 (Unreleased)
+
+### :rocket: **New Features**
+
+* `completion`: Add completion command. (GH-59)
+
+### :tada: **Improvements**
+
+* `documentation`: Add github pages documentation. (GH-59)
+
 ## 0.0.8 (January 19, 2024)
 
 ### :rocket: **New Features**
