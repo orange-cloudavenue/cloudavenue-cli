@@ -40,15 +40,20 @@ nfpms:
     section: default
 
 ## Need to move to pull request (ref: https://goreleaser.com/customization/homebrew/#pull-requests)
-# brews:
-#   - name: cloudavenue-cli
-#     homepage: https://github.com/orange-cloudavenue/cloudavenue-cli
-#     goarm: 6
-#     goamd64: v1
-#     repository: 
-#       owner: orange-cloudavenue
-#       name: cloudavenue-cli
-#       branch: main
+brews:
+  - name: cav
+    homepage: https://github.com/orange-cloudavenue/cloudavenue-cli
+    goarm: 6
+    goamd64: v1
+    download_strategy: CurlDownloadStrategy
+    commit_author:
+      name: goreleaserbot
+    description: >-
+      cav is a CLI terminal app built to give a basic view to manage your Cloud Avenue IaaS.
+    license: MIT
+    repository: 
+      owner: orange-cloudavenue
+      name: cloudavenue-cli
 
 archives:
   - format: tar.gz
