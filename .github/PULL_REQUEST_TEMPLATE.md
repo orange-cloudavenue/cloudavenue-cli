@@ -18,6 +18,7 @@ If you submit change in the provider code, please make sure to:
 
 - [ ] If Needed add a changelog file
 - [ ] Write or modify coverage tests
+- [ ] Run make generate to ensure the doc was updated properly
 
 ### How has this code been coverage and tested
 ```

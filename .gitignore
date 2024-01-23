@@ -1,2 +1,4 @@
 coverage.out
 dist/
+go.work
+go.work.sum

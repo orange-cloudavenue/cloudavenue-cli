@@ -21,10 +21,11 @@ var (
 
 // getCmd list a CAV resource
 var getCmd = &cobra.Command{
-	Use:     "get",
-	Aliases: []string{"ls", "list"},
-	Example: exampleGet1 + "\n" + exampleGet2,
-	Short:   "Get resource to retrieve information from CloudAvenue.",
+	Use:               "get",
+	Aliases:           []string{"ls", "list"},
+	Example:           exampleGet1 + "\n" + exampleGet2,
+	Short:             "Get resource to retrieve information from CloudAvenue.",
+	DisableAutoGenTag: true,
 }
 
 func init() {
@@ -43,9 +44,10 @@ func init() {
 
 // getT0Cmd return a list of your t0 resource(s)
 var getT0Cmd = &cobra.Command{
-	Use:   "t0",
-	Short: "A brief list of your t0 resources",
-	Long:  "A complete list information of your T0 resources in your CloudAvenue account.",
+	Use:               "t0",
+	Short:             "A brief list of your t0 resources",
+	Long:              "A complete list information of your T0 resources in your CloudAvenue account.",
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Check if time flag is set and print time elapsed
 		if cmd.Flag("time").Value.String() == "true" {
@@ -81,10 +83,11 @@ var getT0Cmd = &cobra.Command{
 
 // getPublicIPCmd return a list of your publicip
 var getPublicIPCmd = &cobra.Command{
-	Use:     "publicip",
-	Aliases: []string{"ip"},
-	Short:   "A brief list of your public ip resources",
-	Long:    "A complete list information of your Public IP resources in your CloudAvenue account.",
+	Use:               "publicip",
+	Aliases:           []string{"ip"},
+	Short:             "A brief list of your public ip resources",
+	Long:              "A complete list information of your Public IP resources in your CloudAvenue account.",
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Check if time flag is set and print time elapsed
 		if cmd.Flag("time").Value.String() == "true" {
@@ -120,10 +123,11 @@ var getPublicIPCmd = &cobra.Command{
 
 // getS3Cmd return a list of your s3 (bucket) resource(s)
 var getS3Cmd = &cobra.Command{
-	Use:     "s3",
-	Aliases: []string{"bucket"},
-	Short:   "A brief list of your s3 resources",
-	Long:    "A complete list information of your s3 resources in your CloudAvenue account.",
+	Use:               "s3",
+	Aliases:           []string{"bucket"},
+	Short:             "A brief list of your s3 resources",
+	Long:              "A complete list information of your s3 resources in your CloudAvenue account.",
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Check if time flag is set and print time elapsed
 		if cmd.Flag("time").Value.String() == "true" {
@@ -160,10 +164,11 @@ var getS3Cmd = &cobra.Command{
 
 // getEdgeGatewayCmd return a list of your edgegateway resource(s)
 var getEdgeGatewayCmd = &cobra.Command{
-	Use:     "edgegateway",
-	Aliases: []string{"gw", "egw"},
-	Short:   "A brief list of your edgegateway resources",
-	Long:    "A complete list information of your EdgeGateway resources in your CloudAvenue account.",
+	Use:               "edgegateway",
+	Aliases:           []string{"gw", "egw"},
+	Short:             "A brief list of your edgegateway resources",
+	Long:              "A complete list information of your EdgeGateway resources in your CloudAvenue account.",
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Check if time flag is set and print time elapsed
 		if cmd.Flag("time").Value.String() == "true" {
@@ -197,9 +202,10 @@ var getEdgeGatewayCmd = &cobra.Command{
 
 // getVDCCmd return a list of your vdc resource(s)
 var getVDCCmd = &cobra.Command{
-	Use:   "vdc",
-	Short: "A brief list of your vdc resources",
-	Long:  "A complete list information of your s3 resources in your CloudAvenue account.",
+	Use:               "vdc",
+	Short:             "A brief list of your vdc resources",
+	Long:              "A complete list information of your s3 resources in your CloudAvenue account.",
+	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Check if time flag is set and print time elapsed
 		if cmd.Flag("time").Value.String() == "true" {

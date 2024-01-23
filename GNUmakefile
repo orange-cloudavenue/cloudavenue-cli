@@ -21,14 +21,13 @@ test:
 	go test -coverprofile=coverage.out ./cmd/... && go tool cover -func=coverage.out
 
  doc:
-	@echo "Generating documentation..."
-	go run main.go gen-doc	
+	@echo "=== Start Process for Technical Command Documentation Generation ==="
+	go generate ./...
+	@echo "Documentation Generation Complete !!!"
 
 generate:
 	golangci-lint run
-	go run main.go gen-doc
-	go test -coverprofile=coverage.out ./cmd/... && go tool cover -func=coverage.out
-	goreleaser release --snapshot --clean
+	go generate ./...
 
 submodules:
 	@git submodule sync
