@@ -54,6 +54,7 @@ brews:
     repository: 
       owner: orange-cloudavenue
       name: cloudavenue-cli
+      token: "{{ .Env.TAP_GITHUB_TOKEN }}"
 
 archives:
   - format: tar.gz
