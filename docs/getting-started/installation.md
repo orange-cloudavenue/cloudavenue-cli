@@ -9,23 +9,23 @@ curl -sSfL https://raw.githubusercontent.com/orange-cloudavenue/cloudavenue-cli/
 
 ### Manual Debian / Ubuntu
 ```bash
-curl -LO https://github.com/orange-cloudavenue/cloudavenue-cli/releases/download/v0.0.4/cloudavenue-cli_0.0.4_checksums.txt \
-&& curl -LO https://github.com/orange-cloudavenue/cloudavenue-cli/releases/download/v0.0.4/cloudavenue-cli_0.0.4_386.deb \
-&& sha256sum --ignore-missing -c cloudavenue-cli_0.0.4_checksums.txt
+curl -LO https://github.com/orange-cloudavenue/cloudavenue-cli/releases/download/v0.0.9/cloudavenue-cli_0.0.9_checksums.txt \
+&& curl -LO https://github.com/orange-cloudavenue/cloudavenue-cli/releases/download/v0.0.9/cloudavenue-cli_0.0.9_386.deb \
+&& sha256sum --ignore-missing -c cloudavenue-cli_0.0.9_checksums.txt
 ```
 
 ### Manual RedHat / CentOS
 ```bash
-curl -LO https://github.com/orange-cloudavenue/cloudavenue-cli/releases/download/v0.0.4/cloudavenue-cli_0.0.4_checksums.txt \
-&& curl -LO https://github.com/orange-cloudavenue/cloudavenue-cli/releases/download/v0.0.4/cloudavenue-cli_0.0.4_386.rpm \
-&& sha256sum --ignore-missing -c cloudavenue-cli_0.0.4_checksums.txt
+curl -LO https://github.com/orange-cloudavenue/cloudavenue-cli/releases/download/v0.0.9/cloudavenue-cli_0.0.9_checksums.txt \
+&& curl -LO https://github.com/orange-cloudavenue/cloudavenue-cli/releases/download/v0.0.9/cloudavenue-cli_0.0.9_386.rpm \
+&& sha256sum --ignore-missing -c cloudavenue-cli_0.0.9_checksums.txt
 ```
 
 ### Windows
 ```shell
-Invoke-WebRequest https://github.com/orange-cloudavenue/cloudavenue-cli/releases/download/v0.0.4/cloudavenue-cli_0.0.4_checksums.txt -OutFile "cav-checksum.txt"
-Invoke-WebRequest https://github.com/orange-cloudavenue/cloudavenue-cli/releases/download/v0.0.4/cloudavenue-cli_0.0.4_windows_amd64.zip -OutFile "cloudavenue-cli_0.0.4_windows_amd64.zip"
-Expand-Archive -LiteralPath 'cloudavenue-cli_0.0.4_windows_amd64.zip' -DestinationPath 'c:\cloudavenue\' 
+Invoke-WebRequest https://github.com/orange-cloudavenue/cloudavenue-cli/releases/download/v0.0.9/cloudavenue-cli_0.0.9_checksums.txt -OutFile "cav-checksum.txt"
+Invoke-WebRequest https://github.com/orange-cloudavenue/cloudavenue-cli/releases/download/v0.0.9/cloudavenue-cli_0.0.9_windows_amd64.zip -OutFile "cloudavenue-cli_0.0.9_windows_amd64.zip"
+Expand-Archive -LiteralPath 'cloudavenue-cli_0.0.9_windows_amd64.zip' -DestinationPath 'c:\cloudavenue\' 
 Get-FileHash 'c:\cloudavenue\cav.exe' -Algorithm SHA256 | Format-List
 ```
 
@@ -39,13 +39,13 @@ go install github.com/orange-cloudavenue/cloudavenue-cli@latest
 ### Debian / Ubuntu
 
 ```bash
-sudo dpkg -i cloudavenue-cli_0.0.5._386.deb
+sudo dpkg -i cloudavenue-cli_0.0.9._386.deb
 ```
 
 ### RedHat / CentOS
 
 ```bash
-sudo rpm -i cloudavenue-cli_0.0.5._386.rpm
+sudo rpm -i cloudavenue-cli_0.0.9._386.rpm
 ```
 
 ### Mac OS X (comming soon)
