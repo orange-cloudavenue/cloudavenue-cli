@@ -5,15 +5,15 @@
 It give you a quick view of your cloudavenue resources.
 You can List, Create and Delete some resources.
 Actually we can manage VMware resource based on pos VCD (Virtual Cloud Center), like VDC, VM, VAPP
+Please Go to website: https://orange-cloudavenue.github.io/cloudavenue-cli/
 
 
 # Install
 
-Please see Install chapter in Getting Start: https://github.com/orange-cloudavenue/cloudavenue-cli/blob/main/docs/index.md#Installation
-
+Please see Documentation here: https://orange-cloudavenue.github.io/cloudavenue-cli/getting-started/installation/
 # Configuration
 
-Please see Configuration chapter in Getting Start: https://github.com/orange-cloudavenue/cloudavenue-cli/blob/main/docs/index.md#Configuration
+Please see Documentation here: https://orange-cloudavenue.github.io/cloudavenue-cli/getting-started/configuration/
 
 # Usage
 * Navigation commands :
