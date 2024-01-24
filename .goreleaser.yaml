@@ -39,7 +39,6 @@ nfpms:
     bindir: /usr/bin
     section: default
 
-## Need to move to pull request (ref: https://goreleaser.com/customization/homebrew/#pull-requests)
 brews:
   - name: cav
     homepage: https://github.com/orange-cloudavenue/cloudavenue-cli
