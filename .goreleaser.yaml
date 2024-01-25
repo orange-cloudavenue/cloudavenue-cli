@@ -51,12 +51,13 @@ brews:
     description: >-
       cav is a CLI terminal app built to give a basic view to manage your Cloud Avenue IaaS.
     license: MIT
+    folder: Formula
     repository: 
       owner: orange-cloudavenue
       name: cloudavenue-cli
       branch: main
       token: "{{ .Env.TAP_GITHUB_TOKEN }}"
-    folder: dist
+    skip_upload: false
 
 archives:
   - format: tar.gz
