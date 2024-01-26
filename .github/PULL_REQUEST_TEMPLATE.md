@@ -23,8 +23,8 @@ If you submit change in the provider code, please make sure to:
 ### How has this code been coverage and tested
 ```
 go test -coverprofile=coverage.out ./cmd/... && go tool cover -func=coverage.out
-.... <PUSH YOUR RESULT HERE>
 ```
+.... <PUSH YOUR RESULT HERE>
 
 <!--
 Before reviewers can be confident in the correctness of this pull request, it
