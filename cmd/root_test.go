@@ -91,6 +91,29 @@ func TestRootCmd(t *testing.T) {
 						fail: true,
 					},
 					{
+						name: oneCmd.Use + "_" + cmdSubCmd.Use + " with filename flag and a whatever args",
+						args: []string{oneCmd.Use, cmdSubCmd.Use, "--filename", "whatever"},
+						fail: true,
+					},
+					{
+						name: oneCmd.Use + "_" + cmdSubCmd.Use + " with filename flag without args",
+						args: []string{oneCmd.Use, cmdSubCmd.Use, "--filename", ""},
+						fail: true,
+					},
+					{
+						name: oneCmd.Use + "_" + cmdSubCmd.Use + " with filename flag and json output",
+						args: []string{oneCmd.Use, cmdSubCmd.Use, "--filename", "whatever", "--output", "json"},
+					},
+					{
+						name: oneCmd.Use + "_" + cmdSubCmd.Use + " with filename flag and yaml output",
+						args: []string{oneCmd.Use, cmdSubCmd.Use, "--filename", "whatever", "--output", "yaml"},
+					},
+					{
+						name: oneCmd.Use + "_" + cmdSubCmd.Use + " with filename flag and empty output",
+						args: []string{oneCmd.Use, cmdSubCmd.Use, "--filename", "whatever", "--output", ""},
+					},
+
+					{
 						name: oneCmd.Use + "_" + cmdSubCmd.Use + " with time flag",
 						args: []string{oneCmd.Use, cmdSubCmd.Use, "--time"},
 					},

@@ -56,7 +56,10 @@ var getT0Cmd = &cobra.Command{
 			defer timeTrack(time.Now(), cmd.CommandPath())
 		}
 
-		checkFlags(cmd)
+		if err := checkFlags(cmd); err != nil {
+			fmt.Println(err)
+			return
+		}
 
 		// Get the list of t0
 		t0s, err := c.V1.T0.GetT0s()
@@ -103,7 +106,10 @@ var getPublicIPCmd = &cobra.Command{
 			defer timeTrack(time.Now(), cmd.CommandPath())
 		}
 
-		checkFlags(cmd)
+		if err := checkFlags(cmd); err != nil {
+			fmt.Println(err)
+			return
+		}
 
 		// Get the list of publicip
 		ips, err := c.V1.PublicIP.GetIPs()
@@ -149,7 +155,10 @@ var getS3Cmd = &cobra.Command{
 			defer timeTrack(time.Now(), cmd.CommandPath())
 		}
 
-		checkFlags(cmd)
+		if err := checkFlags(cmd); err != nil {
+			fmt.Println(err)
+			return
+		}
 
 		// Get the list of buckets
 		s3, err := c.V1.S3().ListBuckets(&s3.ListBucketsInput{})
@@ -196,7 +205,10 @@ var getEdgeGatewayCmd = &cobra.Command{
 			defer timeTrack(time.Now(), cmd.CommandPath())
 		}
 
-		checkFlags(cmd)
+		if err := checkFlags(cmd); err != nil {
+			fmt.Println(err)
+			return
+		}
 
 		edgeGateways, err := c.V1.EdgeGateway.List()
 		if err != nil {
@@ -239,7 +251,10 @@ var getVDCCmd = &cobra.Command{
 			defer timeTrack(time.Now(), cmd.CommandPath())
 		}
 
-		checkFlags(cmd)
+		if err := checkFlags(cmd); err != nil {
+			fmt.Println(err)
+			return
+		}
 
 		// Get the list of vdc
 		vdcs, err := c.V1.Querier().List().VDC()
@@ -272,10 +287,10 @@ var getVDCCmd = &cobra.Command{
 }
 
 // func Check if when flag filename is set, the output flag is set too
-func checkFlags(cmd *cobra.Command) {
+func checkFlags(cmd *cobra.Command) error {
 	if cmd.Flag("output").Value.String() == "" && cmd.Flag("filename").Value.String() != "" {
 		s.Stop()
-		log.Default().Println("Warning: --filename flags must be used with --output flags: ignore flag --filename")
-		return
+		return fmt.Errorf("Warning: --filename flags must be used with --output flags: ignore flag --filename")
 	}
+	return nil
 }
