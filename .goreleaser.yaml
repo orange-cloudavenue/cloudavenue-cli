@@ -56,7 +56,7 @@ brews:
       owner: orange-cloudavenue
       name: cloudavenue-cli
       branch: main
-      token: "{{ .Env.TOKEN_CAV_BREW_FORMULA }}"
+      token: "{{ .Env.CHANGELOG_PAT }}"
     skip_upload: false
 
 archives:
