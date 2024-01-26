@@ -19,4 +19,4 @@ jobs:
         env:
           # GitHub sets the GITHUB_TOKEN secret automatically.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TAP_GITHUB_TOKEN: ${{ secrets.TOKEN_CAV_BREW_FORMULA }}
+          TAP_GITHUB_TOKEN: ${{ secrets.CHANGELOG_PAT }}
