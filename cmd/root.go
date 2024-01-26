@@ -4,7 +4,9 @@ Copyright © 2023 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"encoding/json"
 	"fmt"
+	"log"
 	"os"
 	"strconv"
 	"time"
@@ -16,6 +18,7 @@ import (
 	clientcloudavenue "github.com/orange-cloudavenue/cloudavenue-sdk-go/pkg/clients/cloudavenue"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"gopkg.in/yaml.v2"
 )
 
 var (
@@ -148,4 +151,24 @@ func versionCmd() *cobra.Command {
 			s.Stop()
 		},
 	}
+}
+
+// outputJson print the output in json format
+func outputJson(data interface{}) {
+	jsonData, err := json.Marshal(data)
+	if err != nil {
+		log.Default().Println("Error converting to JSON", err)
+	}
+	s.Stop()
+	fmt.Println(string(jsonData))
+}
+
+// outputYaml print the output in yaml format
+func outputYaml(data interface{}) {
+	yamlData, err := yaml.Marshal(data)
+	if err != nil {
+		log.Default().Println("Error converting to YAML", err)
+	}
+	s.Stop()
+	fmt.Println(string(yamlData))
 }

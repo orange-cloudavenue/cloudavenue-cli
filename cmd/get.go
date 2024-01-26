@@ -70,6 +70,10 @@ var getT0Cmd = &cobra.Command{
 			for _, t0 := range *t0s {
 				w.AddFields(t0.Tier0Vrf, t0.Tier0Provider, t0.Tier0ClassService, t0.Services, t0.ClassService)
 			}
+		case "json":
+			outputJson(t0s)
+		case "yaml":
+			outputYaml(t0s)
 		default:
 			w.SetHeader("name", "t0 provider name")
 			for _, t0 := range *t0s {
@@ -110,6 +114,10 @@ var getPublicIPCmd = &cobra.Command{
 			for _, i := range ips.NetworkConfig {
 				w.AddFields(i.UplinkIP, i.EdgeGatewayName, i.TranslatedIP)
 			}
+		case "json":
+			outputJson(ips)
+		case "yaml":
+			outputYaml(ips)
 		default:
 			w.SetHeader("public ip", "edge gateway name")
 			for _, i := range ips.NetworkConfig {
@@ -135,7 +143,7 @@ var getS3Cmd = &cobra.Command{
 		}
 
 		// Get the list of buckets
-		output, err := c.V1.S3().ListBuckets(&s3.ListBucketsInput{})
+		s3, err := c.V1.S3().ListBuckets(&s3.ListBucketsInput{})
 		if err != nil {
 			fmt.Println("Error from S3 List", err)
 			return
@@ -148,13 +156,17 @@ var getS3Cmd = &cobra.Command{
 		switch flag.String() {
 		case "wide":
 			w.SetHeader("name", "owner", "creation date", "owner id")
-			for _, b := range output.Buckets {
-				w.AddFields(*b.Name, *output.Owner.DisplayName, *b.CreationDate, *output.Owner.ID)
+			for _, b := range s3.Buckets {
+				w.AddFields(*b.Name, *s3.Owner.DisplayName, *b.CreationDate, *s3.Owner.ID)
 			}
+		case "json":
+			outputJson(s3)
+		case "yaml":
+			outputYaml(s3)
 		default:
 			w.SetHeader("name", "owner")
-			for _, b := range output.Buckets {
-				w.AddFields(*b.Name, *output.Owner.DisplayName)
+			for _, b := range s3.Buckets {
+				w.AddFields(*b.Name, *s3.Owner.DisplayName)
 			}
 		}
 		s.Stop()
@@ -189,6 +201,10 @@ var getEdgeGatewayCmd = &cobra.Command{
 			for _, e := range *edgeGateways {
 				w.AddFields(e.EdgeName, e.EdgeID, e.OwnerName, e.OwnerType, e.Bandwidth, e.Description, e.Tier0VrfName)
 			}
+		case "json":
+			outputJson(edgeGateways)
+		case "yaml":
+			outputYaml(edgeGateways)
 		default:
 			w.SetHeader("name", "owner")
 			for _, e := range *edgeGateways {
@@ -227,6 +243,10 @@ var getVDCCmd = &cobra.Command{
 			for _, v := range vdcs {
 				w.AddFields(v.Name, v.Status, *v.CpuUsedMhz, *v.MemoryUsedMB, *v.StorageUsedMB, *v.NumberOfVMs, *v.NumberOfVApps)
 			}
+		case "json":
+			outputJson(vdcs)
+		case "yaml":
+			outputYaml(vdcs)
 		default:
 			w.SetHeader("name", "status")
 			for _, v := range vdcs {
