@@ -4,9 +4,7 @@ Copyright © 2023 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"encoding/json"
 	"fmt"
-	"log"
 	"os"
 	"strconv"
 	"time"
@@ -18,7 +16,15 @@ import (
 	clientcloudavenue "github.com/orange-cloudavenue/cloudavenue-sdk-go/pkg/clients/cloudavenue"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"gopkg.in/yaml.v3"
+
+	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/output/model"
+)
+
+const (
+	ValueFlagJSON = "json"
+	ValueFlagYAML = "yaml"
+	ValueFlagWIDE = "wide"
+	FlagOutput    = "output"
 )
 
 var (
@@ -153,70 +159,14 @@ func versionCmd() *cobra.Command {
 	}
 }
 
-// outputJson print the output in json format
-func outputJson(data interface{}, filename string) {
-	if filename != "" {
-		outputJsonToFile(data, filename)
-		return
-	}
-	jsonData, err := json.Marshal(data)
-	if err != nil {
-		log.Default().Println("Error converting to JSON", err)
-		return
-	}
-	s.Stop()
-	fmt.Println(string(jsonData))
-}
-
-// outputYaml print the output in yaml format
-func outputYaml(data interface{}, filename string) {
-	if filename != "" {
-		outputYamlToFile(data, filename)
-		return
-	}
-	yamlData, err := yaml.Marshal(data)
-	if err != nil {
-		log.Default().Println("Error converting to YAML", err)
-		return
-	}
-	s.Stop()
-	fmt.Println(string(yamlData))
-}
-
-// outputJsonToFile print the output in json format to a file
-func outputJsonToFile(data interface{}, filename string) {
-	// Create file
-	file, err := os.Create(filename)
-	if err != nil {
-		log.Default().Println("Error creating file", err)
-		return
-	}
-	defer file.Close()
-
-	// Encode data in JSON and write it to the file
-	encoder := json.NewEncoder(file)
-	err = encoder.Encode(data)
-	if err != nil {
-		log.Default().Println("Error encoding JSON", err)
-		return
-	}
-}
-
-// outputYamlToFile print the output in yaml format to a file
-func outputYamlToFile(data interface{}, filename string) {
-	// Create file
-	file, err := os.Create(filename)
-	if err != nil {
-		log.Default().Println("Error creating file", err)
-		return
-	}
-	defer file.Close()
-
-	// Encode data in YAML and write it to the file
-	encoder := yaml.NewEncoder(file)
-	err = encoder.Encode(data)
-	if err != nil {
-		log.Default().Println("Error encoding YAML", err)
-		return
+// function to transform String to output.TypeFormat
+func stringToTypeFormat(s string) model.TypeFormat {
+	switch s {
+	case ValueFlagJSON:
+		return model.TypeJSON
+	case ValueFlagYAML:
+		return model.TypeYAML
+	default:
+		return model.TypeFormat("")
 	}
 }

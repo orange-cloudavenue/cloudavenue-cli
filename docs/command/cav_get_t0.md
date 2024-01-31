@@ -19,9 +19,8 @@ cav get t0 [flags]
 ### Options inherited from parent commands
 
 ```
-  -f, --filename string   Filename to write to when using --filename=myfile and need --output=json|yaml flags (default stdout)
-  -o, --output string     Output format. One of: (wide, json, yaml)
-  -t, --time              time elapsed for command
+  -o, --output string   Output format. One of: (wide, json, yaml)
+  -t, --time            time elapsed for command
 ```
 
 ### SEE ALSO

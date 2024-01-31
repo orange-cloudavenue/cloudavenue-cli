@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/aws/aws-sdk-go/service/s3"
+	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/output"
 	"github.com/orange-cloudavenue/common-go/print"
 	"github.com/spf13/cobra"
 )
@@ -17,8 +18,6 @@ var (
 	exampleGet2 = `
 	#List all T0 in wide format
 	cav get t0 -o wide`
-
-	filename = ""
 )
 
 // getCmd list a CAV resource
@@ -40,8 +39,7 @@ func init() {
 	getCmd.AddCommand(getS3Cmd)
 	getCmd.AddCommand(getEdgeGatewayCmd)
 	getCmd.AddCommand(getVDCCmd)
-	getCmd.PersistentFlags().StringP("output", "o", "", "Output format. One of: (wide, json, yaml)")
-	getCmd.PersistentFlags().StringVarP(&filename, "filename", "f", "", "Filename to write to when using --filename=myfile and need --output=json|yaml flags (default stdout)")
+	getCmd.PersistentFlags().StringP(FlagOutput, "o", "", "Output format. One of: (wide, json, yaml)")
 }
 
 // getT0Cmd return a list of your t0 resource(s)
@@ -56,11 +54,6 @@ var getT0Cmd = &cobra.Command{
 			defer timeTrack(time.Now(), cmd.CommandPath())
 		}
 
-		if err := checkFlags(cmd); err != nil {
-			fmt.Println(err)
-			return
-		}
-
 		// Get the list of t0
 		t0s, err := c.V1.T0.GetT0s()
 		if err != nil {
@@ -69,18 +62,21 @@ var getT0Cmd = &cobra.Command{
 		}
 
 		// Print the result
-		flag := cmd.Flag("output").Value
+		flag := cmd.Flag(FlagOutput).Value.String()
 		w := print.New()
-		switch flag.String() {
-		case "wide":
+		switch flag {
+		case ValueFlagWIDE:
 			w.SetHeader("name", "t0 provider name", "t0 class service", "services", "class service")
 			for _, t0 := range *t0s {
 				w.AddFields(t0.Tier0Vrf, t0.Tier0Provider, t0.Tier0ClassService, t0.Services, t0.ClassService)
 			}
-		case "json":
-			outputJson(t0s, cmd.Flag("filename").Value.String())
-		case "yaml":
-			outputYaml(t0s, cmd.Flag("filename").Value.String())
+		case ValueFlagJSON, ValueFlagYAML:
+			x, err := output.New(stringToTypeFormat(flag), t0s)
+			if err != nil {
+				log.Default().Println("Error creating output", err)
+				return
+			}
+			x.ToOutput()
 		default:
 			w.SetHeader("name", "t0 provider name")
 			for _, t0 := range *t0s {
@@ -106,11 +102,6 @@ var getPublicIPCmd = &cobra.Command{
 			defer timeTrack(time.Now(), cmd.CommandPath())
 		}
 
-		if err := checkFlags(cmd); err != nil {
-			fmt.Println(err)
-			return
-		}
-
 		// Get the list of publicip
 		ips, err := c.V1.PublicIP.GetIPs()
 		if err != nil {
@@ -119,7 +110,7 @@ var getPublicIPCmd = &cobra.Command{
 		}
 
 		// Print the result
-		flag := cmd.Flag("output").Value
+		flag := cmd.Flag(FlagOutput).Value
 		w := print.New()
 		switch flag.String() {
 		case "wide":
@@ -127,10 +118,13 @@ var getPublicIPCmd = &cobra.Command{
 			for _, i := range ips.NetworkConfig {
 				w.AddFields(i.UplinkIP, i.EdgeGatewayName, i.TranslatedIP)
 			}
-		case "json":
-			outputJson(ips, cmd.Flag("filename").Value.String())
-		case "yaml":
-			outputYaml(ips, cmd.Flag("filename").Value.String())
+		case ValueFlagJSON, ValueFlagYAML:
+			x, err := output.New(stringToTypeFormat(flag.String()), ips)
+			if err != nil {
+				log.Default().Println("Error creating output", err)
+				return
+			}
+			x.ToOutput()
 		default:
 			w.SetHeader("public ip", "edge gateway name")
 			for _, i := range ips.NetworkConfig {
@@ -155,11 +149,6 @@ var getS3Cmd = &cobra.Command{
 			defer timeTrack(time.Now(), cmd.CommandPath())
 		}
 
-		if err := checkFlags(cmd); err != nil {
-			fmt.Println(err)
-			return
-		}
-
 		// Get the list of buckets
 		s3, err := c.V1.S3().ListBuckets(&s3.ListBucketsInput{})
 		if err != nil {
@@ -169,18 +158,22 @@ var getS3Cmd = &cobra.Command{
 
 		// Print the result
 		s.Stop()
-		flag := cmd.Flag("output").Value
+		flag := cmd.Flag(FlagOutput).Value.String()
 		w := print.New()
-		switch flag.String() {
-		case "wide":
+		// var format output.Formatter
+		switch flag {
+		case ValueFlagWIDE:
 			w.SetHeader("name", "owner", "creation date", "owner id")
 			for _, b := range s3.Buckets {
 				w.AddFields(*b.Name, *s3.Owner.DisplayName, *b.CreationDate, *s3.Owner.ID)
 			}
-		case "json":
-			outputJson(s3, cmd.Flag("filename").Value.String())
-		case "yaml":
-			outputYaml(s3, cmd.Flag("filename").Value.String())
+		case ValueFlagJSON, ValueFlagYAML:
+			x, err := output.New(stringToTypeFormat(flag), s3)
+			if err != nil {
+				log.Default().Println("Error creating output", err)
+				return
+			}
+			x.ToOutput()
 		default:
 			w.SetHeader("name", "owner")
 			for _, b := range s3.Buckets {
@@ -205,29 +198,27 @@ var getEdgeGatewayCmd = &cobra.Command{
 			defer timeTrack(time.Now(), cmd.CommandPath())
 		}
 
-		if err := checkFlags(cmd); err != nil {
-			fmt.Println(err)
-			return
-		}
-
 		edgeGateways, err := c.V1.EdgeGateway.List()
 		if err != nil {
 			fmt.Println("Error from EdgeGateway", err)
 		}
 
 		// Print the result
-		flag := cmd.Flag("output").Value
+		flag := cmd.Flag(FlagOutput).Value.String()
 		w := print.New()
-		switch flag.String() {
-		case "wide":
+		switch flag {
+		case ValueFlagWIDE:
 			w.SetHeader("name", "id", "owner name", "owner type", "ratelimit (mb/s)", "description", "tier0 vrf name")
 			for _, e := range *edgeGateways {
 				w.AddFields(e.EdgeName, e.EdgeID, e.OwnerName, e.OwnerType, e.Bandwidth, e.Description, e.Tier0VrfName)
 			}
-		case "json":
-			outputJson(edgeGateways, cmd.Flag("filename").Value.String())
-		case "yaml":
-			outputYaml(edgeGateways, cmd.Flag("filename").Value.String())
+		case ValueFlagJSON, ValueFlagYAML:
+			x, err := output.New(stringToTypeFormat(flag), edgeGateways)
+			if err != nil {
+				log.Default().Println("Error creating output", err)
+				return
+			}
+			x.ToOutput()
 		default:
 			w.SetHeader("name", "owner")
 			for _, e := range *edgeGateways {
@@ -251,11 +242,6 @@ var getVDCCmd = &cobra.Command{
 			defer timeTrack(time.Now(), cmd.CommandPath())
 		}
 
-		if err := checkFlags(cmd); err != nil {
-			fmt.Println(err)
-			return
-		}
-
 		// Get the list of vdc
 		vdcs, err := c.V1.Querier().List().VDC()
 		if err != nil {
@@ -263,7 +249,7 @@ var getVDCCmd = &cobra.Command{
 			return
 		}
 
-		flag := cmd.Flag("output").Value.String()
+		flag := cmd.Flag(FlagOutput).Value.String()
 		w := print.New()
 		switch flag {
 		case "wide":
@@ -271,10 +257,13 @@ var getVDCCmd = &cobra.Command{
 			for _, v := range vdcs {
 				w.AddFields(v.Name, v.Status, *v.CpuUsedMhz, *v.MemoryUsedMB, *v.StorageUsedMB, *v.NumberOfVMs, *v.NumberOfVApps)
 			}
-		case "json":
-			outputJson(vdcs, cmd.Flag("filename").Value.String())
-		case "yaml":
-			outputYaml(vdcs, cmd.Flag("filename").Value.String())
+		case ValueFlagJSON, ValueFlagYAML:
+			x, err := output.New(stringToTypeFormat(flag), vdcs)
+			if err != nil {
+				log.Default().Println("Error creating output", err)
+				return
+			}
+			x.ToOutput()
 		default:
 			w.SetHeader("name", "status")
 			for _, v := range vdcs {
@@ -284,13 +273,4 @@ var getVDCCmd = &cobra.Command{
 		s.Stop()
 		w.PrintTable()
 	},
-}
-
-// func Check if when flag filename is set, the output flag is set too
-func checkFlags(cmd *cobra.Command) error {
-	if cmd.Flag("output").Value.String() == "" && cmd.Flag("filename").Value.String() != "" {
-		s.Stop()
-		return fmt.Errorf("Warning: --filename flags must be used with --output flags: ignore flag --filename")
-	}
-	return nil
 }

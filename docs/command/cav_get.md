@@ -16,9 +16,8 @@ Get resource to retrieve information from CloudAvenue.
 ### Options
 
 ```
-  -f, --filename string   Filename to write to when using --filename=myfile and need --output=json|yaml flags (default stdout)
-  -h, --help              help for get
-  -o, --output string     Output format. One of: (wide, json, yaml)
+  -h, --help            help for get
+  -o, --output string   Output format. One of: (wide, json, yaml)
 ```
 
 ### Options inherited from parent commands
