@@ -3,6 +3,9 @@
 ### :rocket: **New Features**
 
 * `ouput`: Add json and yaml format for get command. (GH-66)
+### :information_source: **Notes**
+
+* `ci`: Add github action dependabot for lib dependencies. (GH-68)
 
 ## 0.0.9 (January 25, 2024)
 
