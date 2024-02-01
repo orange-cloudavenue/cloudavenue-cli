@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/adampresley/sigint v0.0.0-20150906022118-7e8d2ad16a94
-	github.com/aws/aws-sdk-go v1.49.16
+	github.com/aws/aws-sdk-go v1.50.8
 	github.com/briandowns/spinner v1.23.0
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/orange-cloudavenue/cloudavenue-sdk-go v0.7.0
