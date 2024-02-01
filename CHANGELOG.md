@@ -9,6 +9,7 @@
 
 ### :dependabot: **Dependencies**
 
+* deps: bumps actions/download-artifact from 3.0.2 to 4.1.1 (GH-74)
 * deps: bumps actions/upload-artifact from 3 to 4 (GH-75)
 
 ## 0.0.9 (January 25, 2024)
