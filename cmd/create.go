@@ -9,6 +9,13 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const (
+	CmdCreate       = "create"
+	CmdCreateAlias1 = "new"
+	CmdCreateAlias2 = "add"
+	FlagName        = "name"
+)
+
 var (
 	exampleCreate1 = `
 	#List all T0
@@ -17,8 +24,8 @@ var (
 
 // createCmd create a CAV resource
 var createCmd = &cobra.Command{
-	Use:               "create",
-	Aliases:           []string{"new", "add"},
+	Use:               CmdCreate,
+	Aliases:           []string{CmdDeleteAlias1, CmdCreateAlias2},
 	Example:           exampleCreate1,
 	Short:             "Create resource to CloudAvenue.",
 	DisableAutoGenTag: true,
@@ -39,30 +46,30 @@ func init() {
 	createCmd.AddCommand(createVDCCmd)
 
 	// ? Options for edgegateway
-	createEdgeGatewayCmd.Flags().String("t0", "", "t0 name")
-	createEdgeGatewayCmd.Flags().String("vdc", "", "vdc name")
-	if err := createEdgeGatewayCmd.MarkFlagRequired("vdc"); err != nil {
+	createEdgeGatewayCmd.Flags().String(ArgT0, "", "t0 name")
+	createEdgeGatewayCmd.Flags().String(ArgVDC, "", "vdc name")
+	if err := createEdgeGatewayCmd.MarkFlagRequired(ArgVDC); err != nil {
 		fmt.Println("Error from Flag VDC, is require.", err)
 		return
 	}
 
 	// ? Options for publicip
-	createPublicIPCmd.Flags().String("name", "", "public ip address")
-	if err := createPublicIPCmd.MarkFlagRequired("name"); err != nil {
+	createPublicIPCmd.Flags().String(FlagName, "", "public ip address")
+	if err := createPublicIPCmd.MarkFlagRequired(FlagName); err != nil {
 		fmt.Println("Error from Flag name, is require.", err)
 		return
 	}
 
 	// ? Options for s3
-	createS3Cmd.Flags().String("name", "", "s3 bucket name")
-	if err := createS3Cmd.MarkFlagRequired("name"); err != nil {
+	createS3Cmd.Flags().String(FlagName, "", "s3 bucket name")
+	if err := createS3Cmd.MarkFlagRequired(FlagName); err != nil {
 		fmt.Println("Error from Flag name, is require.", err)
 		return
 	}
 
 	// ? Options for vdc
-	createVDCCmd.Flags().String("name", "", "vdc name")
-	if err := createVDCCmd.MarkFlagRequired("name"); err != nil {
+	createVDCCmd.Flags().String(FlagName, "", "vdc name")
+	if err := createVDCCmd.MarkFlagRequired(FlagName); err != nil {
 		fmt.Println("Error from Flag Name, is require.", err)
 		return
 	}
@@ -70,18 +77,18 @@ func init() {
 
 // createPublicIPCmd create a public ip resource(s)
 var createPublicIPCmd = &cobra.Command{
-	Use:               "publicip",
+	Use:               ArgPublicIP,
 	Short:             "Create an ip",
 	Example:           "ip create --name <EdgeGateway>",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Check if time flag is set
-		if cmd.Flag("time").Value.String() == "true" {
+		if cmd.Flag(FlagTime).Value.String() == "true" {
 			defer timeTrack(time.Now(), cmd.CommandPath())
 		}
 
 		// Get the name from the command line
-		gwName, err := cmd.Flags().GetString("name")
+		gwName, err := cmd.Flags().GetString(FlagName)
 		if err != nil {
 			fmt.Println("Malformed argument EdgeGateway Name ", err)
 			return
@@ -110,18 +117,18 @@ var createPublicIPCmd = &cobra.Command{
 
 // createVDCCmd create a vdc resource(s)
 var createVDCCmd = &cobra.Command{
-	Use:               "vdc",
+	Use:               ArgVDC,
 	Short:             "Create an vdc",
 	Example:           "vdc create --name <vdc name>",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Check if time flag is set
-		if cmd.Flag("time").Value.String() == "true" {
+		if cmd.Flag(FlagTime).Value.String() == "true" {
 			defer timeTrack(time.Now(), cmd.CommandPath())
 		}
 
 		// Get the vdc name from the command line
-		vdcName, err := cmd.Flags().GetString("name")
+		vdcName, err := cmd.Flags().GetString(FlagName)
 		if err != nil {
 			fmt.Println("Malformed VDC name", err)
 			return
@@ -163,14 +170,14 @@ var createVDCCmd = &cobra.Command{
 
 // createEdgeGatewayCmd create a edgegateway resource(s)
 var createEdgeGatewayCmd = &cobra.Command{
-	Use:               "edgegateway",
+	Use:               ArgEdgeGateway,
 	Short:             "Create an edgeGateway",
 	Aliases:           []string{"gw", "egw"},
 	Example:           "edgegateway create --vdc <vdc name> [--t0 <t0 name>]",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Check if time flag is set
-		if cmd.Flag("time").Value.String() == "true" {
+		if cmd.Flag(FlagTime).Value.String() == "true" {
 			defer timeTrack(time.Now(), cmd.CommandPath())
 		}
 
@@ -184,7 +191,7 @@ var createEdgeGatewayCmd = &cobra.Command{
 		// Get the t0 name
 		// if flag is not precise, get the first one
 		var t0 string
-		if cmd.Flag("t0").Value.String() == "" {
+		if cmd.Flag(ArgT0).Value.String() == "" {
 			t0s, err := c.V1.T0.GetT0s()
 			if err != nil {
 				fmt.Println("Error to retrieve your first T0", err)
@@ -221,17 +228,17 @@ var createEdgeGatewayCmd = &cobra.Command{
 
 // createS3Cmd create a s3 bucket resource(s)
 var createS3Cmd = &cobra.Command{
-	Use:               "s3",
+	Use:               ArgS3,
 	Short:             "Create an S3 bucket",
 	Example:           "create s3 --name <bucket name>",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Check if time flag is set
-		if cmd.Flag("time").Value.String() == "true" {
+		if cmd.Flag(FlagTime).Value.String() == "true" {
 			defer timeTrack(time.Now(), cmd.CommandPath())
 		}
 
-		bucketName, err := cmd.Flags().GetString("name")
+		bucketName, err := cmd.Flags().GetString(FlagName)
 		if err != nil {
 			fmt.Println("Malformed bucket name ", err)
 			return

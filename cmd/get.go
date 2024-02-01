@@ -11,6 +11,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const (
+	CmdGet       = "get"
+	CmdGetAlias1 = "ls"
+	CmdGetAlias2 = "list"
+)
+
 var (
 	exampleGet1 = `
 	#List all T0
@@ -22,8 +28,8 @@ var (
 
 // getCmd list a CAV resource
 var getCmd = &cobra.Command{
-	Use:               "get",
-	Aliases:           []string{"ls", "list"},
+	Use:               CmdGet,
+	Aliases:           []string{CmdGetAlias1, CmdGetAlias2},
 	Example:           exampleGet1 + "\n" + exampleGet2,
 	Short:             "Get resource to retrieve information from CloudAvenue.",
 	DisableAutoGenTag: true,
@@ -44,13 +50,13 @@ func init() {
 
 // getT0Cmd return a list of your t0 resource(s)
 var getT0Cmd = &cobra.Command{
-	Use:               "t0",
+	Use:               ArgT0,
 	Short:             "A brief list of your t0 resources",
 	Long:              "A complete list information of your T0 resources in your CloudAvenue account.",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Check if time flag is set and print time elapsed
-		if cmd.Flag("time").Value.String() == "true" {
+		if cmd.Flag(FlagTime).Value.String() == "true" {
 			defer timeTrack(time.Now(), cmd.CommandPath())
 		}
 
@@ -65,17 +71,18 @@ var getT0Cmd = &cobra.Command{
 		flag := cmd.Flag(FlagOutput).Value.String()
 		w := print.New()
 		switch flag {
-		case ValueFlagWIDE:
+		case FlagOutputValueWide:
 			w.SetHeader("name", "t0 provider name", "t0 class service", "services", "class service")
 			for _, t0 := range *t0s {
 				w.AddFields(t0.Tier0Vrf, t0.Tier0Provider, t0.Tier0ClassService, t0.Services, t0.ClassService)
 			}
-		case ValueFlagJSON, ValueFlagYAML:
+		case FlagOutputValueJSON, FlagOutputValueYAML:
 			x, err := output.New(stringToTypeFormat(flag), t0s)
 			if err != nil {
 				log.Default().Println("Error creating output", err)
 				return
 			}
+			s.Stop()
 			x.ToOutput()
 		default:
 			w.SetHeader("name", "t0 provider name")
@@ -91,14 +98,14 @@ var getT0Cmd = &cobra.Command{
 
 // getPublicIPCmd return a list of your publicip
 var getPublicIPCmd = &cobra.Command{
-	Use:               "publicip",
-	Aliases:           []string{"ip"},
+	Use:               ArgPublicIP,
+	Aliases:           []string{ArgPublicIPAlias1},
 	Short:             "A brief list of your public ip resources",
 	Long:              "A complete list information of your Public IP resources in your CloudAvenue account.",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Check if time flag is set and print time elapsed
-		if cmd.Flag("time").Value.String() == "true" {
+		if cmd.Flag(FlagTime).Value.String() == "true" {
 			defer timeTrack(time.Now(), cmd.CommandPath())
 		}
 
@@ -113,17 +120,18 @@ var getPublicIPCmd = &cobra.Command{
 		flag := cmd.Flag(FlagOutput).Value
 		w := print.New()
 		switch flag.String() {
-		case "wide":
+		case FlagOutputValueWide:
 			w.SetHeader("public ip", "edge gateway name", "ip natted")
 			for _, i := range ips.NetworkConfig {
 				w.AddFields(i.UplinkIP, i.EdgeGatewayName, i.TranslatedIP)
 			}
-		case ValueFlagJSON, ValueFlagYAML:
+		case FlagOutputValueJSON, FlagOutputValueYAML:
 			x, err := output.New(stringToTypeFormat(flag.String()), ips)
 			if err != nil {
 				log.Default().Println("Error creating output", err)
 				return
 			}
+			s.Stop()
 			x.ToOutput()
 		default:
 			w.SetHeader("public ip", "edge gateway name")
@@ -138,14 +146,14 @@ var getPublicIPCmd = &cobra.Command{
 
 // getS3Cmd return a list of your s3 (bucket) resource(s)
 var getS3Cmd = &cobra.Command{
-	Use:               "s3",
-	Aliases:           []string{"bucket"},
+	Use:               ArgS3,
+	Aliases:           []string{ArgS3Alias},
 	Short:             "A brief list of your s3 resources",
 	Long:              "A complete list information of your s3 resources in your CloudAvenue account.",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Check if time flag is set and print time elapsed
-		if cmd.Flag("time").Value.String() == "true" {
+		if cmd.Flag(FlagTime).Value.String() == "true" {
 			defer timeTrack(time.Now(), cmd.CommandPath())
 		}
 
@@ -162,17 +170,18 @@ var getS3Cmd = &cobra.Command{
 		w := print.New()
 		// var format output.Formatter
 		switch flag {
-		case ValueFlagWIDE:
+		case FlagOutputValueWide:
 			w.SetHeader("name", "owner", "creation date", "owner id")
 			for _, b := range s3.Buckets {
 				w.AddFields(*b.Name, *s3.Owner.DisplayName, *b.CreationDate, *s3.Owner.ID)
 			}
-		case ValueFlagJSON, ValueFlagYAML:
+		case FlagOutputValueJSON, FlagOutputValueYAML:
 			x, err := output.New(stringToTypeFormat(flag), s3)
 			if err != nil {
 				log.Default().Println("Error creating output", err)
 				return
 			}
+			s.Stop()
 			x.ToOutput()
 		default:
 			w.SetHeader("name", "owner")
@@ -187,14 +196,14 @@ var getS3Cmd = &cobra.Command{
 
 // getEdgeGatewayCmd return a list of your edgegateway resource(s)
 var getEdgeGatewayCmd = &cobra.Command{
-	Use:               "edgegateway",
-	Aliases:           []string{"gw", "egw"},
+	Use:               ArgEdgeGateway,
+	Aliases:           []string{ArgEdgeGatewayAlias1, ArgEdgeGatewayAlias2},
 	Short:             "A brief list of your edgegateway resources",
 	Long:              "A complete list information of your EdgeGateway resources in your CloudAvenue account.",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Check if time flag is set and print time elapsed
-		if cmd.Flag("time").Value.String() == "true" {
+		if cmd.Flag(FlagTime).Value.String() == "true" {
 			defer timeTrack(time.Now(), cmd.CommandPath())
 		}
 
@@ -207,17 +216,18 @@ var getEdgeGatewayCmd = &cobra.Command{
 		flag := cmd.Flag(FlagOutput).Value.String()
 		w := print.New()
 		switch flag {
-		case ValueFlagWIDE:
+		case FlagOutputValueWide:
 			w.SetHeader("name", "id", "owner name", "owner type", "ratelimit (mb/s)", "description", "tier0 vrf name")
 			for _, e := range *edgeGateways {
 				w.AddFields(e.EdgeName, e.EdgeID, e.OwnerName, e.OwnerType, e.Bandwidth, e.Description, e.Tier0VrfName)
 			}
-		case ValueFlagJSON, ValueFlagYAML:
+		case FlagOutputValueJSON, FlagOutputValueYAML:
 			x, err := output.New(stringToTypeFormat(flag), edgeGateways)
 			if err != nil {
 				log.Default().Println("Error creating output", err)
 				return
 			}
+			s.Stop()
 			x.ToOutput()
 		default:
 			w.SetHeader("name", "owner")
@@ -232,13 +242,13 @@ var getEdgeGatewayCmd = &cobra.Command{
 
 // getVDCCmd return a list of your vdc resource(s)
 var getVDCCmd = &cobra.Command{
-	Use:               "vdc",
+	Use:               ArgVDC,
 	Short:             "A brief list of your vdc resources",
 	Long:              "A complete list information of your s3 resources in your CloudAvenue account.",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Check if time flag is set and print time elapsed
-		if cmd.Flag("time").Value.String() == "true" {
+		if cmd.Flag(FlagTime).Value.String() == "true" {
 			defer timeTrack(time.Now(), cmd.CommandPath())
 		}
 
@@ -252,17 +262,18 @@ var getVDCCmd = &cobra.Command{
 		flag := cmd.Flag(FlagOutput).Value.String()
 		w := print.New()
 		switch flag {
-		case "wide":
+		case FlagOutputValueWide:
 			w.SetHeader("name", "status", "cpu used (mhz)", "memory used (mb)", "storage used (mb)", "number of vm(s)", "number of vapp(s)")
 			for _, v := range vdcs {
 				w.AddFields(v.Name, v.Status, *v.CpuUsedMhz, *v.MemoryUsedMB, *v.StorageUsedMB, *v.NumberOfVMs, *v.NumberOfVApps)
 			}
-		case ValueFlagJSON, ValueFlagYAML:
+		case FlagOutputValueJSON, FlagOutputValueYAML:
 			x, err := output.New(stringToTypeFormat(flag), vdcs)
 			if err != nil {
 				log.Default().Println("Error creating output", err)
 				return
 			}
+			s.Stop()
 			x.ToOutput()
 		default:
 			w.SetHeader("name", "status")

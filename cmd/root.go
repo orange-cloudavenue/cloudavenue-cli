@@ -21,10 +21,20 @@ import (
 )
 
 const (
-	ValueFlagJSON = "json"
-	ValueFlagYAML = "yaml"
-	ValueFlagWIDE = "wide"
-	FlagOutput    = "output"
+	FlagOutputValueJSON  = "json"
+	FlagOutputValueYAML  = "yaml"
+	FlagOutputValueWide  = "wide"
+	FlagOutput           = "output"
+	FlagTime             = "time"
+	ArgVDC               = "vdc"
+	ArgPublicIP          = "publicip"
+	ArgPublicIPAlias1    = "ip"
+	ArgS3                = "s3"
+	ArgS3Alias           = "bucket"
+	ArgEdgeGateway       = "edgegateway"
+	ArgEdgeGatewayAlias1 = "gw"
+	ArgEdgeGatewayAlias2 = "egw"
+	ArgT0                = "t0"
 )
 
 var (
@@ -162,9 +172,9 @@ func versionCmd() *cobra.Command {
 // function to transform String to output.TypeFormat
 func stringToTypeFormat(s string) model.TypeFormat {
 	switch s {
-	case ValueFlagJSON:
+	case FlagOutputValueJSON:
 		return model.TypeJSON
-	case ValueFlagYAML:
+	case FlagOutputValueYAML:
 		return model.TypeYAML
 	default:
 		return model.TypeFormat("")
