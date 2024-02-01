@@ -68,6 +68,7 @@ var getT0Cmd = &cobra.Command{
 		}
 
 		// Print the result
+		s.Stop()
 		flag := cmd.Flag(FlagOutput).Value.String()
 		w := print.New()
 		switch flag {
@@ -82,7 +83,6 @@ var getT0Cmd = &cobra.Command{
 				log.Default().Println("Error creating output", err)
 				return
 			}
-			s.Stop()
 			x.ToOutput()
 		default:
 			w.SetHeader("name", "t0 provider name")
@@ -90,8 +90,6 @@ var getT0Cmd = &cobra.Command{
 				w.AddFields(t0.Tier0Vrf, t0.Tier0Provider)
 			}
 		}
-
-		s.Stop()
 		w.PrintTable()
 	},
 }
@@ -117,21 +115,21 @@ var getPublicIPCmd = &cobra.Command{
 		}
 
 		// Print the result
-		flag := cmd.Flag(FlagOutput).Value
+		s.Stop()
+		flag := cmd.Flag(FlagOutput).Value.String()
 		w := print.New()
-		switch flag.String() {
+		switch flag {
 		case FlagOutputValueWide:
 			w.SetHeader("public ip", "edge gateway name", "ip natted")
 			for _, i := range ips.NetworkConfig {
 				w.AddFields(i.UplinkIP, i.EdgeGatewayName, i.TranslatedIP)
 			}
 		case FlagOutputValueJSON, FlagOutputValueYAML:
-			x, err := output.New(stringToTypeFormat(flag.String()), ips)
+			x, err := output.New(stringToTypeFormat(flag), ips)
 			if err != nil {
 				log.Default().Println("Error creating output", err)
 				return
 			}
-			s.Stop()
 			x.ToOutput()
 		default:
 			w.SetHeader("public ip", "edge gateway name")
@@ -139,7 +137,6 @@ var getPublicIPCmd = &cobra.Command{
 				w.AddFields(i.UplinkIP, i.EdgeGatewayName)
 			}
 		}
-		s.Stop()
 		w.PrintTable()
 	},
 }
@@ -181,7 +178,6 @@ var getS3Cmd = &cobra.Command{
 				log.Default().Println("Error creating output", err)
 				return
 			}
-			s.Stop()
 			x.ToOutput()
 		default:
 			w.SetHeader("name", "owner")
@@ -189,7 +185,6 @@ var getS3Cmd = &cobra.Command{
 				w.AddFields(*b.Name, *s3.Owner.DisplayName)
 			}
 		}
-		s.Stop()
 		w.PrintTable()
 	},
 }
@@ -213,6 +208,7 @@ var getEdgeGatewayCmd = &cobra.Command{
 		}
 
 		// Print the result
+		s.Stop()
 		flag := cmd.Flag(FlagOutput).Value.String()
 		w := print.New()
 		switch flag {
@@ -227,7 +223,6 @@ var getEdgeGatewayCmd = &cobra.Command{
 				log.Default().Println("Error creating output", err)
 				return
 			}
-			s.Stop()
 			x.ToOutput()
 		default:
 			w.SetHeader("name", "owner")
@@ -235,7 +230,6 @@ var getEdgeGatewayCmd = &cobra.Command{
 				w.AddFields(e.EdgeName, e.OwnerName)
 			}
 		}
-		s.Stop()
 		w.PrintTable()
 	},
 }
@@ -259,6 +253,8 @@ var getVDCCmd = &cobra.Command{
 			return
 		}
 
+		// Print the result
+		s.Stop()
 		flag := cmd.Flag(FlagOutput).Value.String()
 		w := print.New()
 		switch flag {
@@ -273,7 +269,6 @@ var getVDCCmd = &cobra.Command{
 				log.Default().Println("Error creating output", err)
 				return
 			}
-			s.Stop()
 			x.ToOutput()
 		default:
 			w.SetHeader("name", "status")
@@ -281,7 +276,6 @@ var getVDCCmd = &cobra.Command{
 				w.AddFields(v.Name, v.Status)
 			}
 		}
-		s.Stop()
 		w.PrintTable()
 	},
 }
