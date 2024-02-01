@@ -16,6 +16,25 @@ import (
 	clientcloudavenue "github.com/orange-cloudavenue/cloudavenue-sdk-go/pkg/clients/cloudavenue"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+
+	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/output/model"
+)
+
+const (
+	FlagOutputValueJSON  = "json"
+	FlagOutputValueYAML  = "yaml"
+	FlagOutputValueWide  = "wide"
+	FlagOutput           = "output"
+	FlagTime             = "time"
+	ArgVDC               = "vdc"
+	ArgPublicIP          = "publicip"
+	ArgPublicIPAlias1    = "ip"
+	ArgS3                = "s3"
+	ArgS3Alias           = "bucket"
+	ArgEdgeGateway       = "edgegateway"
+	ArgEdgeGatewayAlias1 = "gw"
+	ArgEdgeGatewayAlias2 = "egw"
+	ArgT0                = "t0"
 )
 
 var (
@@ -147,5 +166,17 @@ func versionCmd() *cobra.Command {
 			s.FinalMSG = "Version: " + version + "\nCommit: " + commit + "\nBuilt at: " + date + "\nBuilt by: " + builtBy
 			s.Stop()
 		},
+	}
+}
+
+// function to transform String to output.TypeFormat
+func stringToTypeFormat(s string) model.TypeFormat {
+	switch s {
+	case FlagOutputValueJSON:
+		return model.TypeJSON
+	case FlagOutputValueYAML:
+		return model.TypeYAML
+	default:
+		return model.TypeFormat("")
 	}
 }

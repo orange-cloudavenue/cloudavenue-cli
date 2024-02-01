@@ -74,8 +74,16 @@ func TestRootCmd(t *testing.T) {
 						fail: true,
 					},
 					{
-						name: oneCmd.Use + "_" + cmdSubCmd.Use + " with ouput flag",
+						name: oneCmd.Use + "_" + cmdSubCmd.Use + " with ouput flag wide args",
 						args: []string{oneCmd.Use, cmdSubCmd.Use, "--output", "wide"},
+					},
+					{
+						name: oneCmd.Use + "_" + cmdSubCmd.Use + " with ouput flag json args",
+						args: []string{oneCmd.Use, cmdSubCmd.Use, "--output", "json"},
+					},
+					{
+						name: oneCmd.Use + "_" + cmdSubCmd.Use + " with ouput flag yaml args",
+						args: []string{oneCmd.Use, cmdSubCmd.Use, "--output", "yaml"},
 					},
 					{
 						name: oneCmd.Use + "_" + cmdSubCmd.Use + " with output flag and a whatever args",
@@ -209,14 +217,6 @@ func TestRootCmd(t *testing.T) {
 		},
 	}
 	startTest(tests, t)
-	// if strings.Contains(oneCmd.Use, cmd.CmdEdgeGateway) {
-	// 	tests[3] = tt{
-	// 		name: oneCmd.Use + "_" + cmdSubCmd.Use + " with good flags with argument",
-	// 		args: []string{oneCmd.Use, cmdSubCmd.Use, "--vdc", "whatever", "--t0", "1"},
-	// 		fail: true,
-	// 	}
-	// }
-
 }
 
 func startTest(tests tts, t *testing.T) {

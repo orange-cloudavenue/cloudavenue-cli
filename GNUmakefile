@@ -20,6 +20,9 @@ build:
 test:
 	go test -coverprofile=coverage.out ./cmd/... && go tool cover -func=coverage.out
 
+testhtml:
+	go test -coverprofile=coverage.out ./cmd/... && go tool cover -html=coverage.out
+
  doc:
 	@echo "=== Start Process for Technical Command Documentation Generation ==="
 	go generate ./...
