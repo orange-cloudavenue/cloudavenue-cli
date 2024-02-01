@@ -9,6 +9,7 @@
 
 ### :dependabot: **Dependencies**
 
+* deps: bumps actions/cache from 3 to 4 (GH-72)
 * deps: bumps actions/download-artifact from 3.0.2 to 4.1.1 (GH-74)
 * deps: bumps actions/setup-go from 4.0.1 to 5.0.0 (GH-73)
 * deps: bumps actions/upload-artifact from 3 to 4 (GH-75)
