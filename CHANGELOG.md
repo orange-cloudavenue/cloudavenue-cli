@@ -7,6 +7,10 @@
 
 * `ci`: Add github action dependabot for lib dependencies. (GH-68)
 
+### :dependabot: **Dependencies**
+
+* deps: bumps actions/upload-artifact from 3 to 4 (GH-75)
+
 ## 0.0.9 (January 25, 2024)
 
 ### :rocket: **New Features**
