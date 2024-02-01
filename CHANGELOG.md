@@ -1,5 +1,7 @@
 ## 0.1.0 (Unreleased)
 
+## 0.0.9 (January 25, 2024)
+
 ### :rocket: **New Features**
 
 * `completion`: Add completion command. (GH-59)
