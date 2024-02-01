@@ -1,5 +1,9 @@
 ## 0.1.0 (Unreleased)
 
+### :rocket: **New Features**
+
+* `ouput`: Add json and yaml format for get command. (GH-66)
+
 ## 0.0.9 (January 25, 2024)
 
 ### :rocket: **New Features**
