@@ -2,6 +2,7 @@
 
 ### :rocket: **New Features**
 
+* `cmd/update`: Now an `update` command is available to update the `cav` binary to the latest version. (GH-76)
 * `ouput`: Add json and yaml format for get command. (GH-66)
 ### :information_source: **Notes**
 
