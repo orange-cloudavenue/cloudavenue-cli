@@ -151,22 +151,7 @@ func timeTrack(start time.Time, name string) {
 func init() {
 	s.Start()
 	rootCmd.PersistentFlags().BoolP("time", "t", false, "time elapsed for command")
-	rootCmd.AddCommand(versionCmd())
 	rootCmd.InitDefaultCompletionCmd()
-}
-
-// func versionCmd() return the version of the CLI
-func versionCmd() *cobra.Command {
-	return &cobra.Command{
-		Use:               "version",
-		Short:             "Print the version number of cav",
-		Long:              `All software has versions. This is cav's`,
-		DisableAutoGenTag: true,
-		Run: func(cmd *cobra.Command, args []string) {
-			s.FinalMSG = "Version: " + version + "\nCommit: " + commit + "\nBuilt at: " + date + "\nBuilt by: " + builtBy
-			s.Stop()
-		},
-	}
 }
 
 // function to transform String to output.TypeFormat

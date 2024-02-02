@@ -1,0 +1,3 @@
+```release-note:feature
+`cmd/update`: Now an `update` command is available to update the `cav` binary to the latest version.
+```
