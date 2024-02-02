@@ -11,7 +11,7 @@ import (
 	"github.com/adampresley/sigint"
 	"github.com/briandowns/spinner"
 	"github.com/mitchellh/go-homedir"
-	cloudavenue "github.com/orange-cloudavenue/cloudavenue-sdk-go"
+	"github.com/orange-cloudavenue/cloudavenue-sdk-go"
 	clientcloudavenue "github.com/orange-cloudavenue/cloudavenue-sdk-go/pkg/clients/cloudavenue"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -37,26 +37,29 @@ const (
 )
 
 var (
-	c                   *cloudavenue.Client
-	version             = "dev"
-	commit              = "none"
-	date                = "unknown"
-	builtBy             = "unknown"
-	s                   = spinner.New(spinner.CharSets[43], 100*time.Millisecond)
-	cloudavenueOrg      string
-	cloudavenueUsername string
-	cloudavenuePassword string
-	cloudavenueDebug    bool
-	cloudavenueURL      string
+	c       *cloudavenue.Client
+	version = "dev"
+	commit  = "none"
+	date    = "unknown"
+	builtBy = "unknown"
+	s       = spinner.New(spinner.CharSets[43], 100*time.Millisecond)
+
+	RootCmd = rootCmd
+
+	// rootCmd represents the base command when called without any subcommands
+	rootCmd = &cobra.Command{
+		Use:               "cav",
+		Short:             "cav is the Command Line Interface for CloudAvenue Platform",
+		DisableAutoGenTag: true,
+	}
 )
 
-var RootCmd = rootCmd
-
-// rootCmd represents the base command when called without any subcommands
-var rootCmd = &cobra.Command{
-	Use:               "cav",
-	Short:             "cav is the Command Line Interface for CloudAvenue Platform",
-	DisableAutoGenTag: true,
+type cloudavenueConfig struct {
+	Username string `mapstructure:"username"`
+	Password string `mapstructure:"password"`
+	Org      string `mapstructure:"org"`
+	URL      string `mapstructure:"url"`
+	Debug    bool   `mapstructure:"debug"`
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -67,15 +70,15 @@ func Execute() (err error) {
 		fmt.Println("SIGINT received. Exiting...")
 		os.Exit(0)
 	})
-
 	// Set default file configuration and create it if not exist
 	home, err := homedir.Dir()
 	if err != nil {
 		return err
 	}
-	viper.SetConfigName("config")
-	viper.SetConfigType("yaml")
-	viper.AddConfigPath(home + "/.cav")
+	v := viper.New()
+	v.SetConfigName("config")
+	v.SetConfigType("yaml")
+	v.AddConfigPath(home + "/.cav")
 	if home == "" {
 		return fmt.Errorf("Error in Get HOME Directory")
 	}
@@ -83,36 +86,37 @@ func Execute() (err error) {
 		if err = os.MkdirAll(home+"/.cav", 0755); err != nil {
 			return err
 		}
-		viper.SetDefault("cloudavenue_username", "")
-		viper.SetDefault("cloudavenue_password", "")
-		viper.SetDefault("cloudavenue_org", "")
-		viper.SetDefault("cloudavenue_url", "")
-		// viper.AutomaticEnv()
-		viper.SetDefault("cloudavenue_debug", false)
+		// Set default configuration
+		cloudavenueConfig := cloudavenueConfig{}
+		// set struct to viper
+		v.Set("cloudavenue", cloudavenueConfig)
 
-		if err = viper.SafeWriteConfig(); err != nil {
+		// Write configuration file
+		if err = v.SafeWriteConfig(); err != nil {
 			return err
 		}
-		s.FinalMSG = "Configuration file created in " + home + "/.cav/config.yaml \nPlease fill it with your credentials and re-run the command.\n"
+		s.FinalMSG = "***\n Configuration file is created in " + home + "/.cav/config.yaml \nPlease fill it with your credentials and re-run the command.\n***\n"
 		s.Stop()
 		os.Exit(0)
 	}
 
 	// Read configuration file
-	viper.Debug()
-	fmt.Println("Using config username:", viper.GetString("cloudavenue_username"))
+	err = v.ReadInConfig()
+	if err != nil {
+		fmt.Println("Unable to read config:", err)
+	}
+
 	// Set client CloudAvenue
 	c, err = cloudavenue.New(&cloudavenue.ClientOpts{
 		CloudAvenue: &clientcloudavenue.Opts{
-			Username: viper.GetString("cloudavenue_username"),
-			Password: viper.GetString("cloudavenue_password"),
-			Org:      viper.GetString("cloudavenue_org"),
-			URL:      viper.GetString("cloudavenue_url"),
-			Debug:    viper.GetBool("cloudavenue_debug"),
+			Username: v.GetString("cloudavenue.username"),
+			Password: v.GetString("cloudavenue.password"),
+			Org:      v.GetString("cloudavenue.org"),
+			URL:      v.GetString("cloudavenue.url"),
+			Debug:    v.GetBool("cloudavenue.debug"),
 		},
 	})
 	if err != nil {
-		fmt.Println("Error in New Client", err)
 		return err
 	}
 
