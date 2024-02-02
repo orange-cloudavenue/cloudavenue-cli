@@ -15,6 +15,7 @@ const (
 	delete      string = "delete"
 	help        string = "help"
 	version     string = "version"
+	update      string = "update"
 	vdc         string = "vdc"
 	s3          string = "s3"
 	edgeGateway string = "edgegateway"
@@ -179,7 +180,18 @@ func TestRootCmd(t *testing.T) {
 					fail: false,
 				},
 			}
+
+		// ? Test update argument
+		case update:
+			tests = tts{
+				{
+					name: oneCmd.Use,
+					args: []string{oneCmd.Use},
+					fail: false,
+				},
+			}
 		}
+
 		startTest(tests, t)
 	}
 
