@@ -6,7 +6,6 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"strconv"
 	"time"
 
 	"github.com/adampresley/sigint"
@@ -48,6 +47,7 @@ var (
 	cloudavenueUsername string
 	cloudavenuePassword string
 	cloudavenueDebug    bool
+	cloudavenueURL      string
 )
 
 var RootCmd = rootCmd
@@ -86,7 +86,8 @@ func Execute() (err error) {
 		viper.SetDefault("cloudavenue_username", "")
 		viper.SetDefault("cloudavenue_password", "")
 		viper.SetDefault("cloudavenue_org", "")
-		viper.AutomaticEnv()
+		viper.SetDefault("cloudavenue_url", "")
+		// viper.AutomaticEnv()
 		viper.SetDefault("cloudavenue_debug", false)
 
 		if err = viper.SafeWriteConfig(); err != nil {
@@ -97,36 +98,21 @@ func Execute() (err error) {
 		os.Exit(0)
 	}
 
-	// check if variable is set if not, use configuration file
-	if os.Getenv("CLOUDAVENUE_USERNAME") == "" || os.Getenv("CLOUDAVENUE_PASSWORD") == "" || os.Getenv("CLOUDAVENUE_ORG") == "" {
-		if err = viper.ReadInConfig(); err != nil {
-			return err
-		}
-		cloudavenueUsername = viper.GetString("cloudavenue_username")
-		cloudavenuePassword = viper.GetString("cloudavenue_password")
-		cloudavenueOrg = viper.GetString("cloudavenue_org")
-		cloudavenueDebug = viper.GetBool("cloudavenue_debug")
-	} else {
-		cloudavenueUsername = os.Getenv("CLOUDAVENUE_USERNAME")
-		cloudavenuePassword = os.Getenv("CLOUDAVENUE_PASSWORD")
-		cloudavenueOrg = os.Getenv("CLOUDAVENUE_ORG")
-		x, err := strconv.ParseBool(os.Getenv("CLOUDAVENUE_DEBUG"))
-		if err != nil {
-			return err
-		}
-		cloudavenueDebug = x
-	}
-
+	// Read configuration file
+	viper.Debug()
+	fmt.Println("Using config username:", viper.GetString("cloudavenue_username"))
 	// Set client CloudAvenue
-	c, err = cloudavenue.New(cloudavenue.ClientOpts{
+	c, err = cloudavenue.New(&cloudavenue.ClientOpts{
 		CloudAvenue: &clientcloudavenue.Opts{
-			Username: cloudavenueUsername,
-			Password: cloudavenuePassword,
-			Org:      cloudavenueOrg,
-			Debug:    cloudavenueDebug,
+			Username: viper.GetString("cloudavenue_username"),
+			Password: viper.GetString("cloudavenue_password"),
+			Org:      viper.GetString("cloudavenue_org"),
+			URL:      viper.GetString("cloudavenue_url"),
+			Debug:    viper.GetBool("cloudavenue_debug"),
 		},
 	})
 	if err != nil {
+		fmt.Println("Error in New Client", err)
 		return err
 	}
 
