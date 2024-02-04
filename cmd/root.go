@@ -54,14 +54,6 @@ var (
 	}
 )
 
-type cloudavenueConfig struct {
-	Username string `mapstructure:"username"`
-	Password string `mapstructure:"password"`
-	Org      string `mapstructure:"org"`
-	URL      string `mapstructure:"url"`
-	Debug    bool   `mapstructure:"debug"`
-}
-
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() (err error) {
