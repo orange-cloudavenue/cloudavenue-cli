@@ -16,6 +16,7 @@
 * deps: bumps actions/setup-python from 4 to 5 (GH-71)
 * deps: bumps actions/upload-artifact from 3 to 4 (GH-75)
 * deps: bumps github.com/aws/aws-sdk-go from 1.49.16 to 1.50.8 (GH-70)
+* deps: bumps github.com/aws/aws-sdk-go from 1.50.8 to 1.50.10 (GH-81)
 
 ## 0.0.9 (January 25, 2024)
 
