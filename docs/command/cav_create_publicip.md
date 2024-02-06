@@ -16,7 +16,7 @@ ip create --name <EdgeGateway>
 
 ```
   -h, --help          help for publicip
-      --name string   public ip address
+      --name string   edgegateway name
 ```
 
 ### Options inherited from parent commands
