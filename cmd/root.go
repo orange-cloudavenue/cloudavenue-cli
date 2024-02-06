@@ -96,7 +96,11 @@ func Execute() (err error) {
 		if err = v.SafeWriteConfig(); err != nil {
 			return err
 		}
-		s.FinalMSG = "***\n Configuration file is created in " + home + "/.cav/config.yaml \nPlease fill it with your credentials and re-run the command.\n***\n"
+		s.FinalMSG = `
+					***
+					Configuration file is created in " + home + "/.cav/config.yaml
+					Please fill it with your credentials and re-run the command.
+					***`
 		s.Stop()
 		os.Exit(0)
 	}
