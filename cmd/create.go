@@ -25,7 +25,7 @@ var (
 // createCmd create a CAV resource
 var createCmd = &cobra.Command{
 	Use:               CmdCreate,
-	Aliases:           []string{CmdDeleteAlias1, CmdCreateAlias2},
+	Aliases:           []string{CmdCreateAlias1, CmdCreateAlias2},
 	Example:           exampleCreate1,
 	Short:             "Create resource to CloudAvenue.",
 	DisableAutoGenTag: true,
