@@ -117,7 +117,6 @@ func Execute() (err error) {
 			Username: v.GetString("cloudavenue.username"),
 			Password: v.GetString("cloudavenue.password"),
 			Org:      v.GetString("cloudavenue.org"),
-			URL:      v.GetString("cloudavenue.url"),
 			Debug:    v.GetBool("cloudavenue.debug"),
 		},
 	})
