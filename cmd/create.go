@@ -54,7 +54,7 @@ func init() {
 	}
 
 	// ? Options for publicip
-	createPublicIPCmd.Flags().String(FlagName, "", "public ip address")
+	createPublicIPCmd.Flags().String(FlagName, "", "edgegateway name")
 	if err := createPublicIPCmd.MarkFlagRequired(FlagName); err != nil {
 		fmt.Println("Error from Flag name, is require.", err)
 		return

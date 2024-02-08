@@ -1,3 +1,5 @@
+![Orange Logo](./docs/multimedia/orange.png)
+
 :warning: This tool is under development, Big improvements or changes may appear.
 
 # What is cav

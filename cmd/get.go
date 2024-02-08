@@ -15,6 +15,11 @@ const (
 	CmdGet       = "get"
 	CmdGetAlias1 = "ls"
 	CmdGetAlias2 = "list"
+	description  = `
+					The default output format print the minimal necessary information like name, status or group.
+					You can use the -o flag to specify the output format.
+					"wide" will print some additional information.
+					"json" or "yaml" will print the result in the specified format.`
 )
 
 var (
@@ -52,7 +57,7 @@ func init() {
 var getT0Cmd = &cobra.Command{
 	Use:               ArgT0,
 	Short:             "A brief list of your t0 resources",
-	Long:              "A complete list information of your T0 resources in your CloudAvenue account.",
+	Long:              "A complete list information of your T0 resources in your CloudAvenue account." + description,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Check if time flag is set and print time elapsed
@@ -99,7 +104,7 @@ var getPublicIPCmd = &cobra.Command{
 	Use:               ArgPublicIP,
 	Aliases:           []string{ArgPublicIPAlias1},
 	Short:             "A brief list of your public ip resources",
-	Long:              "A complete list information of your Public IP resources in your CloudAvenue account.",
+	Long:              "A complete list information of your Public IP resources in your CloudAvenue account." + description,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Check if time flag is set and print time elapsed
@@ -146,7 +151,7 @@ var getS3Cmd = &cobra.Command{
 	Use:               ArgS3,
 	Aliases:           []string{ArgS3Alias},
 	Short:             "A brief list of your s3 resources",
-	Long:              "A complete list information of your s3 resources in your CloudAvenue account.",
+	Long:              "A complete list information of your s3 resources in your CloudAvenue account." + description,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Check if time flag is set and print time elapsed
@@ -194,7 +199,7 @@ var getEdgeGatewayCmd = &cobra.Command{
 	Use:               ArgEdgeGateway,
 	Aliases:           []string{ArgEdgeGatewayAlias1, ArgEdgeGatewayAlias2},
 	Short:             "A brief list of your edgegateway resources",
-	Long:              "A complete list information of your EdgeGateway resources in your CloudAvenue account.",
+	Long:              "A complete list information of your EdgeGateway resources in your CloudAvenue account." + description,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Check if time flag is set and print time elapsed
@@ -238,7 +243,7 @@ var getEdgeGatewayCmd = &cobra.Command{
 var getVDCCmd = &cobra.Command{
 	Use:               ArgVDC,
 	Short:             "A brief list of your vdc resources",
-	Long:              "A complete list information of your s3 resources in your CloudAvenue account.",
+	Long:              "A complete list information of your s3 resources in your CloudAvenue account." + description,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Check if time flag is set and print time elapsed
