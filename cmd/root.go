@@ -56,11 +56,11 @@ var (
 
 // Use for YAML configuration file
 type cloudavenueConfig struct {
-	Username string `mapstructure:"username"`
-	Password string `mapstructure:"password"`
-	Org      string `mapstructure:"org"`
-	URL      string `mapstructure:"url"`
-	Debug    bool   `mapstructure:"debug"`
+	Username string `configstruct:"username"`
+	Password string `configstruct:"password"`
+	Org      string `configstruct:"org"`
+	URL      string `configstruct:"url"`
+	Debug    bool   `configstruct:"debug"`
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
