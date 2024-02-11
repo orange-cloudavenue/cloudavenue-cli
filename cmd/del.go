@@ -11,9 +11,9 @@ import (
 )
 
 const (
-	CmdDelete       = "delete"
-	CmdDeleteAlias1 = "del"
-	CmdDeleteAlias2 = "rm"
+	cmdDelete       = "delete"
+	cmdDeleteAlias1 = "del"
+	cmdDeleteAlias2 = "rm"
 )
 
 var (
@@ -27,8 +27,8 @@ var (
 
 // delCmd delete a CAV resource
 var delCmd = &cobra.Command{
-	Use:               CmdDelete,
-	Aliases:           []string{CmdDeleteAlias1, CmdDeleteAlias2},
+	Use:               cmdDelete,
+	Aliases:           []string{cmdDeleteAlias1, cmdDeleteAlias2},
 	Example:           exampleDelete1 + "\n" + exampleDelete2,
 	Short:             "Delete resource from CloudAvenue.",
 	DisableAutoGenTag: true,
@@ -60,13 +60,13 @@ func init() {
 
 // delVDCCmd delete a vdc resource(s)
 var delVDCCmd = &cobra.Command{
-	Use:               ArgVDC,
+	Use:               argVDC,
 	Example:           "del vdc <name> [<name>] [<name>] ...",
 	Short:             "Delete a vdc",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Check if time flag is set
-		if cmd.Flag(FlagTime).Value.String() == "true" {
+		if cmd.Flag(flagTime).Value.String() == "true" {
 			defer timeTrack(time.Now(), cmd.CommandPath())
 		}
 
@@ -98,13 +98,13 @@ var delVDCCmd = &cobra.Command{
 
 // deleteCmd delete a s3 bucket resource(s)
 var delS3Cmd = &cobra.Command{
-	Use:               ArgS3,
+	Use:               argS3,
 	Example:           "delete s3 <name> [<name>] [<name>] ...",
 	Short:             "Delete a s3 bucket",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Check if time flag is set
-		if cmd.Flag(FlagTime).Value.String() == "true" {
+		if cmd.Flag(flagTime).Value.String() == "true" {
 			defer timeTrack(time.Now(), cmd.CommandPath())
 		}
 
@@ -127,14 +127,14 @@ var delS3Cmd = &cobra.Command{
 
 // deleteCmd delete a edgeGateway resource(s)
 var delEdgeGatewayCmd = &cobra.Command{
-	Use:               ArgEdgeGateway,
-	Aliases:           []string{ArgEdgeGatewayAlias1, ArgEdgeGatewayAlias2},
+	Use:               argEdgeGateway,
+	Aliases:           []string{argEdgeGatewayAlias1, argEdgeGatewayAlias2},
 	Example:           "delete edgegateway <id or name> [<id or name>] [<id or name>] ...",
 	Short:             "Delete an edgeGateway (name or id)",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Check if time flag is set
-		if cmd.Flag(FlagTime).Value.String() == "true" {
+		if cmd.Flag(flagTime).Value.String() == "true" {
 			defer timeTrack(time.Now(), cmd.CommandPath())
 		}
 		var (
@@ -176,14 +176,14 @@ var delEdgeGatewayCmd = &cobra.Command{
 
 // deleteCmd delete a public ip resource(s)
 var delPublicIPCmd = &cobra.Command{
-	Use:               ArgPublicIP,
-	Aliases:           []string{ArgPublicIPAlias1},
+	Use:               argPublicIP,
+	Aliases:           []string{argPublicIPAlias1},
 	Example:           "delete publicip <ip> [<ip>] [<ip>] ...",
 	Short:             "Delete public ip resource(s)",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Check if time flag is set
-		if cmd.Flag(FlagTime).Value.String() == "true" {
+		if cmd.Flag(flagTime).Value.String() == "true" {
 			defer timeTrack(time.Now(), cmd.CommandPath())
 		}
 

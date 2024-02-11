@@ -20,20 +20,21 @@ import (
 )
 
 const (
-	FlagOutputValueJSON  = "json"
-	FlagOutputValueYAML  = "yaml"
-	FlagOutputValueWide  = "wide"
-	FlagOutput           = "output"
-	FlagTime             = "time"
-	ArgVDC               = "vdc"
-	ArgPublicIP          = "publicip"
-	ArgPublicIPAlias1    = "ip"
-	ArgS3                = "s3"
-	ArgS3Alias           = "bucket"
-	ArgEdgeGateway       = "edgegateway"
-	ArgEdgeGatewayAlias1 = "gw"
-	ArgEdgeGatewayAlias2 = "egw"
-	ArgT0                = "t0"
+	flagOutputValueJSON  = "json"
+	flagOutputValueYAML  = "yaml"
+	flagOutputValueWide  = "wide"
+	flagOutput           = "output"
+	flagTime             = "time"
+	flagName             = "name"
+	argVDC               = "vdc"
+	argPublicIP          = "publicip"
+	argPublicIPAlias1    = "ip"
+	argS3                = "s3"
+	argS3Alias           = "bucket"
+	argEdgeGateway       = "edgegateway"
+	argEdgeGatewayAlias1 = "gw"
+	argEdgeGatewayAlias2 = "egw"
+	argT0                = "t0"
 )
 
 var (
@@ -151,9 +152,9 @@ func init() {
 // function to transform String to output.TypeFormat
 func stringToTypeFormat(s string) model.TypeFormat {
 	switch s {
-	case FlagOutputValueJSON:
+	case flagOutputValueJSON:
 		return model.TypeJSON
-	case FlagOutputValueYAML:
+	case flagOutputValueYAML:
 		return model.TypeYAML
 	default:
 		return model.TypeFormat("")
