@@ -24,6 +24,5 @@ jobs:
           path: .cache
           restore-keys: |
             mkdocs-material-
-      - run: pip install mkdocs-material pymdown-extensions
-      - run: sed -i 's/${{ github.ref_name }}/__TAG__/g' ./docs/advanced-installation.md
+      - run: pip install mkdocs-material pymdown-extensions git-latest-release
       - run: mkdocs gh-deploy --force

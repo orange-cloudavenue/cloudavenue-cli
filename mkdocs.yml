@@ -37,7 +37,8 @@ theme:
 
 plugins:
   - search
-  
+  - git-latest-release
+
 nav:
   - Home: 
     - index.md
