@@ -12,10 +12,6 @@
 !!! warning
     This tool is under development, big improvements or changes may appear.
 
-// TODO - need version in variable
-// TODO - need FAQ
-// TODO - vdc Group
-
 [cav](command/cav.md) is a Command Line Interface for Orange CloudAvenue Platform.  
 Is supported by the most used operating systems.  
 Is a terminal app built to give a basic view to your Cloud Avenue IaaS.  
