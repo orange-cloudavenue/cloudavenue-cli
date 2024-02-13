@@ -1,19 +1,46 @@
 site_name: CAV (Cloud Avenue CLI)
+site_url: https://orange-cloudavenue.github.io/cloudavenue-cli/
 theme:
   name: material
   features:
     - navigation.instant
     - navigation.footer
     - navigation.tabs
-  palette: 
-    scheme: slate
-    primary: deep orange
-    accent: indigo
+    - navigation.tabs.sticky
+    - navigation.top
+    - content.code.copy
+    - content.code.select
+  language: en
+  font:
+    text: Lora
+  palette:
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: deep orange
+      accent: deep orange
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+     # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: deep orange
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
   icon:
     logo: fontawesome/solid/terminal
+    admonition:
+      warning: octicons/alert-16
+      note: octicons/tag-16
+      info: octicons/info-16
+
+plugins:
+  - search
 
 nav:
-  - Home: index.md
+  - Home: 
+    - index.md
   - Getting Started:
     - Installation: getting-started/installation.md
     - Configuration: getting-started/configuration.md
@@ -45,6 +72,9 @@ nav:
       - fish: command/cav_completion_fish.md
       - powershell: command/cav_completion_powershell.md
     - version: command/cav_version.md
+    - update: command/cav_update.md
+  - Advanced:
+    - Installation: advanced/advanced-installation.md
 
 markdown_extensions:
   # Python Markdown
@@ -63,23 +93,32 @@ markdown_extensions:
   - pymdownx.betterem:
       smart_enable: all
   - pymdownx.caret
+  - pymdownx.critic
   - pymdownx.details
   - pymdownx.emoji:
       emoji_index: !!python/name:material.extensions.emoji.twemoji
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
-  - pymdownx.highlight
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
   - pymdownx.inlinehilite
   - pymdownx.keys
   - pymdownx.mark
   - pymdownx.smartsymbols
+  - pymdownx.snippets
   - pymdownx.superfences
   - pymdownx.tabbed:
       alternate_style: true
   - pymdownx.tasklist:
       custom_checkbox: true
   - pymdownx.tilde
-
+extra_css:
+  - stylesheets/extra.css
 extra:
+  imaging:
+    - pillow
+    - cairosvg
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/orange-cloudavenue/cloudavenue-cli

@@ -24,5 +24,6 @@ jobs:
           path: .cache
           restore-keys: |
             mkdocs-material-
-      - run: pip install mkdocs-material pymdown-extensions
+      - run: pip install mkdocs-material pymdown-extensions 
+      - run: GITTAG=$(git describe --tags --abbrev=0) sed -i "s/__GITTAG__/$GITTAG/g" advanced-installation.md
       - run: mkdocs gh-deploy --force

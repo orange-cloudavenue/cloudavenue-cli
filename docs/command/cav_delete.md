@@ -10,7 +10,7 @@ Delete resource from CloudAvenue.
 	cav del ip 192.168.0.2
 
 	#Delete several vdc named xxxx and yyyy
-	cav del vdc --name xxxx yyyy
+	cav del vdc xxxx yyyy
 ```
 
 ### Options

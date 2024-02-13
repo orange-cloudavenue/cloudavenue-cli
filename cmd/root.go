@@ -20,20 +20,21 @@ import (
 )
 
 const (
-	FlagOutputValueJSON  = "json"
-	FlagOutputValueYAML  = "yaml"
-	FlagOutputValueWide  = "wide"
-	FlagOutput           = "output"
-	FlagTime             = "time"
-	ArgVDC               = "vdc"
-	ArgPublicIP          = "publicip"
-	ArgPublicIPAlias1    = "ip"
-	ArgS3                = "s3"
-	ArgS3Alias           = "bucket"
-	ArgEdgeGateway       = "edgegateway"
-	ArgEdgeGatewayAlias1 = "gw"
-	ArgEdgeGatewayAlias2 = "egw"
-	ArgT0                = "t0"
+	flagOutputValueJSON  = "json"
+	flagOutputValueYAML  = "yaml"
+	flagOutputValueWide  = "wide"
+	flagOutput           = "output"
+	flagTime             = "time"
+	flagName             = "name"
+	argVDC               = "vdc"
+	argPublicIP          = "publicip"
+	argPublicIPAlias1    = "ip"
+	argS3                = "s3"
+	argS3Alias           = "bucket"
+	argEdgeGateway       = "edgegateway"
+	argEdgeGatewayAlias1 = "gw"
+	argEdgeGatewayAlias2 = "egw"
+	argT0                = "t0"
 )
 
 var (
@@ -54,12 +55,13 @@ var (
 	}
 )
 
+// Use for YAML configuration file
 type cloudavenueConfig struct {
-	Username string `mapstructure:"username"`
-	Password string `mapstructure:"password"`
-	Org      string `mapstructure:"org"`
-	URL      string `mapstructure:"url"`
-	Debug    bool   `mapstructure:"debug"`
+	Username string `yaml:"username"`
+	Password string `yaml:"password"`
+	Org      string `yaml:"org"`
+	URL      string `yaml:"url"`
+	Debug    bool   `yaml:"debug"`
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -95,7 +97,11 @@ func Execute() (err error) {
 		if err = v.SafeWriteConfig(); err != nil {
 			return err
 		}
-		s.FinalMSG = "***\n Configuration file is created in " + home + "/.cav/config.yaml \nPlease fill it with your credentials and re-run the command.\n***\n"
+		s.FinalMSG = `
+					***
+					Configuration file is created in " + home + "/.cav/config.yaml
+					Please fill it with your credentials and re-run the command.
+					***`
 		s.Stop()
 		os.Exit(0)
 	}
@@ -112,7 +118,6 @@ func Execute() (err error) {
 			Username: v.GetString("cloudavenue.username"),
 			Password: v.GetString("cloudavenue.password"),
 			Org:      v.GetString("cloudavenue.org"),
-			URL:      v.GetString("cloudavenue.url"),
 			Debug:    v.GetBool("cloudavenue.debug"),
 		},
 	})
@@ -147,9 +152,9 @@ func init() {
 // function to transform String to output.TypeFormat
 func stringToTypeFormat(s string) model.TypeFormat {
 	switch s {
-	case FlagOutputValueJSON:
+	case flagOutputValueJSON:
 		return model.TypeJSON
-	case FlagOutputValueYAML:
+	case flagOutputValueYAML:
 		return model.TypeYAML
 	default:
 		return model.TypeFormat("")

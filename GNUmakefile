@@ -18,7 +18,7 @@ build:
 	goreleaser release --snapshot --clean
 
 test:
-	go test -coverprofile=coverage.out ./cmd/... && go tool cover -func=coverage.out
+	go test -v -coverprofile=coverage.out ./cmd/... && go tool cover -func=coverage.out
 
 testhtml:
 	go test -coverprofile=coverage.out ./cmd/... && go tool cover -html=coverage.out

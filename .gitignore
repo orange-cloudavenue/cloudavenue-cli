@@ -3,3 +3,4 @@ dist/
 go.work
 go.work.sum
 .cache/
+dockerfile
