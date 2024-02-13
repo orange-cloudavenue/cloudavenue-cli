@@ -17,6 +17,7 @@
 * deps: bumps actions/setup-python from 4 to 5 (GH-71)
 * deps: bumps actions/upload-artifact from 3 to 4 (GH-75)
 * deps: bumps github.com/aws/aws-sdk-go from 1.49.16 to 1.50.8 (GH-70)
+* deps: bumps github.com/aws/aws-sdk-go from 1.50.10 to 1.50.15 (GH-88)
 * deps: bumps github.com/aws/aws-sdk-go from 1.50.8 to 1.50.10 (GH-81)
 * deps: bumps github.com/orange-cloudavenue/cloudavenue-sdk-go from 0.7.0 to 0.9.0 (GH-69)
 * deps: bumps golangci/golangci-lint-action from 3.7.0 to 4.0.0 (GH-89)
