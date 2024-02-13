@@ -69,7 +69,7 @@ archives:
         goos: 'windows'
     wrap_in_directory: true
     # this name template makes the OS and Arch compatible with the results of `uname`.
-    name_template: '{{ .ProjectName }}_v{{ .Version }}_v{{ .Os }}_{{ .Arch }}'
+    name_template: '{{ .ProjectName }}_v{{ .Version }}_{{ .Os }}_{{ .Arch }}'
     files:
       - LICENSE
       - README.md
