@@ -57,11 +57,11 @@ var (
 
 // Use for YAML configuration file
 type cloudavenueConfig struct {
-	Username string `configstruct:"username"`
-	Password string `configstruct:"password"`
-	Org      string `configstruct:"org"`
-	URL      string `configstruct:"url"`
-	Debug    bool   `configstruct:"debug"`
+	Username string `yaml:"username"`
+	Password string `yaml:"password"`
+	Org      string `yaml:"org"`
+	URL      string `yaml:"url"`
+	Debug    bool   `yaml:"debug"`
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.

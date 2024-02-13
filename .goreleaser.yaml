@@ -26,7 +26,7 @@ builds:
       - '-s -w -X github.com/orange-cloudavenue/cloudavenue-cli/cmd.version={{.Version}} -X github.com/orange-cloudavenue/cloudavenue-cli/cmd.commit={{.Commit}} -X github.com/orange-cloudavenue/cloudavenue-cli/cmd.date={{.Date}} -X github.com/orange-cloudavenue/cloudavenue-cli/cmd.builtBy=goreleaser'
 
 nfpms:
-  - file_name_template: '{{ .ProjectName }}_v{{ .Version }}_{{ .Arch }}'
+  - file_name_template: '{{ .ProjectName }}_{{ .Version }}_{{ .Arch }}'
     maintainer: https://github.com/orgs/orange-cloudavenue/teams
     description: >-
       cav is a CLI terminal app built to give a basic view to manage your Cloud Avenue IaaS.
@@ -66,7 +66,7 @@ archives:
         goos: 'windows'
     wrap_in_directory: true
     # this name template makes the OS and Arch compatible with the results of `uname`.
-    name_template: '{{ .ProjectName }}_v{{ .Version }}_{{ .Os }}_{{ .Arch }}'
+    name_template: '{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}'
     files:
       - LICENSE
       - README.md
