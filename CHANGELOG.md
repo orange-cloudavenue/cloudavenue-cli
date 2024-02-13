@@ -19,6 +19,7 @@
 * deps: bumps github.com/aws/aws-sdk-go from 1.49.16 to 1.50.8 (GH-70)
 * deps: bumps github.com/aws/aws-sdk-go from 1.50.8 to 1.50.10 (GH-81)
 * deps: bumps github.com/orange-cloudavenue/cloudavenue-sdk-go from 0.7.0 to 0.9.0 (GH-69)
+* deps: bumps golangci/golangci-lint-action from 3.7.0 to 4.0.0 (GH-89)
 
 ## 0.0.9 (January 25, 2024)
 
