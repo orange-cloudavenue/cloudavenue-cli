@@ -28,7 +28,7 @@ var updateCmd = &cobra.Command{
 		s.Stop()
 		if version == "dev" {
 			log.Printf("Cannot update a development version")
-			os.Exit(1)
+			return
 		}
 		log.Println("Checking for updates...")
 		latest, found, err := selfupdate.DetectLatest(context.Background(), selfupdate.ParseSlug("orange-cloudavenue/cloudavenue-cli"))
@@ -43,7 +43,7 @@ var updateCmd = &cobra.Command{
 
 		if latest.LessOrEqual(version) {
 			log.Printf("Current version (%s) is the latest", version)
-			os.Exit(1)
+			return
 		}
 
 		exe, err := os.Executable()

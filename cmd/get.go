@@ -113,11 +113,14 @@ var getT0Cmd = &cobra.Command{
 				os.Exit(1)
 			}
 			x.ToOutput()
-		default:
+		case "":
 			w.SetHeader("name", "t0 provider name")
 			for _, t0 := range *t0s {
 				w.AddFields(t0.Tier0Vrf, t0.Tier0Provider)
 			}
+		default:
+			log.Default().Println("Error unknow output")
+			return
 		}
 		w.PrintTable()
 	},
@@ -174,11 +177,14 @@ var getPublicIPCmd = &cobra.Command{
 				os.Exit(1)
 			}
 			x.ToOutput()
-		default:
+		case "":
 			w.SetHeader("public ip", "edge gateway name")
 			for _, i := range ips.NetworkConfig {
 				w.AddFields(i.UplinkIP, i.EdgeGatewayName)
 			}
+		default:
+			log.Default().Println("Error unknow output")
+			return
 		}
 		w.PrintTable()
 	},
@@ -236,11 +242,14 @@ var getS3Cmd = &cobra.Command{
 				os.Exit(1)
 			}
 			x.ToOutput()
-		default:
+		case "":
 			w.SetHeader("name", "owner")
 			for _, b := range s3.Buckets {
 				w.AddFields(*b.Name, *s3.Owner.DisplayName)
 			}
+		default:
+			log.Default().Println("Error unknow output")
+			return
 		}
 		w.PrintTable()
 	},
@@ -295,11 +304,14 @@ var getEdgeGatewayCmd = &cobra.Command{
 				os.Exit(1)
 			}
 			x.ToOutput()
-		default:
+		case "":
 			w.SetHeader("name", "owner")
 			for _, e := range *edgeGateways {
 				w.AddFields(e.EdgeName, e.OwnerName)
 			}
+		default:
+			log.Default().Println("Error unknow output")
+			return
 		}
 		w.PrintTable()
 	},
@@ -355,11 +367,14 @@ var getVDCCmd = &cobra.Command{
 				os.Exit(1)
 			}
 			x.ToOutput()
-		default:
+		case "":
 			w.SetHeader("name", "status")
 			for _, v := range vdcs {
 				w.AddFields(v.Name, v.Status)
 			}
+		default:
+			log.Default().Println("Error unknow output")
+			return
 		}
 		w.PrintTable()
 	},

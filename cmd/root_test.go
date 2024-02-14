@@ -75,6 +75,11 @@ func TestRootCmd(t *testing.T) {
 						fail: true,
 					},
 					{
+						name: oneCmd.Use + "_" + cmdSubCmd.Use + " with ouput flag without args",
+						args: []string{oneCmd.Use, cmdSubCmd.Use, "--output", "wide"},
+						fail: true,
+					},
+					{
 						name: oneCmd.Use + "_" + cmdSubCmd.Use + " with ouput flag wide args",
 						args: []string{oneCmd.Use, cmdSubCmd.Use, "--output", "wide"},
 					},
@@ -187,7 +192,7 @@ func TestRootCmd(t *testing.T) {
 				{
 					name: oneCmd.Use,
 					args: []string{oneCmd.Use},
-					fail: false,
+					fail: true,
 				},
 			}
 		}
