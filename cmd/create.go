@@ -2,6 +2,8 @@ package cmd
 
 import (
 	"fmt"
+	"log"
+	"os"
 	"time"
 
 	"github.com/aws/aws-sdk-go/service/s3"
@@ -81,6 +83,20 @@ var createPublicIPCmd = &cobra.Command{
 	Example:           "ip create --name <EdgeGateway>",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
+		// init Config File
+		v, err := initConfig()
+		if err != nil {
+			log.Default().Println("Error from init config file", err)
+			return
+		}
+
+		// init Client
+		err = initClient(v)
+		if err != nil {
+			log.Default().Println("Error from init client:", err)
+			os.Exit(1)
+		}
+
 		// Check if time flag is set
 		if cmd.Flag(flagTime).Value.String() == "true" {
 			defer timeTrack(time.Now(), cmd.CommandPath())
@@ -121,6 +137,20 @@ var createVDCCmd = &cobra.Command{
 	Example:           "vdc create --name <vdc name>",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
+		// init Config File
+		v, err := initConfig()
+		if err != nil {
+			log.Default().Println("Error from init config file", err)
+			return
+		}
+
+		// init Client
+		err = initClient(v)
+		if err != nil {
+			log.Default().Println("Error from init client:", err)
+			os.Exit(1)
+		}
+
 		// Check if time flag is set
 		if cmd.Flag(flagTime).Value.String() == "true" {
 			defer timeTrack(time.Now(), cmd.CommandPath())
@@ -175,6 +205,20 @@ var createEdgeGatewayCmd = &cobra.Command{
 	Example:           "edgegateway create --vdc <vdc name> [--t0 <t0 name>]",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
+		// init Config File
+		v, err := initConfig()
+		if err != nil {
+			log.Default().Println("Error from init config file", err)
+			return
+		}
+
+		// init Client
+		err = initClient(v)
+		if err != nil {
+			log.Default().Println("Error from init client:", err)
+			os.Exit(1)
+		}
+
 		// Check if time flag is set
 		if cmd.Flag(flagTime).Value.String() == "true" {
 			defer timeTrack(time.Now(), cmd.CommandPath())
@@ -232,6 +276,20 @@ var createS3Cmd = &cobra.Command{
 	Example:           "create s3 --name <bucket name>",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
+		// init Config File
+		v, err := initConfig()
+		if err != nil {
+			log.Default().Println("Error from init config file", err)
+			return
+		}
+
+		// init Client
+		err = initClient(v)
+		if err != nil {
+			log.Default().Println("Error from init client:", err)
+			os.Exit(1)
+		}
+
 		// Check if time flag is set
 		if cmd.Flag(flagTime).Value.String() == "true" {
 			defer timeTrack(time.Now(), cmd.CommandPath())

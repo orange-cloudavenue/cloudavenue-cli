@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"log"
+	"os"
 	"time"
 
 	"github.com/aws/aws-sdk-go/service/s3"
@@ -29,13 +30,22 @@ var (
 	exampleGet2 = `
 	#List all T0 in wide format
 	cav get t0 -o wide`
+	exampleGet3 = `
+	#List all Public IP
+	cav get publicip`
+	exampleGet4 = `
+	#List all VDC in yaml format
+	cav get vdc -o yaml`
+	exampleGet5 = `
+	#List all S3 in json format
+	cav get s3 -o json`
 )
 
 // getCmd list a CAV resource
 var getCmd = &cobra.Command{
 	Use:               cmdGet,
 	Aliases:           []string{cmdGetAlias1, cmdGetAlias2},
-	Example:           exampleGet1 + "\n" + exampleGet2,
+	Example:           exampleGet1 + "\n" + exampleGet2 + "\n" + exampleGet3 + "\n" + exampleGet4 + "\n" + exampleGet5,
 	Short:             "Get resource to retrieve information from CloudAvenue.",
 	DisableAutoGenTag: true,
 }
@@ -60,6 +70,20 @@ var getT0Cmd = &cobra.Command{
 	Long:              "A complete list information of your T0 resources in your CloudAvenue account." + description,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
+		// init Config File
+		v, err := initConfig()
+		if err != nil {
+			log.Default().Println("Error from init config file", err)
+			os.Exit(1)
+		}
+
+		// init Client
+		err = initClient(v)
+		if err != nil {
+			log.Default().Println("Error from init client:", err)
+			os.Exit(1)
+		}
+
 		// Check if time flag is set and print time elapsed
 		if cmd.Flag(flagTime).Value.String() == "true" {
 			defer timeTrack(time.Now(), cmd.CommandPath())
@@ -69,7 +93,7 @@ var getT0Cmd = &cobra.Command{
 		t0s, err := c.V1.T0.GetT0s()
 		if err != nil {
 			log.Default().Println("Error from t0 List", err)
-			return
+			os.Exit(1)
 		}
 
 		// Print the result
@@ -86,7 +110,7 @@ var getT0Cmd = &cobra.Command{
 			x, err := output.New(stringToTypeFormat(flag), t0s)
 			if err != nil {
 				log.Default().Println("Error creating output", err)
-				return
+				os.Exit(1)
 			}
 			x.ToOutput()
 		default:
@@ -107,6 +131,20 @@ var getPublicIPCmd = &cobra.Command{
 	Long:              "A complete list information of your Public IP resources in your CloudAvenue account." + description,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
+		// init Config File
+		v, err := initConfig()
+		if err != nil {
+			log.Default().Println("Error from init config file", err)
+			os.Exit(1)
+		}
+
+		// init Client
+		err = initClient(v)
+		if err != nil {
+			log.Default().Println("Error from init client:", err)
+			os.Exit(1)
+		}
+
 		// Check if time flag is set and print time elapsed
 		if cmd.Flag(flagTime).Value.String() == "true" {
 			defer timeTrack(time.Now(), cmd.CommandPath())
@@ -116,7 +154,7 @@ var getPublicIPCmd = &cobra.Command{
 		ips, err := c.V1.PublicIP.GetIPs()
 		if err != nil {
 			fmt.Println("Error from IP List", err)
-			return
+			os.Exit(1)
 		}
 
 		// Print the result
@@ -133,7 +171,7 @@ var getPublicIPCmd = &cobra.Command{
 			x, err := output.New(stringToTypeFormat(flag), ips)
 			if err != nil {
 				log.Default().Println("Error creating output", err)
-				return
+				os.Exit(1)
 			}
 			x.ToOutput()
 		default:
@@ -154,6 +192,20 @@ var getS3Cmd = &cobra.Command{
 	Long:              "A complete list information of your s3 resources in your CloudAvenue account." + description,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
+		// init Config File
+		v, err := initConfig()
+		if err != nil {
+			log.Default().Println("Error from init config file", err)
+			os.Exit(1)
+		}
+
+		// init Client
+		err = initClient(v)
+		if err != nil {
+			log.Default().Println("Error from init client:", err)
+			os.Exit(1)
+		}
+
 		// Check if time flag is set and print time elapsed
 		if cmd.Flag(flagTime).Value.String() == "true" {
 			defer timeTrack(time.Now(), cmd.CommandPath())
@@ -163,7 +215,7 @@ var getS3Cmd = &cobra.Command{
 		s3, err := c.V1.S3().ListBuckets(&s3.ListBucketsInput{})
 		if err != nil {
 			fmt.Println("Error from S3 List", err)
-			return
+			os.Exit(1)
 		}
 
 		// Print the result
@@ -181,7 +233,7 @@ var getS3Cmd = &cobra.Command{
 			x, err := output.New(stringToTypeFormat(flag), s3)
 			if err != nil {
 				log.Default().Println("Error creating output", err)
-				return
+				os.Exit(1)
 			}
 			x.ToOutput()
 		default:
@@ -202,6 +254,20 @@ var getEdgeGatewayCmd = &cobra.Command{
 	Long:              "A complete list information of your EdgeGateway resources in your CloudAvenue account." + description,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
+		// init Config File
+		v, err := initConfig()
+		if err != nil {
+			log.Default().Println("Error from init config file", err)
+			os.Exit(1)
+		}
+
+		// init Client
+		err = initClient(v)
+		if err != nil {
+			log.Default().Println("Error from init client:", err)
+			os.Exit(1)
+		}
+
 		// Check if time flag is set and print time elapsed
 		if cmd.Flag(flagTime).Value.String() == "true" {
 			defer timeTrack(time.Now(), cmd.CommandPath())
@@ -226,7 +292,7 @@ var getEdgeGatewayCmd = &cobra.Command{
 			x, err := output.New(stringToTypeFormat(flag), edgeGateways)
 			if err != nil {
 				log.Default().Println("Error creating output", err)
-				return
+				os.Exit(1)
 			}
 			x.ToOutput()
 		default:
@@ -246,6 +312,20 @@ var getVDCCmd = &cobra.Command{
 	Long:              "A complete list information of your s3 resources in your CloudAvenue account." + description,
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
+		// init Config File
+		v, err := initConfig()
+		if err != nil {
+			log.Default().Println("Error from init config file", err)
+			os.Exit(1)
+		}
+
+		// init Client
+		err = initClient(v)
+		if err != nil {
+			log.Default().Println("Error from init client:", err)
+			os.Exit(1)
+		}
+
 		// Check if time flag is set and print time elapsed
 		if cmd.Flag(flagTime).Value.String() == "true" {
 			defer timeTrack(time.Now(), cmd.CommandPath())
@@ -255,7 +335,7 @@ var getVDCCmd = &cobra.Command{
 		vdcs, err := c.V1.Querier().List().VDC()
 		if err != nil {
 			fmt.Println("Error from VDC List", err)
-			return
+			os.Exit(1)
 		}
 
 		// Print the result
@@ -272,7 +352,7 @@ var getVDCCmd = &cobra.Command{
 			x, err := output.New(stringToTypeFormat(flag), vdcs)
 			if err != nil {
 				log.Default().Println("Error creating output", err)
-				return
+				os.Exit(1)
 			}
 			x.ToOutput()
 		default:

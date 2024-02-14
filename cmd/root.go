@@ -11,12 +11,11 @@ import (
 	"github.com/adampresley/sigint"
 	"github.com/briandowns/spinner"
 	"github.com/mitchellh/go-homedir"
+	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/output/model"
 	"github.com/orange-cloudavenue/cloudavenue-sdk-go"
 	clientcloudavenue "github.com/orange-cloudavenue/cloudavenue-sdk-go/pkg/clients/cloudavenue"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-
-	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/output/model"
 )
 
 const (
@@ -72,58 +71,6 @@ func Execute() (err error) {
 		fmt.Println("SIGINT received. Exiting...")
 		os.Exit(0)
 	})
-	// Set default file configuration and create it if not exist
-	home, err := homedir.Dir()
-	if err != nil {
-		return err
-	}
-	v := viper.New()
-	v.SetConfigName("config")
-	v.SetConfigType("yaml")
-	v.AddConfigPath(home + "/.cav")
-	if home == "" {
-		return fmt.Errorf("Error in Get HOME Directory")
-	}
-	if _, err = os.Stat(home + "/.cav/config.yaml"); os.IsNotExist(err) {
-		if err = os.MkdirAll(home+"/.cav", 0755); err != nil {
-			return err
-		}
-		// Set default configuration
-		cloudavenueConfig := cloudavenueConfig{}
-		// set struct to viper
-		v.Set("cloudavenue", cloudavenueConfig)
-
-		// Write configuration file
-		if err = v.SafeWriteConfig(); err != nil {
-			return err
-		}
-		s.FinalMSG = `
-					***
-					Configuration file is created in " + home + "/.cav/config.yaml
-					Please fill it with your credentials and re-run the command.
-					***`
-		s.Stop()
-		os.Exit(0)
-	}
-
-	// Read configuration file
-	err = v.ReadInConfig()
-	if err != nil {
-		fmt.Println("Unable to read config:", err)
-	}
-
-	// Set client CloudAvenue
-	c, err = cloudavenue.New(&cloudavenue.ClientOpts{
-		CloudAvenue: &clientcloudavenue.Opts{
-			Username: v.GetString("cloudavenue.username"),
-			Password: v.GetString("cloudavenue.password"),
-			Org:      v.GetString("cloudavenue.org"),
-			Debug:    v.GetBool("cloudavenue.debug"),
-		},
-	})
-	if err != nil {
-		return err
-	}
 
 	// Execute root command
 	if err = rootCmd.Execute(); err != nil {
@@ -159,4 +106,65 @@ func stringToTypeFormat(s string) model.TypeFormat {
 	default:
 		return model.TypeFormat("")
 	}
+}
+
+// function to initialize the configuration file
+func initConfig() (*viper.Viper, error) {
+	// Set default file configuration and create it if not exist
+	home, err := homedir.Dir()
+	if err != nil {
+		return nil, err
+	}
+	// Set default file configuration
+	v := viper.New()
+	v.SetConfigName("config")
+	v.SetConfigType("yaml")
+	v.AddConfigPath(home + "/.cav")
+	if home == "" {
+		return nil, fmt.Errorf("Error in Get HOME Directory")
+	}
+	// Create configuration file if not exist
+	if _, err = os.Stat(home + "/.cav/config.yaml"); os.IsNotExist(err) {
+		if err = os.MkdirAll(home+"/.cav", 0755); err != nil {
+			return nil, err
+		}
+		// Set default configuration
+		cloudavenueConfig := cloudavenueConfig{}
+		// set struct to viper
+		v.Set("cloudavenue", cloudavenueConfig)
+
+		// Write configuration file
+		if err = v.SafeWriteConfig(); err != nil {
+			return nil, err
+		}
+		s.FinalMSG = `
+					***
+					Configuration file is created in " + home + "/.cav/config.yaml
+					Please fill it with your credentials and re-run the command.
+					***`
+		s.Stop()
+		os.Exit(0)
+	}
+	return v, nil
+}
+
+func initClient(v *viper.Viper) (err error) {
+	// Read configuration file
+	err = v.ReadInConfig()
+	if err != nil {
+		fmt.Println("Unable to read config:", err)
+	}
+	// Set client CloudAvenue
+	c, err = cloudavenue.New(&cloudavenue.ClientOpts{
+		CloudAvenue: &clientcloudavenue.Opts{
+			Username: v.GetString("cloudavenue.username"),
+			Password: v.GetString("cloudavenue.password"),
+			Org:      v.GetString("cloudavenue.org"),
+			Debug:    v.GetBool("cloudavenue.debug"),
+		},
+	})
+	if err != nil {
+		return err
+	}
+	return nil
 }

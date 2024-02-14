@@ -11,6 +11,15 @@ Get resource to retrieve information from CloudAvenue.
 
 	#List all T0 in wide format
 	cav get t0 -o wide
+
+	#List all Public IP
+	cav get publicip
+
+	#List all VDC in yaml format
+	cav get vdc -o yaml
+
+	#List all S3 in json format
+	cav get s3 -o json
 ```
 
 ### Options

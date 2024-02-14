@@ -2,6 +2,8 @@ package cmd
 
 import (
 	"fmt"
+	"log"
+	"os"
 	"time"
 
 	"github.com/aws/aws-sdk-go/service/s3"
@@ -65,6 +67,20 @@ var delVDCCmd = &cobra.Command{
 	Short:             "Delete a vdc",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
+		// init Config File
+		v, err := initConfig()
+		if err != nil {
+			log.Default().Println("Error from init config file", err)
+			return
+		}
+
+		// init Client
+		err = initClient(v)
+		if err != nil {
+			log.Default().Println("Error from init client:", err)
+			os.Exit(1)
+		}
+
 		// Check if time flag is set
 		if cmd.Flag(flagTime).Value.String() == "true" {
 			defer timeTrack(time.Now(), cmd.CommandPath())
@@ -103,6 +119,20 @@ var delS3Cmd = &cobra.Command{
 	Short:             "Delete a s3 bucket",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
+		// init Config File
+		v, err := initConfig()
+		if err != nil {
+			log.Default().Println("Error from init config file", err)
+			return
+		}
+
+		// init Client
+		err = initClient(v)
+		if err != nil {
+			log.Default().Println("Error from init client:", err)
+			os.Exit(1)
+		}
+
 		// Check if time flag is set
 		if cmd.Flag(flagTime).Value.String() == "true" {
 			defer timeTrack(time.Now(), cmd.CommandPath())
@@ -133,13 +163,26 @@ var delEdgeGatewayCmd = &cobra.Command{
 	Short:             "Delete an edgeGateway (name or id)",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
+		// init Config File
+		v, err := initConfig()
+		if err != nil {
+			log.Default().Println("Error from init config file", err)
+			return
+		}
+
+		// init Client
+		err = initClient(v)
+		if err != nil {
+			log.Default().Println("Error from init client:", err)
+			os.Exit(1)
+		}
+
 		// Check if time flag is set
 		if cmd.Flag(flagTime).Value.String() == "true" {
 			defer timeTrack(time.Now(), cmd.CommandPath())
 		}
 		var (
-			gw  *v1.EdgeGw
-			err error
+			gw *v1.EdgeGw
 		)
 
 		for _, arg := range args {
@@ -182,6 +225,20 @@ var delPublicIPCmd = &cobra.Command{
 	Short:             "Delete public ip resource(s)",
 	DisableAutoGenTag: true,
 	Run: func(cmd *cobra.Command, args []string) {
+		// init Config File
+		v, err := initConfig()
+		if err != nil {
+			log.Default().Println("Error from init config file", err)
+			return
+		}
+
+		// init Client
+		err = initClient(v)
+		if err != nil {
+			log.Default().Println("Error from init client:", err)
+			os.Exit(1)
+		}
+
 		// Check if time flag is set
 		if cmd.Flag(flagTime).Value.String() == "true" {
 			defer timeTrack(time.Now(), cmd.CommandPath())
