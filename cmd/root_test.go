@@ -84,6 +84,11 @@ func TestRootCmd(t *testing.T) {
 						fail: true, // Should fail because args for flag is empty
 					},
 					{
+						name: oneCmd.Use + "_" + cmdSubCmd.Use + " with ouput flag without args",
+						args: []string{oneCmd.Use, cmdSubCmd.Use, "--output", "wide"},
+						fail: true,
+					},
+					{
 						name: oneCmd.Use + "_" + cmdSubCmd.Use + " with ouput flag wide args",
 						args: []string{oneCmd.Use, cmdSubCmd.Use, "--output", "wide"},
 					},
