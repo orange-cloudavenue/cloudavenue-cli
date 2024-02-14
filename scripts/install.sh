@@ -92,7 +92,8 @@ tag_to_version() {
   fi
   # if version starts with 'v', remove it
   TAG="$REALTAG"
-  VERSION=${TAG#v}
+  #VERSION=${TAG#v}
+  VERSION=${TAG}
 }
 adjust_format() {
   # change format (tar.gz or zip) based on OS
