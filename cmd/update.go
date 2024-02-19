@@ -34,11 +34,11 @@ var updateCmd = &cobra.Command{
 		latest, found, err := selfupdate.DetectLatest(context.Background(), selfupdate.ParseSlug("orange-cloudavenue/cloudavenue-cli"))
 		if err != nil {
 			log.Default().Printf("error occurred while detecting version: %s", err)
-			return
+			os.Exit(1)
 		}
 		if !found {
 			log.Default().Printf("latest version for %s/%s could not be found from github repository", runtime.GOOS, runtime.GOARCH)
-			return
+			os.Exit(1)
 		}
 
 		if latest.LessOrEqual(version) {
@@ -49,13 +49,13 @@ var updateCmd = &cobra.Command{
 		exe, err := os.Executable()
 		if err != nil {
 			log.Default().Printf("could not locate executable path")
-			return
+			os.Exit(1)
 		}
 
 		log.Printf("Updating to version %s", latest.Version())
 		if err := selfupdate.UpdateTo(context.Background(), latest.AssetURL, latest.AssetName, exe); err != nil {
 			log.Default().Printf("error occurred while updating binary: %s", err)
-			return
+			os.Exit(1)
 		}
 		log.Printf("Successfully updated to version %s", latest.Version())
 	},

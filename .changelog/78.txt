@@ -1,0 +1,3 @@
+```release-note:fix
+`command`: Fixed a bug preventing credential to use basic command like update, version and help.
+```
