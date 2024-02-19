@@ -1,4 +1,9 @@
 ## 0.1.0 (Unreleased)
+
+### :dependabot: **Dependencies**
+
+* deps: bumps github.com/aws/aws-sdk-go from 1.50.15 to 1.50.20 (GH-96)
+
 ## 0.0.10 (February 13, 2024)
 
 ### :rocket: **New Features**
