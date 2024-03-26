@@ -14,6 +14,12 @@ A complete list information of your T0 resources in your CloudAvenue account.
 cav get t0 [flags]
 ```
 
+### Examples
+
+```
+get t0
+```
+
 ### Options
 
 ```

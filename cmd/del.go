@@ -5,26 +5,26 @@ import (
 )
 
 const (
-	cmdDelete       = "delete"
-	cmdDeleteAlias1 = "del"
-	cmdDeleteAlias2 = "rm"
+	cmdDelete = "del"
 )
 
 var (
-	exampleDelete1 = `
+	exampleDel1 = `
 	#Delete a Public IP
 	cav del ip 192.168.0.2`
-	exampleDelete2 = `
+	exampleDel2 = `
 	#Delete several vdc named xxxx and yyyy
 	cav del vdc xxxx yyyy`
+	exampleDel3 = `
+	#Delete a edgegateway named zzzz
+	cav del egw zzzz`
 )
 
 // delCmd delete a CAV resource
 var delCmd = &cobra.Command{
 	Use:               cmdDelete,
-	Aliases:           []string{cmdDeleteAlias1, cmdDeleteAlias2},
-	Example:           exampleDelete1 + "\n" + exampleDelete2,
-	Short:             "Delete resource from CloudAvenue.",
+	Example:           exampleDel1 + "\n" + exampleDel2 + "\n" + exampleDel3,
+	Short:             "Delete resource(s) from CloudAvenue.",
 	DisableAutoGenTag: true,
 }
 

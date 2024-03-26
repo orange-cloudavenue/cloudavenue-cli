@@ -15,6 +15,7 @@ var getVDCCmd = &cobra.Command{
 	Use:               argVDC,
 	Short:             "A brief list of your vdc resources",
 	Long:              "A complete list information of your s3 resources in your CloudAvenue account." + description,
+	Example:           "get vdc",
 	DisableAutoGenTag: true,
 	SilenceErrors:     true,
 	RunE: func(cmd *cobra.Command, args []string) error {

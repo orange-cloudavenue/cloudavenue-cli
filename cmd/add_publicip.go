@@ -7,11 +7,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// createPublicIPCmd create a public ip resource(s)
-var createPublicIPCmd = &cobra.Command{
+// addPublicIPCmd add a public ip resource(s)
+var addPublicIPCmd = &cobra.Command{
 	Use:               argPublicIP,
-	Short:             "Create an ip",
-	Example:           "ip create --name <EdgeGateway>",
+	Aliases:           []string{argPublicIPAlias1},
+	Short:             "Add a public ip",
+	Example:           "add publicip --name <EdgeGateway>",
 	DisableAutoGenTag: true,
 	SilenceErrors:     true,
 	RunE: func(cmd *cobra.Command, args []string) error {
@@ -31,21 +32,21 @@ var createPublicIPCmd = &cobra.Command{
 			return fmt.Errorf("Unable to retrieve flag %v: %w", flagName, err)
 		}
 
-		// Create a public ip
+		// Add a public ip
 		s.Stop()
-		fmt.Println("create public ip resource")
+		fmt.Println("add public ip resource")
 		fmt.Println("for EdgeGateway name: " + gwName)
 		s.Restart()
 
 		job, err := c.V1.PublicIP.New(gwName)
 		if err != nil {
-			return fmt.Errorf("Unable to create job: %w", err)
+			return fmt.Errorf("Unable to add job: %w", err)
 		}
 		err = job.Wait(5, 300)
 		if err != nil {
 			return fmt.Errorf("Error during public ip creation for edgegateway %v: %w", gwName, err)
 		}
-		s.FinalMSG = "public ip resource created successfully !!"
+		s.FinalMSG = "public ip resource addd successfully !!"
 		s.Stop()
 		return nil
 	},

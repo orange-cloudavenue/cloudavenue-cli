@@ -10,8 +10,7 @@ import (
 // deleteCmd delete a public ip resource(s)
 var delPublicIPCmd = &cobra.Command{
 	Use:               argPublicIP,
-	Aliases:           []string{argPublicIPAlias1},
-	Example:           "delete publicip <ip> [<ip>] [<ip>] ...",
+	Example:           "del publicip <ip> [<ip>] [<ip>] ...",
 	Short:             "Delete public ip resource(s)",
 	DisableAutoGenTag: true,
 	SilenceErrors:     true,

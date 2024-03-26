@@ -8,11 +8,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// createVDCCmd create a vdc resource(s)
-var createVDCCmd = &cobra.Command{
+// addVDCCmd add a vdc resource(s)
+var addVDCCmd = &cobra.Command{
 	Use:               argVDC,
-	Short:             "Create an vdc",
-	Example:           "vdc create --name <vdc name>",
+	Short:             "Add an vdc (virtual data center) to CloudAvenue.",
+	Example:           "add vdc --name <vdc name>",
 	DisableAutoGenTag: true,
 	SilenceErrors:     true,
 	RunE: func(cmd *cobra.Command, args []string) error {
@@ -32,9 +32,9 @@ var createVDCCmd = &cobra.Command{
 			return fmt.Errorf("Unable to retrieve flag %v: %w", flagName, err)
 		}
 
-		// Create the vdc
+		// Add the vdc
 		s.Stop()
-		fmt.Println("create vdc resource (with basic value)")
+		fmt.Println("add vdc resource (with basic value)")
 		fmt.Println("vdc name: " + vdcName)
 		s.Restart()
 
@@ -45,7 +45,7 @@ var createVDCCmd = &cobra.Command{
 				BillingModel:        "PAYG",
 				CPUAllocated:        22000,
 				VCPUInMhz:           2200,
-				Description:         "vdc created by cloudavenue-cli",
+				Description:         "vdc add by cloudavenue-cli",
 				MemoryAllocated:     30,
 				DisponibilityClass:  "ONE-ROOM",
 				StorageBillingModel: "PAYG",
@@ -58,9 +58,9 @@ var createVDCCmd = &cobra.Command{
 				},
 			},
 		}); err != nil {
-			return fmt.Errorf("Unable to create vdc %v: %w", vdcName, err)
+			return fmt.Errorf("Unable to add vdc %v: %w", vdcName, err)
 		}
-		s.FinalMSG = "vdc resource created successfully !!\n"
+		s.FinalMSG = "vdc resource added successfully !!\n"
 		s.Stop()
 		return nil
 	},

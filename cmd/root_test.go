@@ -13,7 +13,7 @@ import (
 
 const (
 	get         string = "get"
-	create      string = "create"
+	add         string = "add"
 	delete      string = "delete"
 	help        string = "help"
 	version     string = "version"
@@ -110,8 +110,8 @@ func TestRootCmd(t *testing.T) {
 				globalTests = append(globalTests, tests...)
 			}
 
-		// ? Test create argument
-		case create:
+		// ? Test add argument
+		case add:
 			// ? Test all subcommands
 			subCmd := oneCmd.Commands()
 			subCmdSorted := sortCmd(subCmd)

@@ -17,6 +17,7 @@ var getS3Cmd = &cobra.Command{
 	Aliases:           []string{argS3Alias},
 	Short:             "A brief list of your s3 resources",
 	Long:              "A complete list information of your s3 resources in your CloudAvenue account." + description,
+	Example:           "get s3",
 	DisableAutoGenTag: true,
 	SilenceErrors:     true,
 	RunE: func(cmd *cobra.Command, args []string) error {
