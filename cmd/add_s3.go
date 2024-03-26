@@ -8,11 +8,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// createS3Cmd create a s3 bucket resource(s)
-var createS3Cmd = &cobra.Command{
+// addS3Cmd add a s3 bucket resource(s)
+var addS3Cmd = &cobra.Command{
 	Use:               argS3,
-	Short:             "Create an S3 bucket",
-	Example:           "create s3 --name <bucket name>",
+	Short:             "Add an S3 bucket",
+	Example:           "add s3 --name <bucket name>",
 	DisableAutoGenTag: true,
 	SilenceErrors:     true,
 	RunE: func(cmd *cobra.Command, args []string) error {
@@ -31,17 +31,17 @@ var createS3Cmd = &cobra.Command{
 			return fmt.Errorf("Unable to retrieve flag %v: %w", flagName, err)
 		}
 
-		// Create the bucket
+		// Add the bucket
 		s.Stop()
-		fmt.Println("create a bucket resource (with basic value)")
+		fmt.Println("add a bucket resource (with basic value)")
 		fmt.Println("bucket name: " + bucketName)
 		s.Restart()
 
 		_, err = c.V1.S3().CreateBucket(&s3.CreateBucketInput{Bucket: &bucketName})
 		if err != nil {
-			return fmt.Errorf("Unable to create bucket S3 %v: %w", bucketName, err)
+			return fmt.Errorf("Unable to add bucket S3 %v: %w", bucketName, err)
 		}
-		s.FinalMSG = "Bucket resource created successfully !!"
+		s.FinalMSG = "Bucket resource addd successfully !!"
 		s.Stop()
 		return nil
 	},

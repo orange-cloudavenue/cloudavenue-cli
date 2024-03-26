@@ -11,7 +11,7 @@ import (
 // deleteCmd delete a s3 bucket resource(s)
 var delS3Cmd = &cobra.Command{
 	Use:               argS3,
-	Example:           "delete s3 <name> [<name>] [<name>] ...",
+	Example:           "del s3 <name> [<name>] [<name>] ...",
 	Short:             "Delete a s3 bucket",
 	DisableAutoGenTag: true,
 	SilenceErrors:     true,

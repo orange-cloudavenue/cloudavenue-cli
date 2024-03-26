@@ -7,12 +7,13 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// createEdgeGatewayCmd create a edgegateway resource(s)
-var createEdgeGatewayCmd = &cobra.Command{
+// addEdgeGatewayCmd add a edgegateway resource(s)
+var addEdgeGatewayCmd = &cobra.Command{
 	Use:               argEdgeGateway,
-	Short:             "Create an edgeGateway",
-	Aliases:           []string{"gw", "egw"},
-	Example:           "edgegateway create --vdc <vdc name> [--t0 <t0 name>]",
+	Aliases:           []string{argEdgeGatewayAlias1, argEdgeGatewayAlias2},
+	Short:             "Add an edgeGateway",
+	Long:              "Add an edgeGateway in a VDC. If the T0 is not specified, the first one will be used. No need to specify a name, the edgeGateway name is auto-generated.",
+	Example:           "add edgegateway --vdc <vdc name> [--t0 <t0 name>]",
 	DisableAutoGenTag: true,
 	SilenceErrors:     true,
 	RunE: func(cmd *cobra.Command, args []string) error {
@@ -47,7 +48,7 @@ var createEdgeGatewayCmd = &cobra.Command{
 				return fmt.Errorf("Unable to retrieve T0 with VDC name %v: %w", flagVDC, err)
 			}
 		}
-		// Create the edgeGateway
+		// Add the edgeGateway
 		s.Stop()
 		fmt.Println("Creating EdgeGateway resource")
 		fmt.Println("vdc name: " + vdc)
@@ -55,13 +56,13 @@ var createEdgeGatewayCmd = &cobra.Command{
 		s.Restart()
 		job, err := c.V1.EdgeGateway.New(vdc, t0)
 		if err != nil {
-			return fmt.Errorf("Unable to create job: %w", err)
+			return fmt.Errorf("Unable to add job: %w", err)
 		}
 		err = job.Wait(3, 300)
 		if err != nil {
 			return fmt.Errorf("Error during EdgeGateway creation in VDC %v: %w", vdc, err)
 		}
-		s.FinalMSG = "EdgeGateway resource created successfully !!"
+		s.FinalMSG = "EdgeGateway resource addd successfully !!"
 		s.Stop()
 		return nil
 	},

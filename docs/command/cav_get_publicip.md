@@ -14,6 +14,12 @@ A complete list information of your Public IP resources in your CloudAvenue acco
 cav get publicip [flags]
 ```
 
+### Examples
+
+```
+get publicip
+```
+
 ### Options
 
 ```

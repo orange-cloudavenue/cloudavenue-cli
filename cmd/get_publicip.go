@@ -16,6 +16,7 @@ var getPublicIPCmd = &cobra.Command{
 	Aliases:           []string{argPublicIPAlias1},
 	Short:             "A brief list of your public ip resources",
 	Long:              "A complete list information of your Public IP resources in your CloudAvenue account." + description,
+	Example:           "get publicip",
 	DisableAutoGenTag: true,
 	SilenceErrors:     true,
 	RunE: func(cmd *cobra.Command, args []string) error {

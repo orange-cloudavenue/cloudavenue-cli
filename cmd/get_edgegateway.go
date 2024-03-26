@@ -16,6 +16,7 @@ var getEdgeGatewayCmd = &cobra.Command{
 	Aliases:           []string{argEdgeGatewayAlias1, argEdgeGatewayAlias2},
 	Short:             "A brief list of your edgegateway resources",
 	Long:              "A complete list information of your EdgeGateway resources in your CloudAvenue account." + description,
+	Example:           "get edgegateway",
 	DisableAutoGenTag: true,
 	SilenceErrors:     true,
 	RunE: func(cmd *cobra.Command, args []string) error {

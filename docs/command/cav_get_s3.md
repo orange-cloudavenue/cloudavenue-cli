@@ -14,6 +14,12 @@ A complete list information of your s3 resources in your CloudAvenue account.
 cav get s3 [flags]
 ```
 
+### Examples
+
+```
+get s3
+```
+
 ### Options
 
 ```

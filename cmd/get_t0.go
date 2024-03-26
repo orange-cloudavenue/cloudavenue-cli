@@ -15,6 +15,7 @@ var getT0Cmd = &cobra.Command{
 	Use:               argT0,
 	Short:             "A brief list of your t0 resources",
 	Long:              "A complete list information of your T0 resources in your CloudAvenue account." + description,
+	Example:           "get t0",
 	DisableAutoGenTag: true,
 	SilenceErrors:     true,
 	RunE: func(cmd *cobra.Command, args []string) error {
