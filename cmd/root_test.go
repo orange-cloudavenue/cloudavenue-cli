@@ -14,7 +14,7 @@ import (
 const (
 	get         string = "get"
 	add         string = "add"
-	delete      string = "delete"
+	del         string = "del"
 	help        string = "help"
 	version     string = "version"
 	update      string = "update"
@@ -215,36 +215,36 @@ func TestRootCmd(t *testing.T) {
 			}
 
 		// ? Test delete argument
-		case delete:
+		case del:
 			tests := tts{
 				{
-					name: delete + " without args",
-					args: []string{delete},
+					name: del + " without args",
+					args: []string{del},
 					fail: true, // Should fail because no args
 				},
 				{
-					name: delete + " with a whatever flag",
-					args: []string{delete, "--whatever"},
+					name: del + " with a whatever flag",
+					args: []string{del, "--whatever"},
 					fail: true, // Should fail because flag no exist
 				},
 				{
-					name: delete + " a bucket",
-					args: []string{delete, "s3", "whatever", "whatever-time"},
+					name: del + " a bucket",
+					args: []string{del, "s3", "whatever", "whatever-time"},
 					fail: false,
 				},
 				{
-					name: delete + " a publicip",
-					args: []string{delete, "publicip", "whatever"},
+					name: del + " a publicip",
+					args: []string{del, "publicip", "whatever"},
 					fail: true,
 				},
 				{
-					name: delete + " an edgegateway",
-					args: []string{delete, "edgegateway", "tn01e02ocb0006205spt104"},
+					name: del + " an edgegateway",
+					args: []string{del, "edgegateway", "tn01e02ocb0006205spt104"},
 					fail: false,
 				},
 				{
-					name: delete + " a vdc",
-					args: []string{delete, "vdc", "whatever", "whatever-time"},
+					name: del + " a vdc",
+					args: []string{del, "vdc", "whatever", "whatever-time"},
 					fail: false,
 				},
 			}
