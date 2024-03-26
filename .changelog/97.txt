@@ -1,0 +1,3 @@
+```release-note:dependency
+deps: bumps github.com/aws/aws-sdk-go from 1.50.20 to 1.50.25
+```
