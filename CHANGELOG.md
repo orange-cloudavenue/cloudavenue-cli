@@ -4,6 +4,7 @@
 
 * deps: bumps dependabot/fetch-metadata from 1.6.0 to 2.0.0 (GH-102)
 * deps: bumps github.com/aws/aws-sdk-go from 1.50.15 to 1.50.20 (GH-96)
+* deps: bumps github.com/creativeprojects/go-selfupdate from 1.1.3 to 1.1.4 (GH-101)
 
 ## 0.0.10 (February 13, 2024)
 
