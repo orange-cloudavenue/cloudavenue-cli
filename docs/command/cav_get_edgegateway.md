@@ -14,6 +14,12 @@ A complete list information of your EdgeGateway resources in your CloudAvenue ac
 cav get edgegateway [flags]
 ```
 
+### Examples
+
+```
+get edgegateway
+```
+
 ### Options
 
 ```

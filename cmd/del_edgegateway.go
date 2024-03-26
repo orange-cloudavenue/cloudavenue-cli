@@ -13,8 +13,9 @@ import (
 var delEdgeGatewayCmd = &cobra.Command{
 	Use:               argEdgeGateway,
 	Aliases:           []string{argEdgeGatewayAlias1, argEdgeGatewayAlias2},
-	Example:           "delete edgegateway <id or name> [<id or name>] [<id or name>] ...",
-	Short:             "Delete an edgeGateway (name or id)",
+	Example:           "del edgegateway <id or name> [<id or name>] [<id or name>] ...",
+	Short:             "Delete an edgeGateway (name or id).",
+	Long:              "Delete an edgeGateway (name or id), multiple edgeGateway can be deleted at once.",
 	DisableAutoGenTag: true,
 	SilenceErrors:     true,
 	RunE: func(cmd *cobra.Command, args []string) error {

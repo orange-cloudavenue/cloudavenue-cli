@@ -22,7 +22,7 @@ const (
 	// ? Arguments for commands
 	argVDC               = "vdc"
 	argPublicIP          = "publicip"
-	argPublicIPAlias1    = "ip"
+	argPublicIPAlias1    = "pip"
 	argS3                = "s3"
 	argS3Alias           = "bucket"
 	argEdgeGateway       = "edgegateway"
