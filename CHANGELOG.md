@@ -1,5 +1,9 @@
 ## 0.1.0 (Unreleased)
 
+### :tada: **Improvements**
+
+* cmd: replace command create by add and delete by del. (GH-85)
+
 ### :dependabot: **Dependencies**
 
 * deps: bumps actions/download-artifact from 4.1.2 to 4.1.4 (GH-98)
