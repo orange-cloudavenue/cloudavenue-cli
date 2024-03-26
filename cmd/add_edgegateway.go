@@ -62,7 +62,7 @@ var addEdgeGatewayCmd = &cobra.Command{
 		if err != nil {
 			return fmt.Errorf("Error during EdgeGateway creation in VDC %v: %w", vdc, err)
 		}
-		s.FinalMSG = "EdgeGateway resource addd successfully !!"
+		s.FinalMSG = "EdgeGateway resource added successfully !!"
 		s.Stop()
 		return nil
 	},

@@ -46,7 +46,7 @@ var addPublicIPCmd = &cobra.Command{
 		if err != nil {
 			return fmt.Errorf("Error during public ip creation for edgegateway %v: %w", gwName, err)
 		}
-		s.FinalMSG = "public ip resource addd successfully !!"
+		s.FinalMSG = "public ip resource added successfully !!"
 		s.Stop()
 		return nil
 	},

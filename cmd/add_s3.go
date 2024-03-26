@@ -41,7 +41,7 @@ var addS3Cmd = &cobra.Command{
 		if err != nil {
 			return fmt.Errorf("Unable to add bucket S3 %v: %w", bucketName, err)
 		}
-		s.FinalMSG = "Bucket resource addd successfully !!"
+		s.FinalMSG = "Bucket resource added successfully !!"
 		s.Stop()
 		return nil
 	},
