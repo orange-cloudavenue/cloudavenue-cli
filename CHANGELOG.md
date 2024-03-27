@@ -11,7 +11,9 @@
 * deps: bumps github.com/aws/aws-sdk-go from 1.50.15 to 1.50.20 (GH-96)
 * deps: bumps github.com/aws/aws-sdk-go from 1.50.20 to 1.50.25 (GH-97)
 * deps: bumps github.com/creativeprojects/go-selfupdate from 1.1.3 to 1.1.4 (GH-101)
+* deps: bumps github.com/orange-cloudavenue/cloudavenue-sdk-go from 0.9.1 to 0.10.0 (GH-100)
 * deps: bumps google.golang.org/protobuf from 1.32.0 to 1.33.0 (GH-99)
+* deps: update golang from 1.20 to 1.21 (GH-80)
 
 ## 0.0.10 (February 13, 2024)
 
