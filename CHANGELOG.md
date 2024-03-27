@@ -4,6 +4,11 @@
 
 * cmd: replace command create by add and delete by del. (GH-85)
 
+### :bug: **Bug Fixes**
+
+* `command`: Fix a bug preventing credential to use basic command like update, version and help. (GH-104)
+* `command`: Fix cursor lost when command return an error or was canceled. (GH-80)
+
 ### :dependabot: **Dependencies**
 
 * deps: bumps actions/download-artifact from 4.1.2 to 4.1.4 (GH-98)
