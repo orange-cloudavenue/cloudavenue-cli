@@ -1,4 +1,4 @@
-```release-note:fix
+```release-note:bug
 `command`: Fix cursor lost when command return an error or was canceled.
 ```
 
