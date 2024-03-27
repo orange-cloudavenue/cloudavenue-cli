@@ -1,0 +1,7 @@
+```release-note:fix
+`command`: Fix cursor lost when command return an error or was canceled.
+```
+
+```release-note:dependency
+deps: update golang from 1.20 to 1.21
+```
