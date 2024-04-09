@@ -18,6 +18,7 @@ const (
 	flagOutput          = "output"
 	flagTime            = "time"
 	flagName            = "name"
+	flagIPAdress        = "ip"
 	flagVDC             = "vdc"
 	// ? Arguments for commands
 	argVDC               = "vdc"

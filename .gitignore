@@ -4,3 +4,4 @@ go.work
 go.work.sum
 .cache/
 dockerfile
+.vscode/launch.json

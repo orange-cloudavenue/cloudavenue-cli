@@ -23,7 +23,8 @@ get s3
 ### Options
 
 ```
-  -h, --help   help for s3
+  -h, --help          help for s3
+      --name string   A s3 bucket name (default "n")
 ```
 
 ### Options inherited from parent commands

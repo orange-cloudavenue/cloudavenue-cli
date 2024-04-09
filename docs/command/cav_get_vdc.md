@@ -23,7 +23,8 @@ get vdc
 ### Options
 
 ```
-  -h, --help   help for vdc
+  -h, --help          help for vdc
+  -n, --name string   A vdc name
 ```
 
 ### Options inherited from parent commands

@@ -9,6 +9,7 @@ import (
 
 	"github.com/orange-cloudavenue/cloudavenue-cli/cmd"
 	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 )
 
 const (
@@ -33,21 +34,23 @@ type tt struct {
 type tts []tt
 
 func TestRootCmd(t *testing.T) {
+	// TODO - Need to fix the export variables
 	// ? Test configuration
 	// Bad configuration
 	t.Run("Bad Configuration", func(t *testing.T) {
-		os.Setenv("ENDPOINT", "")
+		os.Setenv("CLOUDAVENUE_USERNAME", "TOTO")
 		if err := cmd.Execute(); err != nil {
 			check := err.Error()
-			if !strings.Contains(check, "Error in CloudAvenue parameter") {
+			if !strings.Contains(check, "Please check your configuration") {
 				t.Errorf("Fail %v", err)
 			}
 		}
 	})
 
 	// Good configuration
+	fmt.Println("=Good Configuration")
 	t.Run("Configuration", func(t *testing.T) {
-		os.Setenv("CLOUDAVENUE_URL", "https://console1.cloudavenue.orange-business.com")
+		os.Setenv("CLOUDAVENUE_USERNAME", "gaetan.ars")
 		if err := cmd.Execute(); err != nil {
 			t.Errorf("Fail %v", err)
 		}
@@ -59,15 +62,16 @@ func TestRootCmd(t *testing.T) {
 		panic("No command found")
 	}
 
+	var globalTests, addTests, getTests, delTests tts
 	for _, oneCmd := range allCmd {
-
-		globalTests := tts{}
+		// ? Test all subcommands
 		switch oneCmd.Use {
 		// ? Test list argument
 		case get:
 			// ? Test all subcommands
 			subCmd := oneCmd.Commands()
 			for _, cmdSubCmd := range subCmd {
+				// ? Test all subcommands for Get and some use case
 				tests := tts{
 					{
 						name: oneCmd.Use + "_" + cmdSubCmd.Use + " without args",
@@ -77,11 +81,6 @@ func TestRootCmd(t *testing.T) {
 						name: oneCmd.Use + "_" + cmdSubCmd.Use + " with a whatever flag",
 						args: []string{oneCmd.Use, cmdSubCmd.Use, "--whatever"},
 						fail: true, // Should fail because flag no exist
-					},
-					{
-						name: oneCmd.Use + "_" + cmdSubCmd.Use + " with ouput flag without args",
-						args: []string{oneCmd.Use, cmdSubCmd.Use, "--output"},
-						fail: true, // Should fail because args for flag is empty
 					},
 					{
 						name: oneCmd.Use + "_" + cmdSubCmd.Use + " with ouput flag without args",
@@ -100,21 +99,23 @@ func TestRootCmd(t *testing.T) {
 						name: oneCmd.Use + "_" + cmdSubCmd.Use + " with ouput flag yaml args",
 						args: []string{oneCmd.Use, cmdSubCmd.Use, "--output", "yaml"},
 					},
-					// TODO: this test seems to broke all the tests
-					// {
-					// 	name: oneCmd.Use + "_" + cmdSubCmd.Use + " with output flag and a wtf args",
-					// 	args: []string{oneCmd.Use, cmdSubCmd.Use, "--output", "wtf"},
-					// 	fail: true, // Should fail because args for flag is unknown
-					// },
+					{
+						name: oneCmd.Use + "_" + cmdSubCmd.Use + " with resource name flag",
+						args: []string{oneCmd.Use, cmdSubCmd.Use, "--name", "whatever"},
+						fail: true, // Should fail because resource doesn't exist
+					},
+					{
+						name: oneCmd.Use + "_" + cmdSubCmd.Use + " with output flag and a wtf args",
+						args: []string{oneCmd.Use, cmdSubCmd.Use, "--output", "wtf"},
+						fail: true, // Should fail because args for flag is unknown
+					},
 					{
 						name: oneCmd.Use + "_" + cmdSubCmd.Use + " with time flag",
 						args: []string{oneCmd.Use, cmdSubCmd.Use, "--time"},
 					},
 				}
-				// startTest(tests, t)
-				globalTests = append(globalTests, tests...)
+				getTests = append(getTests, tests...)
 			}
-
 		// ? Test add argument
 		case add:
 			// ? Test all subcommands
@@ -148,9 +149,10 @@ func TestRootCmd(t *testing.T) {
 						{
 							name: oneCmd.Use + "_" + cmdSubCmd.Use + " with time flag",
 							args: []string{oneCmd.Use, cmdSubCmd.Use, "--time", "--name", "whatever-time"},
+							fail: false,
 						},
 					}
-					globalTests = append(globalTests, tests...)
+					addTests = append(addTests, tests...)
 				case publicip:
 					tests := tts{
 						{
@@ -174,7 +176,7 @@ func TestRootCmd(t *testing.T) {
 							fail: true, // Should fail because args for flag is empty
 						},
 					}
-					globalTests = append(globalTests, tests...)
+					addTests = append(addTests, tests...)
 				case edgeGateway:
 					tests := tts{
 						{
@@ -208,9 +210,11 @@ func TestRootCmd(t *testing.T) {
 							fail: true, // Should fail because no vdc
 						},
 					}
-					globalTests = append(globalTests, tests...)
+					addTests = append(addTests, tests...)
 				default:
-					fmt.Println("No test for this subcommand")
+					if cmdSubCmd.Use == "" {
+						fmt.Printf("No test for this subcommand: %v", cmdSubCmd.Use)
+					}
 				}
 			}
 
@@ -248,7 +252,7 @@ func TestRootCmd(t *testing.T) {
 					fail: false,
 				},
 			}
-			globalTests = append(globalTests, tests...)
+			delTests = append(delTests, tests...)
 
 		// ? Test help argument
 		case help:
@@ -284,13 +288,17 @@ func TestRootCmd(t *testing.T) {
 			globalTests = append(globalTests, tests...)
 
 		default:
-			fmt.Println("No test for this command")
+			if oneCmd.Use == "" {
+				fmt.Printf("No test for this subcommand: %v", oneCmd.Use)
+			}
 		}
-
-		// ? Test all commands
-		startTest(globalTests, t)
-
 	}
+	// ? Test all commands
+	startTest(addTests, t)
+	startTest(getTests, t)
+	startTest(delTests, t)
+	startTest(globalTests, t)
+
 }
 
 func startTest(tests tts, t *testing.T) {
@@ -306,16 +314,19 @@ func startTest(tests tts, t *testing.T) {
 			// set the args
 			x.SetArgs(test.args)
 
-			// print the command generated
-			fmt.Printf("***Generated Test command: %v %v \n", x.CommandPath(), test.args)
-
 			// execute the command
 			err := x.Execute()
-			if err != nil && !test.fail {
-				t.Errorf("Fail %v", err)
+			if err != nil && test.fail == false {
+				t.Fail()
 			}
 
+			// reset the flags
+			resetFlags(x)
+			x.SetOut(nil)
+			x.SetErr(nil)
+
 		})
+
 	}
 }
 
@@ -323,15 +334,29 @@ func startTest(tests tts, t *testing.T) {
 func sortCmd(cmds []*cobra.Command) []*cobra.Command {
 	cmdsSorted := []*cobra.Command{}
 	for _, cmd := range cmds {
-		fmt.Println("===")
-		fmt.Println(cmd.Use)
 		switch cmd.Use {
 		case vdc:
 			cmdsSorted = append([]*cobra.Command{cmd}, cmdsSorted...)
 		default:
 			cmdsSorted = append(cmdsSorted, cmd)
 		}
-		fmt.Println(cmdsSorted)
 	}
 	return cmdsSorted
+}
+
+// func to reset all flags recursuvely
+func resetFlags(cmd *cobra.Command) {
+	cmd.Flags().VisitAll(func(f *pflag.Flag) {
+		if f.Changed {
+			err := f.Value.Set(f.DefValue)
+			if err != nil {
+				fmt.Printf("Error: %v", err)
+			}
+			f.Changed = false
+		}
+	})
+
+	for _, c := range cmd.Commands() {
+		resetFlags(c)
+	}
 }

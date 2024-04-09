@@ -23,7 +23,8 @@ get t0
 ### Options
 
 ```
-  -h, --help   help for t0
+  -h, --help          help for t0
+      --name string   A vdc name (default "n")
 ```
 
 ### Options inherited from parent commands

@@ -4,16 +4,20 @@ go 1.21
 
 toolchain go1.22.1
 
+replace github.com/orange-cloudavenue/cloudavenue-sdk-go v0.10.0-f65d1949 => ../cloudavenue-sdk-go
+
 require (
 	github.com/adampresley/sigint v0.0.0-20150906022118-7e8d2ad16a94
 	github.com/aws/aws-sdk-go v1.51.0
 	github.com/briandowns/spinner v1.23.0
 	github.com/creativeprojects/go-selfupdate v1.1.4
+	github.com/k0kubun/pp v3.0.1+incompatible
 	github.com/mitchellh/go-homedir v1.1.0
-	github.com/orange-cloudavenue/cloudavenue-sdk-go v0.10.0
+	github.com/orange-cloudavenue/cloudavenue-sdk-go v0.10.0-f65d1949
 	github.com/orange-cloudavenue/common-go/print v0.0.0-20240115212523-43a46e6ad427
 	github.com/spf13/cobra v1.8.0
 	github.com/spf13/viper v1.18.2
+	github.com/vmware/go-vcloud-director/v2 v2.22.0
 	gopkg.in/yaml.v3 v3.0.1
 )
 
@@ -60,6 +64,7 @@ require (
 	github.com/hashicorp/yamux v0.1.1 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
+	github.com/k0kubun/colorstring v0.0.0-20150214042306-9440f1994b88 // indirect
 	github.com/kr/pretty v0.3.1 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/magiconair/properties v1.8.7 // indirect
@@ -87,7 +92,6 @@ require (
 	github.com/vmihailenco/msgpack v4.0.4+incompatible // indirect
 	github.com/vmihailenco/msgpack/v5 v5.4.1 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
-	github.com/vmware/go-vcloud-director/v2 v2.22.0 // indirect
 	github.com/xanzy/go-gitlab v0.100.0 // indirect
 	github.com/zclconf/go-cty v1.14.2 // indirect
 	go.uber.org/atomic v1.9.0 // indirect

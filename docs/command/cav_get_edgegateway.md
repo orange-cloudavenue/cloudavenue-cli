@@ -23,7 +23,8 @@ get edgegateway
 ### Options
 
 ```
-  -h, --help   help for edgegateway
+  -h, --help          help for edgegateway
+      --name string   An edge gateway name (default "n")
 ```
 
 ### Options inherited from parent commands
