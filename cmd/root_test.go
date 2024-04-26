@@ -38,7 +38,7 @@ func TestRootCmd(t *testing.T) {
 	// ? Test configuration
 	// Bad configuration
 	t.Run("Bad Configuration", func(t *testing.T) {
-		os.Setenv("CLOUDAVENUE_USERNAME", "TOTO")
+		os.Setenv("CLOUDAVENUE_URL", "https://console1.cloudavenue.orange-business.blackhole")
 		if err := cmd.Execute(); err != nil {
 			check := err.Error()
 			if !strings.Contains(check, "Please check your configuration") {
@@ -50,7 +50,7 @@ func TestRootCmd(t *testing.T) {
 	// Good configuration
 	fmt.Println("=Good Configuration")
 	t.Run("Configuration", func(t *testing.T) {
-		os.Setenv("CLOUDAVENUE_USERNAME", "gaetan.ars")
+		os.Setenv("CLOUDAVENUE_URL", "https://console1.cloudavenue.orange-business.com")
 		if err := cmd.Execute(); err != nil {
 			t.Errorf("Fail %v", err)
 		}

@@ -24,7 +24,7 @@ get publicip
 
 ```
   -h, --help        help for publicip
-      --ip string   A public ip4 adress (default "i")
+  -i, --ip string   A public ip4 address
 ```
 
 ### Options inherited from parent commands

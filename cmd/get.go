@@ -53,16 +53,15 @@ func init() {
 	getCmd.AddCommand(getEdgeGatewayCmd)
 	getCmd.AddCommand(getVDCCmd)
 	getCmd.PersistentFlags().StringP(flagOutput, "o", "", "Output format. One of: (wide, json, yaml)")
-	// getVDCCmd.Flags().StringP(flagName, "n", "", "A resource name")
 
 	// ? Options for vdc
 	getVDCCmd.Flags().StringP(flagName, "n", "", "A vdc name")
 	// ? Options for t0
-	getT0Cmd.LocalFlags().String(flagName, "n", "A vdc name")
+	getT0Cmd.Flags().StringP(flagName, "n", "", "A vdc name")
 	// ? Options for s3
-	getS3Cmd.LocalFlags().String(flagName, "n", "A s3 bucket name")
+	getS3Cmd.Flags().StringP(flagName, "n", "", "A s3 bucket name")
 	// ? Options for publicip
-	getPublicIPCmd.LocalFlags().String(flagIPAdress, "i", "A public ip4 adress")
+	getPublicIPCmd.Flags().StringP(flagIPAdress, "i", "", "A public ip4 address")
 	// ? Options for edgegateway
-	getEdgeGatewayCmd.LocalFlags().String(flagName, "n", "An edge gateway name")
+	getEdgeGatewayCmd.Flags().StringP(flagName, "n", "", "An edge gateway name")
 }

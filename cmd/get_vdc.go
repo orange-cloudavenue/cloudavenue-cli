@@ -35,7 +35,6 @@ var getVDCCmd = &cobra.Command{
 		// Get the list of vdc or a specific vdc
 		var vdcs []*types.QueryResultOrgVdcRecordType
 		var vdc *types.QueryResultOrgVdcRecordType
-		// pp.Printf("FLAG: %v\n", cmd.Flag(flagName))
 		if cmd.Flag(flagName) != nil && cmd.Flag(flagName).Value.String() != "" {
 			// Get the specific vdc
 			vdc, err = c.V1.Querier().Get().VDC(cmd.Flag(flagName).Value.String())
@@ -80,8 +79,3 @@ var getVDCCmd = &cobra.Command{
 		return nil
 	},
 }
-
-// func init() {
-// 	getCmd.AddCommand(getVDCCmd)
-// 	getVDCCmd.Flags().StringP(flagName, "n", "", "A resource name")
-// }

@@ -24,7 +24,7 @@ get t0
 
 ```
   -h, --help          help for t0
-      --name string   A vdc name (default "n")
+  -n, --name string   A vdc name
 ```
 
 ### Options inherited from parent commands
