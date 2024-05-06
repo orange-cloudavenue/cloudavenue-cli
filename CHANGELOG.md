@@ -6,6 +6,7 @@
 
 ### :dependabot: **Dependencies**
 
+* deps: bumps actions/download-artifact from 4.1.4 to 4.1.5 (GH-115)
 * deps: bumps actions/setup-go from 5.0.0 to 5.0.1 (GH-119)
 * deps: bumps dependabot/fetch-metadata from 2.0.0 to 2.1.0 (GH-118)
 
