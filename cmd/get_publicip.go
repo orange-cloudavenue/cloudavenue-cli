@@ -6,6 +6,7 @@ import (
 
 	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/customErrors"
 	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/output"
+	v1 "github.com/orange-cloudavenue/cloudavenue-sdk-go/v1"
 	"github.com/orange-cloudavenue/common-go/print"
 	"github.com/spf13/cobra"
 )
@@ -20,6 +21,8 @@ var getPublicIPCmd = &cobra.Command{
 	DisableAutoGenTag: true,
 	SilenceErrors:     true,
 	RunE: func(cmd *cobra.Command, args []string) error {
+		var err error
+
 		// init Config File & Client
 		if err := initConfig(); err != nil {
 			return fmt.Errorf("Unable to initialize: %w", err)
@@ -30,10 +33,25 @@ var getPublicIPCmd = &cobra.Command{
 			defer timeTrack(time.Now(), cmd.CommandPath())
 		}
 
-		// Get the list of publicip
-		ips, err := c.V1.PublicIP.GetIPs()
-		if err != nil {
-			return fmt.Errorf("CloudAvenue Error from IP List: %w", err)
+		// Get the list of publicip or a specific publicip
+		var ips *v1.IPs
+		var ip *v1.IP
+		if cmd.Flag(flagIPAdress) != nil && cmd.Flag(flagIPAdress).Value.String() != "" {
+			// Get the specific publicip
+			ip, err = c.V1.PublicIP.GetIP(cmd.Flag(flagIPAdress).Value.String())
+			if err != nil {
+				return fmt.Errorf("CloudAvenue Error from IP Get: %w", err)
+			}
+			// Create a list of one publicip
+			ips = &v1.IPs{
+				NetworkConfig: []v1.IP{*ip},
+			}
+		} else {
+			// Get the list of publicip
+			ips, err = c.V1.PublicIP.GetIPs()
+			if err != nil {
+				return fmt.Errorf("CloudAvenue Error from IP List: %w", err)
+			}
 		}
 
 		// Print the result

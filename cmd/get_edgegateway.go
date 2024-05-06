@@ -6,6 +6,7 @@ import (
 
 	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/customErrors"
 	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/output"
+	v1 "github.com/orange-cloudavenue/cloudavenue-sdk-go/v1"
 	"github.com/orange-cloudavenue/common-go/print"
 	"github.com/spf13/cobra"
 )
@@ -20,6 +21,8 @@ var getEdgeGatewayCmd = &cobra.Command{
 	DisableAutoGenTag: true,
 	SilenceErrors:     true,
 	RunE: func(cmd *cobra.Command, args []string) error {
+		var err error
+
 		// init Config File & Client
 		if err := initConfig(); err != nil {
 			return fmt.Errorf("Unable to initialize: %w", err)
@@ -30,9 +33,23 @@ var getEdgeGatewayCmd = &cobra.Command{
 			defer timeTrack(time.Now(), cmd.CommandPath())
 		}
 
-		edgeGateways, err := c.V1.EdgeGateway.List()
-		if err != nil {
-			return fmt.Errorf("CloudAvenue Error from EdgeGateway List: %w", err)
+		// Get the list of edgegateway or a specific edgegateway
+		var edgeGateways *v1.EdgeGateways
+		var edgeGw *v1.EdgeGw
+		if cmd.Flag(flagName) != nil && cmd.Flag(flagName).Value.String() != "" {
+			// Get the specific edgegateway
+			edgeGw, err = c.V1.EdgeGateway.GetByName(cmd.Flag(flagName).Value.String())
+			if err != nil {
+				return fmt.Errorf("CloudAvenue Error from EdgeGateway Get: %w", err)
+			}
+			// Create a list of one edgegateway
+			edgeGateways = &v1.EdgeGateways{*edgeGw}
+		} else {
+			// Get the list of edgegateway
+			edgeGateways, err = c.V1.EdgeGateway.List()
+			if err != nil {
+				return fmt.Errorf("CloudAvenue Error from EdgeGateway List: %w", err)
+			}
 		}
 
 		// Print the result

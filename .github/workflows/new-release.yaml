@@ -57,7 +57,7 @@ jobs:
         with:
           token: ${{ secrets.CHANGELOG_PAT }}
           ref: ${{ github.ref }}
-      - uses: actions/setup-go@v5
+      - uses: actions/setup-go@v5.0.1
         with:
           go-version-file: 'go.mod'
       - run: go mod download
@@ -74,7 +74,7 @@ jobs:
   #     with:
   #       token: ${{ secrets.CHANGELOG_PAT }}
   #       ref: ${{ github.ref }}
-  #   - uses: actions/setup-go@v5
+  #   - uses: actions/setup-go@v5.0.1
   #     with:
   #       go-version-file: 'go.mod'
   #   - run: go mod download
@@ -133,7 +133,7 @@ jobs:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v5.0.1
         with:
           go-version-file: 'go.mod'
       - id: release-notes-download
@@ -152,7 +152,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   changelog-newversion:
-    needs: [release-app, pre-check]
+    needs: [release-app, golangci-lint, pre-check]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4 # v3.5.3 
@@ -163,16 +163,17 @@ jobs:
       - name: Update Changelog Header
         run: |
           CHANGELOG_FILE_NAME="CHANGELOG.md"
-          PREVIOUS_RELEASE_TAG=${{ github.ref_name }}
+          RELEASE_TAG=${{ needs.pre-check.outputs.TAG_NAME }}
+          # PREVIOUS_RELEASE_TAG=${{ github.ref_name }}
 
           # Add Release Date
           RELEASE_DATE=`date +%B' '%e', '%Y`
-          sed -i -e "1 s/.*Unreleased.*/## ${PREVIOUS_RELEASE_TAG#v} ($RELEASE_DATE)/" $CHANGELOG_FILE_NAME
+          sed -i -e "1 s/.*Unreleased.*/## ${RELEASE_TAG#v} ($RELEASE_DATE)/" $CHANGELOG_FILE_NAME
 
           # Prepend next release line
-          echo Previous release is: $PREVIOUS_RELEASE_TAG
+          echo Previous release is: $RELEASE_TAG
 
-          NEW_RELEASE_LINE=$(echo $PREVIOUS_RELEASE_TAG | awk -F. '{
+          NEW_RELEASE_LINE=$(echo $RELEASE_TAG | awk -F. '{
               $1 = substr($1,2)
               $2 += 1
               printf("%s.%01d.0\n\n", $1, $2);
