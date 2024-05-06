@@ -2,8 +2,6 @@ module github.com/orange-cloudavenue/cloudavenue-cli
 
 go 1.22
 
-toolchain go1.22.2
-
 require (
 	github.com/adampresley/sigint v0.0.0-20150906022118-7e8d2ad16a94
 	github.com/aws/aws-sdk-go v1.51.21
