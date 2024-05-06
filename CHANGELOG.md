@@ -4,6 +4,10 @@
 
 * cmd/get: Now you can describe a specific resource. (GH-84)
 
+### :dependabot: **Dependencies**
+
+* deps: bumps actions/setup-go from 5.0.0 to 5.0.1 (GH-119)
+
 ## 0.0.11 (March 27, 2024)
 
 ### :tada: **Improvements**
