@@ -6,7 +6,7 @@ require (
 	github.com/adampresley/sigint v0.0.0-20150906022118-7e8d2ad16a94
 	github.com/aws/aws-sdk-go v1.52.2
 	github.com/briandowns/spinner v1.23.0
-	github.com/creativeprojects/go-selfupdate v1.1.4
+	github.com/creativeprojects/go-selfupdate v1.2.0
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/orange-cloudavenue/cloudavenue-sdk-go v0.10.1
 	github.com/orange-cloudavenue/common-go/print v0.0.0-20240115212523-43a46e6ad427

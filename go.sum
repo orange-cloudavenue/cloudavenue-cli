@@ -28,8 +28,8 @@ github.com/cloudflare/circl v1.3.7/go.mod h1:sRTcRWXGLrKw6yIGJ+l7amYJFfAXbZG0kBS
 github.com/cpuguy83/go-md2man/v2 v2.0.3 h1:qMCsGGgs+MAzDFyp9LpAe1Lqy/fY/qCovCm0qnXZOBM=
 github.com/cpuguy83/go-md2man/v2 v2.0.3/go.mod h1:tgQtvFlXSQOSOSIRvRPT7W67SCa46tRHOmNcaadrF8o=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
-github.com/creativeprojects/go-selfupdate v1.1.4 h1:6/+Wfg08lXAbmU/qEU0v9W4w5Wp6TWf9x2DAttZEwzg=
-github.com/creativeprojects/go-selfupdate v1.1.4/go.mod h1:zCTXcZolcs0Cw9WsfXZvlcX9AupkAlikQ14PQqIV2v0=
+github.com/creativeprojects/go-selfupdate v1.2.0 h1:sHpsnSJuSxQ6pua32c+86Izm+nG1jEKPo3UP/MAE6IM=
+github.com/creativeprojects/go-selfupdate v1.2.0/go.mod h1:zCTXcZolcs0Cw9WsfXZvlcX9AupkAlikQ14PQqIV2v0=
 github.com/cyphar/filepath-securejoin v0.2.4 h1:Ugdm7cg7i6ZK6x3xDF1oEu1nfkyfH53EtKeQYTC3kyg=
 github.com/cyphar/filepath-securejoin v0.2.4/go.mod h1:aPGpWjXOXUn2NCNjFvBE6aRxGGx79pTxQpKOJNYHHl4=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
