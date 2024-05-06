@@ -6,6 +6,7 @@ import (
 
 	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/customErrors"
 	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/output"
+	v1 "github.com/orange-cloudavenue/cloudavenue-sdk-go/v1"
 	"github.com/orange-cloudavenue/common-go/print"
 	"github.com/spf13/cobra"
 )
@@ -19,8 +20,10 @@ var getT0Cmd = &cobra.Command{
 	DisableAutoGenTag: true,
 	SilenceErrors:     true,
 	RunE: func(cmd *cobra.Command, args []string) error {
+		var err error
+
 		// init Config File & Client
-		if err := initConfig(); err != nil {
+		if err = initConfig(); err != nil {
 			return fmt.Errorf("Unable to initialize: %w", err)
 		}
 
@@ -29,10 +32,23 @@ var getT0Cmd = &cobra.Command{
 			defer timeTrack(time.Now(), cmd.CommandPath())
 		}
 
-		// Get the list of t0
-		t0s, err := c.V1.T0.GetT0s()
-		if err != nil {
-			return fmt.Errorf("CloudAvenue Error from T0 List: %w", err)
+		// Get the list of t0 or a specific t0
+		var t0s *v1.T0s
+		var t0 *v1.T0
+		if cmd.Flag(flagName) != nil && cmd.Flag(flagName).Value.String() != "" {
+			// Get the specific t0
+			t0, err = c.V1.T0.GetT0(cmd.Flag(flagName).Value.String())
+			if err != nil {
+				return fmt.Errorf("CloudAvenue Error from T0 Get: %w", err)
+			}
+			// Create a list of one t0
+			t0s = &v1.T0s{*t0}
+		} else {
+			// Get the list of t0
+			t0s, err = c.V1.T0.GetT0s()
+			if err != nil {
+				return fmt.Errorf("CloudAvenue Error from T0 List: %w", err)
+			}
 		}
 
 		// Print the result

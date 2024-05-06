@@ -8,6 +8,7 @@ import (
 	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/output"
 	"github.com/orange-cloudavenue/common-go/print"
 	"github.com/spf13/cobra"
+	"github.com/vmware/go-vcloud-director/v2/types/v56"
 )
 
 // getVDCCmd return a list of your vdc resource(s)
@@ -19,8 +20,10 @@ var getVDCCmd = &cobra.Command{
 	DisableAutoGenTag: true,
 	SilenceErrors:     true,
 	RunE: func(cmd *cobra.Command, args []string) error {
+		var err error
+
 		// init Config File & Client
-		if err := initConfig(); err != nil {
+		if err = initConfig(); err != nil {
 			return fmt.Errorf("Unable to initialize: %w", err)
 		}
 
@@ -29,10 +32,23 @@ var getVDCCmd = &cobra.Command{
 			defer timeTrack(time.Now(), cmd.CommandPath())
 		}
 
-		// Get the list of vdc
-		vdcs, err := c.V1.Querier().List().VDC()
-		if err != nil {
-			return fmt.Errorf("CloudAvenue Error from VDC List: %w", err)
+		// Get the list of vdc or a specific vdc
+		var vdcs []*types.QueryResultOrgVdcRecordType
+		var vdc *types.QueryResultOrgVdcRecordType
+		if cmd.Flag(flagName) != nil && cmd.Flag(flagName).Value.String() != "" {
+			// Get the specific vdc
+			vdc, err = c.V1.Querier().Get().VDC(cmd.Flag(flagName).Value.String())
+			if err != nil || vdc == nil {
+				return fmt.Errorf("CloudAvenue Error from VDC Get (VDC exist ?): %w", err)
+			}
+			// Create a list of one vdc
+			vdcs = append(vdcs, vdc)
+		} else {
+			// Get the list of vdc
+			vdcs, err = c.V1.Querier().List().VDC()
+			if err != nil {
+				return fmt.Errorf("CloudAvenue Error from VDC List: %w", err)
+			}
 		}
 
 		// Print the result
