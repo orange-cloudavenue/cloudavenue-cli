@@ -1,4 +1,9 @@
 ## 0.1.0 (Unreleased)
+
+### :tada: **Improvements**
+
+* cmd/get: Now you can describe a specific resource. (GH-84)
+
 ## 0.0.11 (March 27, 2024)
 
 ### :tada: **Improvements**
