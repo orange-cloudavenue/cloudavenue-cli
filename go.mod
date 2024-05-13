@@ -4,7 +4,7 @@ go 1.22
 
 require (
 	github.com/adampresley/sigint v0.0.0-20150906022118-7e8d2ad16a94
-	github.com/aws/aws-sdk-go v1.52.2
+	github.com/aws/aws-sdk-go v1.53.0
 	github.com/briandowns/spinner v1.23.0
 	github.com/creativeprojects/go-selfupdate v1.2.0
 	github.com/mitchellh/go-homedir v1.1.0
