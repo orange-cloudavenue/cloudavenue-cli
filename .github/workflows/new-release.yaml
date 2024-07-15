@@ -57,7 +57,7 @@ jobs:
         with:
           token: ${{ secrets.CHANGELOG_PAT }}
           ref: ${{ github.ref }}
-      - uses: actions/setup-go@v5.0.1
+      - uses: actions/setup-go@v5.0.2
         with:
           go-version-file: 'go.mod'
       - run: go mod download
@@ -74,7 +74,7 @@ jobs:
   #     with:
   #       token: ${{ secrets.CHANGELOG_PAT }}
   #       ref: ${{ github.ref }}
-  #   - uses: actions/setup-go@v5.0.1
+  #   - uses: actions/setup-go@v5.0.2
   #     with:
   #       go-version-file: 'go.mod'
   #   - run: go mod download
@@ -133,7 +133,7 @@ jobs:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Go
-        uses: actions/setup-go@v5.0.1
+        uses: actions/setup-go@v5.0.2
         with:
           go-version-file: 'go.mod'
       - id: release-notes-download
