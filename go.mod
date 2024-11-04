@@ -10,7 +10,7 @@ require (
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/orange-cloudavenue/cloudavenue-sdk-go v0.10.1
 	github.com/orange-cloudavenue/common-go/print v0.0.0-20240115212523-43a46e6ad427
-	github.com/spf13/cobra v1.8.0
+	github.com/spf13/cobra v1.8.1
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.19.0
 	github.com/vmware/go-vcloud-director/v2 v2.23.0
@@ -25,7 +25,7 @@ require (
 	github.com/apparentlymart/go-textseg/v15 v15.0.0 // indirect
 	github.com/araddon/dateparse v0.0.0-20190622164848-0fb0a474d195 // indirect
 	github.com/cloudflare/circl v1.3.7 // indirect
-	github.com/cpuguy83/go-md2man/v2 v2.0.3 // indirect
+	github.com/cpuguy83/go-md2man/v2 v2.0.4 // indirect
 	github.com/davidmz/go-pageant v1.0.2 // indirect
 	github.com/fatih/color v1.16.0 // indirect
 	github.com/fbiville/markdown-table-formatter v0.3.0 // indirect
