@@ -2,6 +2,7 @@
 
 ### :dependabot: **Dependencies**
 
+* deps: bumps dependabot/fetch-metadata from 2.1.0 to 2.2.0 (GH-130)
 * deps: bumps github.com/briandowns/spinner from 1.23.0 to 1.23.1 (GH-128)
 * deps: bumps github.com/hashicorp/go-retryablehttp from 0.7.5 to 0.7.7 (GH-129)
 * deps: bumps github.com/spf13/cobra from 1.8.0 to 1.8.1 (GH-127)
