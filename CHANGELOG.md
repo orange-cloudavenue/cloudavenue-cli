@@ -2,6 +2,7 @@
 
 ### :dependabot: **Dependencies**
 
+* deps: bumps github.com/briandowns/spinner from 1.23.0 to 1.23.1 (GH-128)
 * deps: bumps github.com/spf13/cobra from 1.8.0 to 1.8.1 (GH-127)
 * deps: bumps github.com/spf13/viper from 1.18.2 to 1.19.0 (GH-126)
 
