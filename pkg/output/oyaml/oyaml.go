@@ -3,8 +3,9 @@ package oyaml
 import (
 	"fmt"
 
-	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/output/model"
 	"gopkg.in/yaml.v3"
+
+	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/output/model"
 )
 
 var _ model.Formatter = oyaml{}

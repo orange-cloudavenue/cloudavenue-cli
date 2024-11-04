@@ -24,7 +24,7 @@ Is based on the Terraform [Provider Cloud Avenue](https://registry.terraform.io/
 It can quickly create an object with a simple template defined in the application coding (in futur release with a parameter template).  
 No needs to use terraform to see your IAAS state.  
 It is recommended to use it when you want to perform a quick operation on your infrastructure.  
-See [demo below](index.md#demo) 
+See [demo below](index.md#demo)
 
 !!! info
     If you need more information about Cloud Avenue, please visit [Cloud Avenue documentation](https://wiki.cloudavenue.orange-business.com/wiki/Welcome).

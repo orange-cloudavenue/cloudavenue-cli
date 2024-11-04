@@ -18,17 +18,17 @@ var addS3Cmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		// init Config File & Client
 		if err := initConfig(); err != nil {
-			return fmt.Errorf("Unable to initialize: %w", err)
+			return fmt.Errorf("unable to initialize: %w", err)
 		}
 
 		// Check if time flag is set
-		if cmd.Flag(flagTime).Value.String() == "true" {
+		if cmd.Flag(flagTime).Value.String() == trueValue {
 			defer timeTrack(time.Now(), cmd.CommandPath())
 		}
 
 		bucketName, err := cmd.Flags().GetString(flagName)
 		if err != nil {
-			return fmt.Errorf("Unable to retrieve flag %v: %w", flagName, err)
+			return fmt.Errorf("unable to retrieve flag %v: %w", flagName, err)
 		}
 
 		// Add the bucket
@@ -39,7 +39,7 @@ var addS3Cmd = &cobra.Command{
 
 		_, err = c.V1.S3().CreateBucket(&s3.CreateBucketInput{Bucket: &bucketName})
 		if err != nil {
-			return fmt.Errorf("Unable to add bucket S3 %v: %w", bucketName, err)
+			return fmt.Errorf("unable to add bucket S3 %v: %w", bucketName, err)
 		}
 		s.FinalMSG = "Bucket resource added successfully !!"
 		s.Stop()

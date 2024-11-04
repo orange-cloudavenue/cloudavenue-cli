@@ -1,6 +1,6 @@
 ## Configuration
 
-Two ways possible to configure your CLI. 
+Two ways possible to configure your CLI.
 
 ### Configuration File
 
@@ -8,7 +8,7 @@ On the first try, a config file locate in your home directory, under the followi
 
 ```{ .shell .no-copy }
 > cav
-Configuration file created in /root/.cav/config.yaml 
+Configuration file created in /root/.cav/config.yaml
 Please fill it with your credentials and re-run the command.
 ```
 

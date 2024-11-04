@@ -17,11 +17,11 @@ var delVDCCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		// init Config File & Client
 		if err := initConfig(); err != nil {
-			return fmt.Errorf("Unable to initialize: %w", err)
+			return fmt.Errorf("unable to initialize: %w", err)
 		}
 
 		// Check if time flag is set
-		if cmd.Flag(flagTime).Value.String() == "true" {
+		if cmd.Flag(flagTime).Value.String() == trueValue {
 			defer timeTrack(time.Now(), cmd.CommandPath())
 		}
 
@@ -31,15 +31,15 @@ var delVDCCmd = &cobra.Command{
 			s.Restart()
 			vdc, err := c.V1.VDC().GetVDC(arg)
 			if err != nil {
-				return fmt.Errorf("Error from vdc: %w", err)
+				return fmt.Errorf("error from vdc: %w", err)
 			}
 			job, err := vdc.Delete()
 			if err != nil {
-				return fmt.Errorf("Unable to delete vdc: %w", err)
+				return fmt.Errorf("unable to delete vdc: %w", err)
 			}
 			err = job.Wait(3, 300)
 			if err != nil {
-				return fmt.Errorf("Error during vdc Deletion !!: %w", err)
+				return fmt.Errorf("error during vdc Deletion !!: %w", err)
 			}
 			s.FinalMSG = "vdc resource deleted " + arg + " successfully !!\n"
 			s.Stop()

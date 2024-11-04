@@ -4,11 +4,12 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/customErrors"
-	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/output"
 	v1 "github.com/orange-cloudavenue/cloudavenue-sdk-go/v1"
 	"github.com/orange-cloudavenue/common-go/print"
 	"github.com/spf13/cobra"
+
+	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/errorscustom"
+	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/output"
 )
 
 // getEdgeGatewayCmd return a list of your edgegateway resource(s)
@@ -25,11 +26,11 @@ var getEdgeGatewayCmd = &cobra.Command{
 
 		// init Config File & Client
 		if err := initConfig(); err != nil {
-			return fmt.Errorf("Unable to initialize: %w", err)
+			return fmt.Errorf("unable to initialize: %w", err)
 		}
 
 		// Check if time flag is set and print time elapsed
-		if cmd.Flag(flagTime).Value.String() == "true" {
+		if cmd.Flag(flagTime).Value.String() == trueValue {
 			defer timeTrack(time.Now(), cmd.CommandPath())
 		}
 
@@ -65,7 +66,7 @@ var getEdgeGatewayCmd = &cobra.Command{
 		case flagOutputValueJSON, flagOutputValueYAML:
 			x, err := output.New(stringToTypeFormat(flag), edgeGateways)
 			if err != nil {
-				return fmt.Errorf("Impossible to format output: %w", err)
+				return fmt.Errorf("impossible to format output: %w", err)
 			}
 			x.ToOutput()
 		case "":
@@ -74,7 +75,7 @@ var getEdgeGatewayCmd = &cobra.Command{
 				w.AddFields(e.EdgeName, e.OwnerName)
 			}
 		default:
-			return fmt.Errorf("Output format %v: %w", flag, customErrors.ErrNotValidOutput)
+			return fmt.Errorf("output format %v: %w", flag, errorscustom.ErrNotValidOutput)
 		}
 		w.PrintTable()
 		return nil

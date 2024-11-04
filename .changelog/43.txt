@@ -1,7 +1,7 @@
 ```release-note:enhancement
 `command` - Add new option `--output` to improve result in `cav` command.
 ```
-    
+
 ```release-note:enhancement
 `command` - improve speed of printed result for vdc list command.
 ```

@@ -47,7 +47,7 @@ execute() {
   http_download "${tmpdir}/${CHECKSUM}" "${CHECKSUM_URL}"
   hash_sha256_verify "${tmpdir}/${TARBALL}" "${tmpdir}/${CHECKSUM}"
   srcdir="${tmpdir}/${NAME}"
-  rm -rf "${srcdir}" 
+  rm -rf "${srcdir}"
   (cd "${tmpdir}" && untar "${TARBALL}")
   test ! -d "${BINDIR}" && install -d "${BINDIR}"
   for binexe in $BINARIES; do

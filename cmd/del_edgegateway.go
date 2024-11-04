@@ -26,11 +26,11 @@ var delEdgeGatewayCmd = &cobra.Command{
 
 		// init Config File & Client
 		if err = initConfig(); err != nil {
-			return fmt.Errorf("Unable to initialize: %w", err)
+			return fmt.Errorf("unable to initialize: %w", err)
 		}
 
 		// Check if time flag is set
-		if cmd.Flag(flagTime).Value.String() == "true" {
+		if cmd.Flag(flagTime).Value.String() == trueValue {
 			defer timeTrack(time.Now(), cmd.CommandPath())
 		}
 
@@ -44,16 +44,16 @@ var delEdgeGatewayCmd = &cobra.Command{
 				gw, err = c.V1.EdgeGateway.GetByName(arg)
 			}
 			if err != nil {
-				return fmt.Errorf("Unable to retrieve EdgeGateway: %w.", err)
+				return fmt.Errorf("unable to retrieve EdgeGateway: %w", err)
 			}
 
 			job, err := gw.Delete()
 			if err != nil {
-				return fmt.Errorf("Unable to delete EdgeGateway: %w", err)
+				return fmt.Errorf("unable to delete EdgeGateway: %w", err)
 			}
 			err = job.Wait(3, 300)
 			if err != nil {
-				return fmt.Errorf("Error during jobs edgeGateway deletion : %w", err)
+				return fmt.Errorf("error during jobs edgeGateway deletion : %w", err)
 			}
 			s.FinalMSG = "EdgeGateway resource deleted " + arg + " successfully !!\n"
 			s.Stop()

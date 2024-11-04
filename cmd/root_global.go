@@ -5,9 +5,10 @@ import (
 	"time"
 
 	"github.com/briandowns/spinner"
-	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/output/model"
 	"github.com/orange-cloudavenue/cloudavenue-sdk-go"
 	"github.com/spf13/cobra"
+
+	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/output/model"
 )
 
 const (
@@ -34,6 +35,8 @@ const (
 	configPath     = "/.cav"
 	fileConfig     = "config.yaml"
 	fileConfigPath = configPath + "/" + fileConfig
+	// ? Constants values for true
+	trueValue = "true"
 )
 
 var (

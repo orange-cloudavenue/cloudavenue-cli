@@ -5,10 +5,11 @@ import (
 	"time"
 
 	"github.com/aws/aws-sdk-go/service/s3"
-	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/customErrors"
-	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/output"
 	"github.com/orange-cloudavenue/common-go/print"
 	"github.com/spf13/cobra"
+
+	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/errorscustom"
+	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/output"
 )
 
 // getS3Cmd return a list of your s3 (bucket) resource(s)
@@ -25,11 +26,11 @@ var getS3Cmd = &cobra.Command{
 
 		// init Config File & Client
 		if err := initConfig(); err != nil {
-			return fmt.Errorf("Unable to initialize: %w", err)
+			return fmt.Errorf("unable to initialize: %w", err)
 		}
 
 		// Check if time flag is set and print time elapsed
-		if cmd.Flag(flagTime).Value.String() == "true" {
+		if cmd.Flag(flagTime).Value.String() == trueValue {
 			defer timeTrack(time.Now(), cmd.CommandPath())
 		}
 
@@ -61,7 +62,7 @@ var getS3Cmd = &cobra.Command{
 		case flagOutputValueJSON, flagOutputValueYAML:
 			x, err := output.New(stringToTypeFormat(flag), s3s)
 			if err != nil {
-				return fmt.Errorf("Impossible to format output: %w", err)
+				return fmt.Errorf("impossible to format output: %w", err)
 			}
 			x.ToOutput()
 		case "":
@@ -70,7 +71,7 @@ var getS3Cmd = &cobra.Command{
 				w.AddFields(*b.Name, *s3s.Owner.DisplayName)
 			}
 		default:
-			return fmt.Errorf("Output format %v: %w", flag, customErrors.ErrNotValidOutput)
+			return fmt.Errorf("output format %v: %w", flag, errorscustom.ErrNotValidOutput)
 		}
 		w.PrintTable()
 		return nil
