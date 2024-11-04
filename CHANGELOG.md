@@ -10,6 +10,7 @@
 * deps: bumps github.com/hashicorp/go-retryablehttp from 0.7.5 to 0.7.7 (GH-129)
 * deps: bumps github.com/spf13/cobra from 1.8.0 to 1.8.1 (GH-127)
 * deps: bumps github.com/spf13/viper from 1.18.2 to 1.19.0 (GH-126)
+* deps: bumps github.com/vmware/go-vcloud-director/v2 from 2.23.0 to 2.26.0 (GH-136)
 * deps: bumps goreleaser/goreleaser-action from 5.0.0 to 6.0.0 (GH-133)
 
 ## 0.0.12 (May  6, 2024)
