@@ -1,6 +1,6 @@
 ## Installation
 
-The binary `cav` will be installed in `/usr/local/bin/` directory. 
+The binary `cav` will be installed in `/usr/local/bin/` directory.
 
 ### Automatic installation
 ```bash

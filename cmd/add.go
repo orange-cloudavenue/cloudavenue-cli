@@ -10,11 +10,9 @@ const (
 	cmdAdd = "add"
 )
 
-var (
-	exampleAdd1 = `
+var exampleAdd1 = `
 	#Add a VDC (Virtual Data Center) to CloudAvenue
 	cav add vdc --name myvdc`
-)
 
 // addCmd add a CAV resource
 var addCmd = &cobra.Command{

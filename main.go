@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/orange-cloudavenue/cloudavenue-cli/cmd"
-	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/customErrors"
+	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/customerrors"
 )
 
 const (
@@ -17,14 +17,14 @@ const (
 func main() {
 	if err := cmd.Execute(); err != nil {
 		switch {
-		case customErrors.IsNoHomeDirectory(err):
+		case customerrors.IsNoHomeDirectory(err):
 			fmt.Println(errorMessage+"Check your system to set and access write to your home directory.", err)
-		case customErrors.IsConfigFile(err):
+		case customerrors.IsConfigFile(err):
 			fmt.Println(errorMessage+"Please check your configuration file.", err)
-		case customErrors.IsClient(err):
+		case customerrors.IsClient(err):
 			fmt.Println(errorMessage+"Unable to initialize client", err)
 			fmt.Println("Please check your configuration (https://orange-cloudavenue.github.io/cloudavenue-cli/getting-started/configuration/).")
-		case customErrors.IsNotValidOutput(err):
+		case customerrors.IsNotValidOutput(err):
 			fmt.Println(errorMessage+"Please read help to check format output is possible.", err)
 		default:
 			fmt.Println(errorMessage + err.Error())

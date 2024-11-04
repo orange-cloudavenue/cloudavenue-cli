@@ -24,7 +24,7 @@ func Execute() (err error) {
 
 	// Execute root command
 	if err = rootCmd.Execute(); err != nil {
-		return fmt.Errorf("Command return an Error: %w", err)
+		return fmt.Errorf("command return an Error: %w", err)
 	}
 	return nil
 }

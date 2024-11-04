@@ -49,5 +49,4 @@ func init() {
 	// ? Delete for vdc
 	delCmd.AddCommand(delVDCCmd)
 	delVDCCmd.Args = cobra.MinimumNArgs(1)
-
 }

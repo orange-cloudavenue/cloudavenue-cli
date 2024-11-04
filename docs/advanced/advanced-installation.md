@@ -23,7 +23,7 @@ Version: __GITTAG__
         && curl -LO https://github.com/orange-cloudavenue/cloudavenue-cli/releases/download/__GITTAG__/cloudavenue-cli___GITTAG___386.apk \
         && sha256sum --ignore-missing -c cloudavenue-cli___GITTAG___checksums.txt \
         && sudo apk add cloudavenue-cli___GITTAG___386.apk
-        
+
 !!! Note
         For other Arch please replace word `386` by `amd64` or `arm64`
 
@@ -31,7 +31,7 @@ Version: __GITTAG__
 ``` powershell
 Invoke-WebRequest https://github.com/orange-cloudavenue/cloudavenue-cli/releases/download/__GITTAG__/cloudavenue-cli___GITTAG___checksums.txt -OutFile "cav-checksum.txt"
 Invoke-WebRequest https://github.com/orange-cloudavenue/cloudavenue-cli/releases/download/__GITTAG__/cloudavenue-cli___GITTAG___windows_amd64.zip -OutFile "cloudavenue-cli___GITTAG___windows_amd64.zip"
-Expand-Archive -LiteralPath 'cloudavenue-cli___GITTAG___windows_amd64.zip' -DestinationPath 'c:\cloudavenue\' 
+Expand-Archive -LiteralPath 'cloudavenue-cli___GITTAG___windows_amd64.zip' -DestinationPath 'c:\cloudavenue\'
 Get-FileHash 'c:\cloudavenue\cav.exe' -Algorithm SHA256 | Format-List
 ```
 !!! Note

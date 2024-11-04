@@ -4,11 +4,12 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/customErrors"
-	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/output"
 	"github.com/orange-cloudavenue/common-go/print"
 	"github.com/spf13/cobra"
 	"github.com/vmware/go-vcloud-director/v2/types/v56"
+
+	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/customerrors"
+	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/output"
 )
 
 // getVDCCmd return a list of your vdc resource(s)
@@ -24,11 +25,11 @@ var getVDCCmd = &cobra.Command{
 
 		// init Config File & Client
 		if err = initConfig(); err != nil {
-			return fmt.Errorf("Unable to initialize: %w", err)
+			return fmt.Errorf("unable to initialize: %w", err)
 		}
 
 		// Check if time flag is set and print time elapsed
-		if cmd.Flag(flagTime).Value.String() == "true" {
+		if cmd.Flag(flagTime).Value.String() == trueValue {
 			defer timeTrack(time.Now(), cmd.CommandPath())
 		}
 
@@ -64,7 +65,7 @@ var getVDCCmd = &cobra.Command{
 		case flagOutputValueJSON, flagOutputValueYAML:
 			x, err := output.New(stringToTypeFormat(flag), vdcs)
 			if err != nil {
-				return fmt.Errorf("Impossible to format output: %w", err)
+				return fmt.Errorf("impossible to format output: %w", err)
 			}
 			x.ToOutput()
 		case "":
@@ -73,7 +74,7 @@ var getVDCCmd = &cobra.Command{
 				w.AddFields(v.Name, v.Status)
 			}
 		default:
-			return fmt.Errorf("Output format %v: %w", flag, customErrors.ErrNotValidOutput)
+			return fmt.Errorf("output format %v: %w", flag, customerrors.ErrNotValidOutput)
 		}
 		w.PrintTable()
 		return nil

@@ -1,4 +1,4 @@
-name: ci 
+name: ci
 on:
   push:
     branches:
@@ -15,19 +15,19 @@ jobs:
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           sudo apt install jq -y
-          # GITTAG=$(git describe --tags --abbrev=0) sed -i "s/__GITTAG__/$GITTAG/g" $GITHUB_WORKSPACE/docs/advanced/advanced-installation.md 
+          # GITTAG=$(git describe --tags --abbrev=0) sed -i "s/__GITTAG__/$GITTAG/g" $GITHUB_WORKSPACE/docs/advanced/advanced-installation.md
           GITTAG=$(curl -s https://api.github.com/repos/orange-cloudavenue/cloudavenue-cli/releases/latest | jq -r '.tag_name')
           echo $GITTAG
           sed -i "s/__GITTAG__/$GITTAG/g" $GITHUB_WORKSPACE/docs/advanced/advanced-installation.md
       - uses: actions/setup-python@v5
         with:
           python-version: 3.x
-      - run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV 
+      - run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV
       - uses: actions/cache@v4
         with:
           key: mkdocs-material-${{ env.cache_id }}
           path: .cache
           restore-keys: |
             mkdocs-material-
-      - run: pip install mkdocs-material pymdown-extensions 
+      - run: pip install mkdocs-material pymdown-extensions
       - run: mkdocs gh-deploy --force

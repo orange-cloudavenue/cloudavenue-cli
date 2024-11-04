@@ -19,18 +19,18 @@ var addEdgeGatewayCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		// init Config File & Client
 		if err := initConfig(); err != nil {
-			return fmt.Errorf("Unable to initialize: %w", err)
+			return fmt.Errorf("unable to initialize: %w", err)
 		}
 
 		// Check if time flag is set
-		if cmd.Flag(flagTime).Value.String() == "true" {
+		if cmd.Flag(flagTime).Value.String() == trueValue {
 			defer timeTrack(time.Now(), cmd.CommandPath())
 		}
 
 		// Get the vdc name from the command line
 		vdc, err := cmd.Flags().GetString(flagVDC)
 		if err != nil {
-			return fmt.Errorf("Unable to retrieve flag %v: %w", flagVDC, err)
+			return fmt.Errorf("unable to retrieve flag %v: %w", flagVDC, err)
 		}
 
 		// Get the t0 name
@@ -39,13 +39,13 @@ var addEdgeGatewayCmd = &cobra.Command{
 		if cmd.Flag(argT0).Value.String() == "" {
 			t0s, err := c.V1.T0.GetT0s()
 			if err != nil || (len(*t0s) > 1 || len(*t0s) == 0) {
-				return fmt.Errorf("Unable to retrieve your first T0: %w", err)
+				return fmt.Errorf("unable to retrieve your first T0: %w", err)
 			}
 			t0 = (*t0s)[0].Tier0Vrf
 		} else {
 			t0, err = cmd.Flags().GetString("t0")
 			if err != nil {
-				return fmt.Errorf("Unable to retrieve T0 with VDC name %v: %w", flagVDC, err)
+				return fmt.Errorf("unable to retrieve T0 with VDC name %v: %w", flagVDC, err)
 			}
 		}
 		// Add the edgeGateway
@@ -56,11 +56,11 @@ var addEdgeGatewayCmd = &cobra.Command{
 		s.Restart()
 		job, err := c.V1.EdgeGateway.New(vdc, t0)
 		if err != nil {
-			return fmt.Errorf("Unable to add job: %w", err)
+			return fmt.Errorf("unable to add job: %w", err)
 		}
 		err = job.Wait(3, 300)
 		if err != nil {
-			return fmt.Errorf("Error during EdgeGateway creation in VDC %v: %w", vdc, err)
+			return fmt.Errorf("error during EdgeGateway creation in VDC %v: %w", vdc, err)
 		}
 		s.FinalMSG = "EdgeGateway resource added successfully !!"
 		s.Stop()

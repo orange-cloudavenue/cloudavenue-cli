@@ -19,7 +19,7 @@ Please see Configuration chapter in Getting Start: https://github.com/orange-clo
 
 # Usage
 * Navigation commands :
-  
+
 ```shell
 $> cav
 cav is the Command Line Interface for CloudAvenue Platform
@@ -46,8 +46,8 @@ Use "cav [command] --help" for more information about a command.
 
 ```shell
 $> cav get egw
-NAME                        OWNER               
-tn01e02ocbxxxxxxspt101     Shared     
-tn01e02ocbxxxxxxspt102     PRODUCTION          
+NAME                        OWNER  
+tn01e02ocbxxxxxxspt101     Shared  
+tn01e02ocbxxxxxxspt102     PRODUCTION  
 tn01e02ocbxxxxxxspt103     STAGING
 ```

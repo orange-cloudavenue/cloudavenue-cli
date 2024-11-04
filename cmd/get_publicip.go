@@ -4,11 +4,12 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/customErrors"
-	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/output"
 	v1 "github.com/orange-cloudavenue/cloudavenue-sdk-go/v1"
 	"github.com/orange-cloudavenue/common-go/print"
 	"github.com/spf13/cobra"
+
+	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/customerrors"
+	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/output"
 )
 
 // getPublicIPCmd return a list of your publicip
@@ -25,11 +26,11 @@ var getPublicIPCmd = &cobra.Command{
 
 		// init Config File & Client
 		if err := initConfig(); err != nil {
-			return fmt.Errorf("Unable to initialize: %w", err)
+			return fmt.Errorf("unable to initialize: %w", err)
 		}
 
 		// Check if time flag is set and print time elapsed
-		if cmd.Flag(flagTime).Value.String() == "true" {
+		if cmd.Flag(flagTime).Value.String() == trueValue {
 			defer timeTrack(time.Now(), cmd.CommandPath())
 		}
 
@@ -67,7 +68,7 @@ var getPublicIPCmd = &cobra.Command{
 		case flagOutputValueJSON, flagOutputValueYAML:
 			x, err := output.New(stringToTypeFormat(flag), ips)
 			if err != nil {
-				return fmt.Errorf("Impossible to format output: %w", err)
+				return fmt.Errorf("impossible to format output: %w", err)
 			}
 			x.ToOutput()
 		case "":
@@ -76,7 +77,7 @@ var getPublicIPCmd = &cobra.Command{
 				w.AddFields(i.UplinkIP, i.EdgeGatewayName)
 			}
 		default:
-			return fmt.Errorf("Output format %v: %w", flag, customErrors.ErrNotValidOutput)
+			return fmt.Errorf("output format %v: %w", flag, customerrors.ErrNotValidOutput)
 		}
 		w.PrintTable()
 		return nil

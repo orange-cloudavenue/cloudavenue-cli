@@ -2,14 +2,15 @@ package cmd_test
 
 import (
 	"bytes"
-	"fmt"
-	"os"
+	"context"
 	"strings"
 	"testing"
 
-	"github.com/orange-cloudavenue/cloudavenue-cli/cmd"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
+	"google.golang.org/appengine/log"
+
+	"github.com/orange-cloudavenue/cloudavenue-cli/cmd"
 )
 
 const (
@@ -38,7 +39,7 @@ func TestRootCmd(t *testing.T) {
 	// ? Test configuration
 	// Bad configuration
 	t.Run("Bad Configuration", func(t *testing.T) {
-		os.Setenv("CLOUDAVENUE_URL", "https://console1.cloudavenue.orange-business.blackhole")
+		t.Setenv("CLOUDAVENUE_URL", "https://console1.cloudavenue.orange-business.blackhole")
 		if err := cmd.Execute(); err != nil {
 			check := err.Error()
 			if !strings.Contains(check, "Please check your configuration") {
@@ -48,9 +49,9 @@ func TestRootCmd(t *testing.T) {
 	})
 
 	// Good configuration
-	fmt.Println("=Good Configuration")
+	// fmt.Println("=Good Configuration")
 	t.Run("Configuration", func(t *testing.T) {
-		os.Setenv("CLOUDAVENUE_URL", "https://console1.cloudavenue.orange-business.com")
+		t.Setenv("CLOUDAVENUE_URL", "https://console1.cloudavenue.orange-business.com")
 		if err := cmd.Execute(); err != nil {
 			t.Errorf("Fail %v", err)
 		}
@@ -83,20 +84,20 @@ func TestRootCmd(t *testing.T) {
 						fail: true, // Should fail because flag no exist
 					},
 					{
-						name: oneCmd.Use + "_" + cmdSubCmd.Use + " with ouput flag without args",
+						name: oneCmd.Use + "_" + cmdSubCmd.Use + " with output flag without args",
 						args: []string{oneCmd.Use, cmdSubCmd.Use, "--output"},
 						fail: true, // Should fail because args for flag is empty
 					},
 					{
-						name: oneCmd.Use + "_" + cmdSubCmd.Use + " with ouput flag wide args",
+						name: oneCmd.Use + "_" + cmdSubCmd.Use + " with output flag wide args",
 						args: []string{oneCmd.Use, cmdSubCmd.Use, "--output", "wide"},
 					},
 					{
-						name: oneCmd.Use + "_" + cmdSubCmd.Use + " with ouput flag json args",
+						name: oneCmd.Use + "_" + cmdSubCmd.Use + " with output flag json args",
 						args: []string{oneCmd.Use, cmdSubCmd.Use, "--output", "json"},
 					},
 					{
-						name: oneCmd.Use + "_" + cmdSubCmd.Use + " with ouput flag yaml args",
+						name: oneCmd.Use + "_" + cmdSubCmd.Use + " with output flag yaml args",
 						args: []string{oneCmd.Use, cmdSubCmd.Use, "--output", "yaml"},
 					},
 					{
@@ -213,7 +214,7 @@ func TestRootCmd(t *testing.T) {
 					addTests = append(addTests, tests...)
 				default:
 					if cmdSubCmd.Use == "" {
-						fmt.Printf("No test for this subcommand: %v", cmdSubCmd.Use)
+						log.Errorf(context.Background(), "No test for this subcommand: %v", cmdSubCmd.Use)
 					}
 				}
 			}
@@ -289,7 +290,7 @@ func TestRootCmd(t *testing.T) {
 
 		default:
 			if oneCmd.Use == "" {
-				fmt.Printf("No test for this subcommand: %v", oneCmd.Use)
+				log.Errorf(context.Background(), "No test for this subcommand: %v", oneCmd.Use)
 			}
 		}
 	}
@@ -298,7 +299,6 @@ func TestRootCmd(t *testing.T) {
 	startTest(getTests, t)
 	startTest(delTests, t)
 	startTest(globalTests, t)
-
 }
 
 func startTest(tests tts, t *testing.T) {
@@ -324,9 +324,7 @@ func startTest(tests tts, t *testing.T) {
 			resetFlags(x)
 			x.SetOut(nil)
 			x.SetErr(nil)
-
 		})
-
 	}
 }
 
@@ -350,7 +348,7 @@ func resetFlags(cmd *cobra.Command) {
 		if f.Changed {
 			err := f.Value.Set(f.DefValue)
 			if err != nil {
-				fmt.Printf("Error: %v", err)
+				panic(err)
 			}
 			f.Changed = false
 		}

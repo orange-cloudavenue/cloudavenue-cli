@@ -6,7 +6,9 @@ type Formatter interface {
 
 type TypeFormat string
 
-const TypeJSON TypeFormat = "json"
-const TypeYAML TypeFormat = "yaml"
+const (
+	TypeJSON TypeFormat = "json"
+	TypeYAML TypeFormat = "yaml"
+)
 
 var ListTypeFormat = []TypeFormat{TypeJSON, TypeYAML}

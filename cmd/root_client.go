@@ -6,10 +6,11 @@ import (
 	"os"
 
 	"github.com/mitchellh/go-homedir"
-	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/customErrors"
 	"github.com/orange-cloudavenue/cloudavenue-sdk-go"
 	clientcloudavenue "github.com/orange-cloudavenue/cloudavenue-sdk-go/pkg/clients/cloudavenue"
 	"github.com/spf13/viper"
+
+	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/customerrors"
 )
 
 // function to initialize the configuration file
@@ -17,7 +18,7 @@ func initConfig() error {
 	// Find the home directory
 	home, err := homedir.Dir()
 	if err != nil {
-		return fmt.Errorf("Home Directory %s is: %w, %w", home, customErrors.ErrNoHomeDirectory, err)
+		return fmt.Errorf("home directory %s is: %w, %w", home, customerrors.ErrNoHomeDirectory, err)
 	}
 	// Set default file configuration
 	v := viper.New()
@@ -25,12 +26,12 @@ func initConfig() error {
 	v.SetConfigType("yaml")
 	v.AddConfigPath(home + configPath)
 	if home == "" {
-		return fmt.Errorf("Error Home Directory: %w", errors.New(customErrors.ErrNoHomeDirectory.Error()))
+		return fmt.Errorf("error home directory: %w", errors.New(customerrors.ErrNoHomeDirectory.Error()))
 	}
 	// Create configuration file if not exist
 	if _, err = os.Stat(home + fileConfigPath); os.IsNotExist(err) {
-		if err = os.MkdirAll(home+configPath, 0755); err != nil {
-			return fmt.Errorf("Error canot create directory %s: %w, %w", home+configPath, customErrors.ErrNoHomeDirectory, err)
+		if err = os.MkdirAll(home+configPath, 0o755); err != nil {
+			return fmt.Errorf("error canot create directory %s: %w, %w", home+configPath, customerrors.ErrNoHomeDirectory, err)
 		}
 		// Set default configuration
 		cloudavenueConfig := cloudavenueConfig{}
@@ -39,7 +40,7 @@ func initConfig() error {
 
 		// Write configuration file
 		if err = v.SafeWriteConfig(); err != nil {
-			return fmt.Errorf("Error write config: %w", err)
+			return fmt.Errorf("error write config: %w", err)
 		}
 		s.FinalMSG = `
 					***
@@ -52,7 +53,7 @@ func initConfig() error {
 	// Read configuration file
 	err = v.ReadInConfig()
 	if err != nil {
-		return fmt.Errorf("Unable to read config file: %w, %w", customErrors.ErrConfigFile, err)
+		return fmt.Errorf("unable to read config file: %w, %w", customerrors.ErrConfigFile, err)
 	}
 	return initClient(v)
 }
@@ -69,7 +70,7 @@ func initClient(v *viper.Viper) (err error) {
 		},
 	})
 	if err != nil {
-		return fmt.Errorf("Unable to init cloudavenue client: %w, %w", customErrors.ErrClient, err)
+		return fmt.Errorf("unable to init cloudavenue client: %w, %w", customerrors.ErrClient, err)
 	}
 	return nil
 }

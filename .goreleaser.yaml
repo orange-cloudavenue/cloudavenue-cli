@@ -47,7 +47,7 @@ checksum:
 #       cav is a CLI terminal app built to give a basic view to manage your Cloud Avenue IaaS.
 #     license: MIT
 #     folder: Formula
-#     repository: 
+#     repository:
 #       owner: orange-cloudavenue
 #       name: cloudavenue-cli
 #       branch: main

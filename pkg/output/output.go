@@ -15,5 +15,5 @@ func New(format model.TypeFormat, data any) (model.Formatter, error) {
 	case model.TypeYAML:
 		return oyaml.New(data)
 	}
-	return nil, fmt.Errorf("Error creating output")
+	return nil, fmt.Errorf("error creating output")
 }

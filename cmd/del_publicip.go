@@ -17,11 +17,11 @@ var delPublicIPCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		// init Config File & Client
 		if err := initConfig(); err != nil {
-			return fmt.Errorf("Unable to initialize: %w", err)
+			return fmt.Errorf("unable to initialize: %w", err)
 		}
 
 		// Check if time flag is set
-		if cmd.Flag(flagTime).Value.String() == "true" {
+		if cmd.Flag(flagTime).Value.String() == trueValue {
 			defer timeTrack(time.Now(), cmd.CommandPath())
 		}
 
@@ -31,15 +31,15 @@ var delPublicIPCmd = &cobra.Command{
 			s.Restart()
 			ip, err := c.V1.PublicIP.GetIP(arg)
 			if err != nil {
-				return fmt.Errorf("Unable to retrieve ip: %w", err)
+				return fmt.Errorf("unable to retrieve ip: %w", err)
 			}
 			job, err := ip.Delete()
 			if err != nil {
-				return fmt.Errorf("Unable to delete ip: %w", err)
+				return fmt.Errorf("unable to delete ip: %w", err)
 			}
 			err = job.Wait(15, 300)
 			if err != nil {
-				return fmt.Errorf("Job errors: %w", err)
+				return fmt.Errorf("job errors: %w", err)
 			}
 			s.FinalMSG = "ip resource deleted " + arg + " successfully !!\n"
 			s.Stop()

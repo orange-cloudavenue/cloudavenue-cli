@@ -1,14 +1,14 @@
-package customErrors
+package customerrors
 
 import "errors"
 
 var (
 	// Generic Error type
-	ErrNotValidOutput  = errors.New("not valid output.")
-	ErrNoHomeDirectory = errors.New("no home directory.")
-	ErrNotImplemented  = errors.New("not implemented.")
-	ErrConfigFile      = errors.New("error to configuration file.")
-	ErrClient          = errors.New("error to initialize client.")
+	ErrNotValidOutput  = errors.New("not valid output")
+	ErrNoHomeDirectory = errors.New("no home directory")
+	ErrNotImplemented  = errors.New("not implemented")
+	ErrConfigFile      = errors.New("error to configuration file")
+	ErrClient          = errors.New("error to initialize client")
 )
 
 // IsNoHomeDirectory checks if the error is of type ErrNoHomeDirectory
