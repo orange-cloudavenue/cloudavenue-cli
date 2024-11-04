@@ -1,4 +1,9 @@
 ## 0.1.0 (Unreleased)
+
+### :dependabot: **Dependencies**
+
+* deps: bumps github.com/spf13/viper from 1.18.2 to 1.19.0 (GH-126)
+
 ## 0.0.12 (May  6, 2024)
 
 ### :tada: **Improvements**
