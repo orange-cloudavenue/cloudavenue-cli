@@ -8,7 +8,7 @@ import (
 	"github.com/orange-cloudavenue/common-go/print"
 	"github.com/spf13/cobra"
 
-	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/customerrors"
+	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/errorscustom"
 	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/output"
 )
 
@@ -75,7 +75,7 @@ var getEdgeGatewayCmd = &cobra.Command{
 				w.AddFields(e.EdgeName, e.OwnerName)
 			}
 		default:
-			return fmt.Errorf("output format %v: %w", flag, customerrors.ErrNotValidOutput)
+			return fmt.Errorf("output format %v: %w", flag, errorscustom.ErrNotValidOutput)
 		}
 		w.PrintTable()
 		return nil

@@ -2,13 +2,12 @@ package cmd_test
 
 import (
 	"bytes"
-	"context"
+	"fmt"
 	"strings"
 	"testing"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
-	"google.golang.org/appengine/log"
 
 	"github.com/orange-cloudavenue/cloudavenue-cli/cmd"
 )
@@ -214,7 +213,7 @@ func TestRootCmd(t *testing.T) {
 					addTests = append(addTests, tests...)
 				default:
 					if cmdSubCmd.Use == "" {
-						log.Errorf(context.Background(), "No test for this subcommand: %v", cmdSubCmd.Use)
+						fmt.Printf("No test for this subcommand: %v", cmdSubCmd.Use)
 					}
 				}
 			}
@@ -290,7 +289,7 @@ func TestRootCmd(t *testing.T) {
 
 		default:
 			if oneCmd.Use == "" {
-				log.Errorf(context.Background(), "No test for this subcommand: %v", oneCmd.Use)
+				fmt.Printf("No test for this command: %v", oneCmd.Use)
 			}
 		}
 	}
@@ -348,7 +347,7 @@ func resetFlags(cmd *cobra.Command) {
 		if f.Changed {
 			err := f.Value.Set(f.DefValue)
 			if err != nil {
-				panic(err)
+				fmt.Printf("Error: %v", err)
 			}
 			f.Changed = false
 		}

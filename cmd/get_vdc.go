@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/vmware/go-vcloud-director/v2/types/v56"
 
-	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/customerrors"
+	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/errorscustom"
 	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/output"
 )
 
@@ -74,7 +74,7 @@ var getVDCCmd = &cobra.Command{
 				w.AddFields(v.Name, v.Status)
 			}
 		default:
-			return fmt.Errorf("output format %v: %w", flag, customerrors.ErrNotValidOutput)
+			return fmt.Errorf("output format %v: %w", flag, errorscustom.ErrNotValidOutput)
 		}
 		w.PrintTable()
 		return nil

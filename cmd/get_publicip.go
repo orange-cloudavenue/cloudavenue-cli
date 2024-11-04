@@ -8,7 +8,7 @@ import (
 	"github.com/orange-cloudavenue/common-go/print"
 	"github.com/spf13/cobra"
 
-	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/customerrors"
+	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/errorscustom"
 	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/output"
 )
 
@@ -77,7 +77,7 @@ var getPublicIPCmd = &cobra.Command{
 				w.AddFields(i.UplinkIP, i.EdgeGatewayName)
 			}
 		default:
-			return fmt.Errorf("output format %v: %w", flag, customerrors.ErrNotValidOutput)
+			return fmt.Errorf("output format %v: %w", flag, errorscustom.ErrNotValidOutput)
 		}
 		w.PrintTable()
 		return nil

@@ -10,7 +10,7 @@ import (
 	clientcloudavenue "github.com/orange-cloudavenue/cloudavenue-sdk-go/pkg/clients/cloudavenue"
 	"github.com/spf13/viper"
 
-	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/customerrors"
+	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/errorscustom"
 )
 
 // function to initialize the configuration file
@@ -18,7 +18,7 @@ func initConfig() error {
 	// Find the home directory
 	home, err := homedir.Dir()
 	if err != nil {
-		return fmt.Errorf("home directory %s is: %w, %w", home, customerrors.ErrNoHomeDirectory, err)
+		return fmt.Errorf("home directory %s is: %w, %w", home, errorscustom.ErrNoHomeDirectory, err)
 	}
 	// Set default file configuration
 	v := viper.New()
@@ -26,12 +26,12 @@ func initConfig() error {
 	v.SetConfigType("yaml")
 	v.AddConfigPath(home + configPath)
 	if home == "" {
-		return fmt.Errorf("error home directory: %w", errors.New(customerrors.ErrNoHomeDirectory.Error()))
+		return fmt.Errorf("error home directory: %w", errors.New(errorscustom.ErrNoHomeDirectory.Error()))
 	}
 	// Create configuration file if not exist
 	if _, err = os.Stat(home + fileConfigPath); os.IsNotExist(err) {
 		if err = os.MkdirAll(home+configPath, 0o755); err != nil {
-			return fmt.Errorf("error canot create directory %s: %w, %w", home+configPath, customerrors.ErrNoHomeDirectory, err)
+			return fmt.Errorf("error canot create directory %s: %w, %w", home+configPath, errorscustom.ErrNoHomeDirectory, err)
 		}
 		// Set default configuration
 		cloudavenueConfig := cloudavenueConfig{}
@@ -53,7 +53,7 @@ func initConfig() error {
 	// Read configuration file
 	err = v.ReadInConfig()
 	if err != nil {
-		return fmt.Errorf("unable to read config file: %w, %w", customerrors.ErrConfigFile, err)
+		return fmt.Errorf("unable to read config file: %w, %w", errorscustom.ErrConfigFile, err)
 	}
 	return initClient(v)
 }
@@ -70,7 +70,7 @@ func initClient(v *viper.Viper) (err error) {
 		},
 	})
 	if err != nil {
-		return fmt.Errorf("unable to init cloudavenue client: %w, %w", customerrors.ErrClient, err)
+		return fmt.Errorf("unable to init cloudavenue client: %w, %w", errorscustom.ErrClient, err)
 	}
 	return nil
 }

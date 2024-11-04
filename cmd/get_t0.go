@@ -8,7 +8,7 @@ import (
 	"github.com/orange-cloudavenue/common-go/print"
 	"github.com/spf13/cobra"
 
-	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/customerrors"
+	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/errorscustom"
 	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/output"
 )
 
@@ -74,7 +74,7 @@ var getT0Cmd = &cobra.Command{
 				w.AddFields(t0.Tier0Vrf, t0.Tier0Provider)
 			}
 		default:
-			return fmt.Errorf("output format %v: %w", flag, customerrors.ErrNotValidOutput)
+			return fmt.Errorf("output format %v: %w", flag, errorscustom.ErrNotValidOutput)
 		}
 		w.PrintTable()
 		return nil
