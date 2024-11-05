@@ -31,6 +31,7 @@ const (
 	argEdgeGatewayAlias1 = "gw"
 	argEdgeGatewayAlias2 = "egw"
 	argT0                = "t0"
+	argBMS               = "bms"
 	// Path of cav configuration file
 	configPath     = "/.cav"
 	fileConfig     = "config.yaml"

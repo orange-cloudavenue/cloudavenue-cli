@@ -24,6 +24,7 @@ const (
 	t0          string = "t0"
 	edgeGateway string = "edgegateway"
 	publicip    string = "publicip"
+	bms         string = "bms"
 )
 
 type tt struct {

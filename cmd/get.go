@@ -52,6 +52,7 @@ func init() {
 	getCmd.AddCommand(getS3Cmd)
 	getCmd.AddCommand(getEdgeGatewayCmd)
 	getCmd.AddCommand(getVDCCmd)
+	getCmd.AddCommand(getBMSCmd)
 	getCmd.PersistentFlags().StringP(flagOutput, "o", "", "Output format. One of: (wide, json, yaml)")
 
 	// ? Options for vdc

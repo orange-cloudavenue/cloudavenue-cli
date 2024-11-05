@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
 	"time"
 
@@ -38,7 +39,7 @@ var addVDCCmd = &cobra.Command{
 		fmt.Println("vdc name: " + vdcName)
 		s.Restart()
 
-		if _, err = c.V1.VDC().New(&infrapi.CAVVirtualDataCenter{
+		if _, err = c.V1.VDC().New(context.Background(), &infrapi.CAVVirtualDataCenter{
 			VDC: infrapi.CAVVirtualDataCenterVDC{
 				Name:                vdcName,
 				ServiceClass:        "STD",
