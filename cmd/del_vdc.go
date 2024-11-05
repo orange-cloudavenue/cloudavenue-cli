@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
 	"time"
 
@@ -33,13 +34,9 @@ var delVDCCmd = &cobra.Command{
 			if err != nil {
 				return fmt.Errorf("error from vdc: %w", err)
 			}
-			job, err := vdc.Delete()
+			err = vdc.Delete(context.Background())
 			if err != nil {
 				return fmt.Errorf("unable to delete vdc: %w", err)
-			}
-			err = job.Wait(3, 300)
-			if err != nil {
-				return fmt.Errorf("error during vdc Deletion !!: %w", err)
 			}
 			s.FinalMSG = "vdc resource deleted " + arg + " successfully !!\n"
 			s.Stop()

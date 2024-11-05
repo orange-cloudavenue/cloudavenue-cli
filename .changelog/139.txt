@@ -1,0 +1,7 @@
+```release-note:feature
+`cmd`: Add get command to show BMS information.
+```
+
+```release-note:dependency
+deps: bumps github.com/orange-cloudavenue/cloudavenue-sdk-go from v0.10.1 to v0.12.2
+```

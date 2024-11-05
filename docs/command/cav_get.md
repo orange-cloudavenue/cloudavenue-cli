@@ -38,6 +38,7 @@ Get resource to retrieve information from CloudAvenue.
 ### SEE ALSO
 
 * [cav](cav.md)	 - cav is the Command Line Interface for CloudAvenue Platform
+* [cav get bms](cav_get_bms.md)	 - A brief list of your BMS resources
 * [cav get edgegateway](cav_get_edgegateway.md)	 - A brief list of your edgegateway resources
 * [cav get publicip](cav_get_publicip.md)	 - A brief list of your public ip resources
 * [cav get s3](cav_get_s3.md)	 - A brief list of your s3 resources
