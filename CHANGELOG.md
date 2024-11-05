@@ -1,5 +1,9 @@
 ## 0.1.0 (Unreleased)
 
+### :rocket: **New Features**
+
+* `cmd`: Add get command to show BMS information. (GH-139)
+
 ### :dependabot: **Dependencies**
 
 * deps: bumps actions/download-artifact from 4.1.5 to 4.1.8 (GH-134)
@@ -8,6 +12,7 @@
 * deps: bumps github.com/aws/aws-sdk-go from 1.52.2 to 1.55.5 (GH-135)
 * deps: bumps github.com/briandowns/spinner from 1.23.0 to 1.23.1 (GH-128)
 * deps: bumps github.com/hashicorp/go-retryablehttp from 0.7.5 to 0.7.7 (GH-129)
+* deps: bumps github.com/orange-cloudavenue/cloudavenue-sdk-go from v0.10.1 to v0.12.2 (GH-139)
 * deps: bumps github.com/spf13/cobra from 1.8.0 to 1.8.1 (GH-127)
 * deps: bumps github.com/spf13/viper from 1.18.2 to 1.19.0 (GH-126)
 * deps: bumps github.com/vmware/go-vcloud-director/v2 from 2.23.0 to 2.26.0 (GH-136)
