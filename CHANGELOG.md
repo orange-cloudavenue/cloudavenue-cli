@@ -10,6 +10,7 @@
 * deps: bumps actions/setup-go from 5.0.1 to 5.1.0 (GH-132)
 * deps: bumps dependabot/fetch-metadata from 2.1.0 to 2.2.0 (GH-130)
 * deps: bumps github.com/aws/aws-sdk-go from 1.52.2 to 1.55.5 (GH-135)
+* deps: bumps github.com/aws/aws-sdk-go from 1.55.5 to 1.55.6 (GH-148)
 * deps: bumps github.com/briandowns/spinner from 1.23.0 to 1.23.1 (GH-128)
 * deps: bumps github.com/hashicorp/go-retryablehttp from 0.7.5 to 0.7.7 (GH-129)
 * deps: bumps github.com/orange-cloudavenue/cloudavenue-sdk-go from v0.10.1 to v0.12.2 (GH-139)
