@@ -18,6 +18,7 @@
 * deps: bumps github.com/spf13/cobra from 1.8.0 to 1.8.1 (GH-127)
 * deps: bumps github.com/spf13/viper from 1.18.2 to 1.19.0 (GH-126)
 * deps: bumps github.com/vmware/go-vcloud-director/v2 from 2.23.0 to 2.26.0 (GH-136)
+* deps: bumps golang.org/x/net from 0.27.0 to 0.33.0 (GH-150)
 * deps: bumps golangci/golangci-lint-action from 5 to 6 (GH-122)
 * deps: bumps goreleaser/goreleaser-action from 5.0.0 to 6.0.0 (GH-133)
 
