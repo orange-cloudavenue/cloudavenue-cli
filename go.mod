@@ -6,7 +6,7 @@ toolchain go1.23.1
 require (
 	github.com/adampresley/sigint v0.0.0-20150906022118-7e8d2ad16a94
 	github.com/aws/aws-sdk-go v1.55.6
-	github.com/briandowns/spinner v1.23.1
+	github.com/briandowns/spinner v1.23.2
 	github.com/creativeprojects/go-selfupdate v1.2.0
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/orange-cloudavenue/cloudavenue-sdk-go v0.12.2
