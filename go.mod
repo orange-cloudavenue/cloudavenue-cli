@@ -1,6 +1,7 @@
 module github.com/orange-cloudavenue/cloudavenue-cli
 
-go 1.22.0
+go 1.23.0
+
 toolchain go1.23.1
 
 require (
@@ -12,7 +13,7 @@ require (
 	github.com/orange-cloudavenue/cloudavenue-sdk-go v0.12.2
 	github.com/orange-cloudavenue/common-go/print v0.0.0-20240115212523-43a46e6ad427
 	github.com/spf13/cobra v1.8.1
-	github.com/spf13/pflag v1.0.5
+	github.com/spf13/pflag v1.0.6
 	github.com/spf13/viper v1.19.0
 	github.com/vmware/go-vcloud-director/v2 v2.26.0
 	gopkg.in/yaml.v3 v3.0.1
