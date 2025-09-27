@@ -1,0 +1,2237 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>Field selector</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <style>
+    :root{--bar-height:36px}
+
+    /* neutralise transforms/filters sur ancêtres (force position:fixed relatif au viewport) */
+    :root, html, body, #root, #app, .app, .viewport, .container, body * {
+      transform: none !important;
+      -webkit-transform: none !important;
+      filter: none !important;
+      will-change: auto !important;
+    }
+    /* Reconciliation script accidentally injected here previously was removed. */
+
+    html, body { height: 100%; }
+    body {
+      font-family: system-ui;
+      /* allow the app to span entire viewport while keeping left/right margins */
+      max-width: none;
+      width: 100%;
+      margin: 0;
+      color: #e6e6e6;
+      background: #0f1113;
+      /* réserve la place pour banner + topbar afin que le contenu ne soit pas caché */
+      padding-top: calc(var(--bar-height) * 2 + 16px);
+      /* left/right margins requested */
+      padding-left: 32px;
+      padding-right: 32px;
+      -webkit-font-smoothing:antialiased;
+      overflow-x: hidden;
+      box-sizing: border-box;
+    }
+
+    select, button, input { margin: 6px }
+
+    /* banner fixe tout en haut, pleine largeur viewport */
+    .unsaved-banner{
+      position: fixed !important;
+      top: 0;
+      width: 100vw;
+      transform: translateX(-50%);
+      height: var(--bar-height);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #ff9b2f;
+      color: #000;
+      font-weight: 600;
+      z-index: 99999;
+      border-bottom: 2px solid rgba(0,0,0,0.08);
+      pointer-events: none;
+    }
+
+    /* topbar — propriétés supprimées */
+    .topbar{
+      /* intentionalement vide — toutes les propriétés CSS retirées */
+    }
+
+    .toolbar{ margin-left: auto }
+  .cols{ display:flex; gap:24px; align-items:flex-start; width:100%; }
+    .col{ flex:1; min-width:240px }
+    .box{ border:1px solid #2b2b2b; border-radius:8px; padding:12px; background:#121215 }
+    .box h3{ margin:0 0 8px 0; font-size:1rem; color:#fff }
+    ul{ list-style:none; padding:0; margin:0 }
+    .field-item{ margin:6px 0; padding:8px; border:1px solid #2b2b2b; border-radius:6px; background:#0f1113; display:flex; align-items:center; gap:8px }
+    .field-item .label{ flex:1; user-select:none; color:#e6e6e6 }
+  .field-item .label{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap }
+    .field-item .actions{ display:flex; }
+    .selected-list .field-item{ cursor:grab }
+    .field-item.dragging{ opacity:0.5 }
+    .field-item.selected{ outline:2px solid #3b82f6; background:#05132a }
+    .hint{ font-size:0.9em; color:#999; margin-top:6px }
+    .smallbtn{ padding:4px 8px; border:1px solid #333; background:#0f1113; color:#e6e6e6; border-radius:6px; cursor:pointer }
+    /* smooth transitions for small buttons and hover/active styles */
+    .smallbtn{ transition: background-color .12s ease, border-color .12s ease, color .12s ease, filter .12s ease, transform .08s ease; }
+    .smallbtn.ghost{ background:transparent }
+    .smallbtn.danger{ background:#2b0b0b; border-color:#7a1414; color:#ffb4b4 }
+
+  /* hover states: use background/border color changes (filter is globally disabled) */
+  .smallbtn:hover{ background-color: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.06); cursor: pointer; }
+    /* disabled buttons should not respond to hover or be clickable */
+    .smallbtn:disabled, .smallbtn[disabled]{ filter: none; cursor: default; opacity: 0.6; }
+  /* ghost buttons gain a faint background and border on hover to improve discoverability */
+  .smallbtn.ghost:hover{ background: rgba(255,255,255,0.02); border-color: rgba(255,255,255,0.04); }
+  /* edit button hover: orange */
+  .smallbtn.edit-btn:hover, .smallbtn.edit-btn:focus{ background: #3b1400; border-color: #ff9800; color: #ffd9b3; }
+    /* green (create) button: slightly darker on hover */
+    .smallbtn.green:hover{ background: #159a43; border-color:#0e6f31; color:#fff; }
+    /* danger (disabled/confirm) button: stronger red on hover */
+    .smallbtn.danger:hover{ background:#3c0f0f; border-color:#9a1a1a; color:#fff; }
+    /* small press effect */
+    .smallbtn:active{ transform: translateY(1px); }
+    label{ color:#ddd }
+    select, input { background:#0f1113; color:#e6e6e6; border:1px solid #2b2b2b; padding:6px; border-radius:6px }
+    button{ outline:none }
+    #status{ margin-left:8px; color:#9ae6b4 }
+    button[disabled]{ opacity:0.45; cursor:not-allowed }
+
+    /* available list visual states and disabled-add styling */
+    #available .field-item.in-selected { background: #05132a; }
+    #available .field-item.in-wide { opacity: 0.9; }
+    #available .field-item .add-btn[disabled],
+    #available .field-item .add-wide-btn[disabled], #available .field-item .add-wide-btn[disabled] .short, #available .field-item .add-wide-btn[disabled] .full {
+      opacity: 0.45;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    /* display-name style */
+    .display-name { color:#9ae6b4; margin-left:8px; font-size:0.95em; opacity:0.95; }
+
+  /* documentation icon (hover shows title) */
+  .doc-icon{ margin-right:8px; margin-left:0; display:inline-flex; align-items:center; justify-content:center; width:18px; height:18px; color:#9aa0a6; border:1px solid rgba(255,255,255,0.04); padding:2px; border-radius:999px; background:transparent; cursor:help }
+  .field-name{ display:inline-block }
+
+    /* Modal / properties editor */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100000;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal {
+      width: 90%;
+      max-width: 1500px;
+      background: #0b0c0d;
+      border-radius: 8px;
+      padding: 12px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+      color: #e6e6e6;
+      transition: transform 120ms ease, opacity 120ms ease;
+    }
+    .modal h4{ margin:0 0 8px 0; font-size:1.05rem }
+    .modal .row{ display:flex; gap:8px; align-items:center; margin-bottom:8px }
+    .modal label{ flex:0 0 140px; color:#ccc; font-size:0.95rem }
+    .modal input[type="text"]{ flex:1; padding:8px; border-radius:6px; border:1px solid #333; background:#0f1113; color:#e6e6e6 }
+    .modal .buttons{ display:flex; gap:8px; justify-content:flex-end; margin-top:12px }
+    .modal .muted{ color:#9aa0a6; font-size:0.9rem }
+
+  /* expression component compacting to avoid overflow */
+  .expr-comp > div:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .expr-comp { display: flex; gap: 8px; align-items: center; }
+  /* XS badges: transparent background with light border, slight hover tint */
+  .expr-badge { display:inline-flex; align-items:center; gap:6px; padding:4px 8px; margin:2px; border-radius:8px; background: transparent; border:1px solid rgba(200,200,200,0.12); font-size:0.78em; color: rgba(230,230,230,0.86); transition: background .12s ease, color .12s ease, border-color .12s ease; cursor: grab; }
+  .expr-badge:active{ cursor: grabbing }
+  /* hover: very slightly gray transparent font and faint background */
+  .expr-badge:hover { background: rgba(230,230,230,0.02); color: rgba(230,230,230,0.9); border-color: rgba(200,200,200,0.18); }
+  .expr-badge .smallbtn { padding:1px 5px; font-size:0.72em; background:transparent; border: none; color: rgba(200,200,200,0.8) }
+  .expr-badge .smallbtn:hover { background: rgba(255,255,255,0.02); color: rgba(255,255,255,0.92) }
+  /* add-button badge (shows inline input when clicked) */
+  .expr-badge.expr-add { background: #16a34a; color: #fff; border-color: rgba(0,0,0,0); }
+  /* make the add-badge show a green border (was transparent) */
+  .expr-badge.expr-add { border-color: #0f7a36; }
+  .expr-badge.expr-add input { background: transparent; border: none; color: #fff; outline: none; width: 100%; padding:6px 8px; font-size:1rem; caret-color: #fff }
+  .expr-badge.expr-add input::placeholder { color: rgba(255,255,255,0.85); opacity:1 }
+  /* context-specific borders */
+  /* badges rendered inside the components list (source) - neutral border */
+  .expr-comp.expr-badge { /* keep default subtle border (no red) */ }
+  /* badges inside the expression container get green borders */
+  #expr-expression .expr-badge { border-color: rgb(0 164 30); }
+  /* when a badge lives in components list it should still have red border; when created it will briefly show green if needed via class */
+  /* trash target styling */
+  #expr-trash { border-color: rgb(255 0 0); color: rgb(255 0 0); transition: transform .14s ease, background .14s ease, color .14s ease, opacity .14s ease; opacity:0.98 }
+  /* trash hover while dragging: solid red bg + slight zoom to indicate drop target */
+  #expr-trash.over { background: rgb(255,0,0); color: #fff; transform: scale(1.08); box-shadow: 0 8px 28px rgba(255,0,0,0.12); opacity:1 }
+
+  /* confirm overlay animations */
+  .expr-confirm-overlay { display:none; position:absolute; left:0; top:0; width:100%; height:100%; align-items:center; justify-content:center; pointer-events:none; }
+  .expr-confirm-overlay .confirm-inner { background:rgba(11,12,13,0.98); border:1px solid rgba(200,0,0,0.18); padding:12px; border-radius:8px; width:420px; max-width:90%; text-align:left; box-shadow:0 8px 24px rgba(0,0,0,0.6); transform: translateY(-6px) scale(0.98); opacity:0; transition: transform .16s ease, opacity .16s ease; }
+  .expr-confirm-overlay.open { display:flex; pointer-events:auto; }
+  .expr-confirm-overlay.open .confirm-inner { transform: translateY(0) scale(1); opacity:1 }
+  /* green create button */
+  .smallbtn.green { background: #16a34a; border-color: #0f7a36; color: #fff; }
+
+  /* icon-only square button */
+  .iconbtn { display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.02); color:#e8e8e8; cursor:pointer; transition: background .12s ease, border-color .12s ease, transform .08s ease; }
+  .iconbtn:hover{ background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.14); }
+  .iconbtn:active{ transform: translateY(1px); }
+  .iconbtn.green{ background:#16a34a; border-color:#0f7a36; color:#fff; }
+  .iconbtn.green:hover{ background:#138a3f; border-color:#0f7a36; }
+
+  /* danger (trash) button — red background like built-field remove */
+  .smallbtn.danger { background: #7b1f1f; border-color: rgba(255,99,99,0.16); color: #fff; }
+  .smallbtn.danger:hover, .smallbtn.danger:focus { background: #5d1313; border-color: rgb(255, 0, 0); color: #fff; }
+  .smallbtn.danger:active{ transform: translateY(1px); }
+  .smallbtn.danger:disabled, .smallbtn.danger[disabled] { background: rgba(123,31,31,0.6); border-color: rgba(255,99,99,0.12); opacity: 0.6; cursor: default; }
+
+  /* add-wide (W) button: transparent green and expands on hover to reveal full label */
+  .smallbtn.add-wide-btn{
+    background: rgba(21,128,61,0.10); /* transparent green */
+    border-color: rgba(15,115,54,0.12);
+    color: #c7f7df;
+    padding:4px 8px; position:relative; overflow:hidden; display:inline-flex; align-items:center; justify-content:center;
+    min-width:36px; max-width:320px;
+    transition: padding .22s cubic-bezier(.2,.9,.2,1), background-color .12s ease, border-color .12s ease;
+  }
+  /* collapsed short label */
+  .smallbtn.add-wide-btn .short{ display:inline-block; transition: transform .12s ease, opacity .12s ease; }
+  /* full label hidden initially and doesn't take layout space (max-width/overflow) */
+  .smallbtn.add-wide-btn .full{ display:inline-block; white-space:nowrap; max-width:0; overflow:hidden; margin-left:0; opacity:0; transform: translateX(-6px); transition: max-width .22s cubic-bezier(.2,.9,.2,1), transform .18s ease, opacity .18s ease; }
+  /* expand on hover or keyboard focus (unless disabled) — animate padding symmetrically so content stays centered */
+  .smallbtn.add-wide-btn:hover:not([disabled]), .smallbtn.add-wide-btn:focus-visible:not([disabled]){ padding:4px 18px; background: rgba(21,128,61,0.18); border-color: rgba(15,115,54,0.22); }
+  .smallbtn.add-wide-btn:hover:not([disabled]) .short, .smallbtn.add-wide-btn:focus-visible:not([disabled]) .short{ opacity:0; transform: translateY(-2px); }
+  .smallbtn.add-wide-btn:hover:not([disabled]) .full, .smallbtn.add-wide-btn:focus-visible:not([disabled]) .full{ opacity:1; transform: translateX(0); max-width:240px; }
+  .smallbtn.add-wide-btn:active{ transform: translateY(1px); }
+
+  /* add (+) button acting like add-wide but blue: short 'S' and full label shown on hover */
+  .smallbtn.add-btn { /* base visual - keep subtle, full color on hover */ }
+  .smallbtn.add-btn .short{ display:inline-block; transition: transform .12s ease, opacity .12s ease; }
+  .smallbtn.add-btn .full{ display:inline-block; white-space:nowrap; max-width:0; overflow:hidden; margin-left:0; opacity:0; transform: translateX(-6px); transition: max-width .22s cubic-bezier(.2,.9,.2,1), transform .18s ease, opacity .18s ease; }
+  .smallbtn.add-btn:hover:not([disabled]), .smallbtn.add-btn:focus-visible:not([disabled]){ padding:4px 18px; background: rgba(3,105,161,0.12); border-color: rgba(3,82,124,0.18); }
+  .smallbtn.add-btn:hover:not([disabled]) .short, .smallbtn.add-btn:focus-visible:not([disabled]) .short{ opacity:0; transform: translateY(-2px); }
+  .smallbtn.add-btn:hover:not([disabled]) .full, .smallbtn.add-btn:focus-visible:not([disabled]) .full{ opacity:1; transform: translateX(0); max-width:240px; }
+  .smallbtn.add-btn:active{ transform: translateY(1px); }
+
+  </style>
+</head>
+<body>
+  <!-- banner fixed tout en haut -->
+  <div id="unsaved" class="unsaved-banner" style="display:none">Modifications non enregistrées</div>
+
+  <!-- topbar placé sous la banner -->
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:8px">
+      <label>Namespace
+        <select id="ns"></select>
+      </label>
+      <label>Resource
+        <select id="res"><option value="">(none)</option></select>
+      </label>
+      <label>Verb
+        <select id="verb"></select>
+      </label>
+      <button id="load" class="smallbtn">Load fields</button>
+    </div>
+    <div class="toolbar">
+      <button id="save-top" class="smallbtn" disabled>Save selection</button>
+      <span id="status"></span>
+    </div>
+  </div>
+
+  <div style="height:8px"></div>
+
+  <div class="cols" style="margin-top:12px">
+    <div class="col">
+      <div id="available-area" class="box">
+        <h3>Champs disponibles</h3>
+        <div style="margin-bottom:8px">
+          <div style="margin-top:8px">
+            <button id="create-expression-available" class="smallbtn green" disabled style="display:inline-flex;align-items:center;gap:8px" title="Sélectionnez au moins 2 champs puis appuyez sur E pour créer" aria-label="Créer expression (E)"><span style="font-weight:700;">＋</span><span>Créer expression</span><span style="opacity:.7;margin-left:6px;">(E)</span></button>
+          </div>
+        </div>
+        <ul id="available" aria-label="Champs disponibles"></ul>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="box">
+        <h3>Champs sélectionnés</h3>
+        <div style="margin-bottom:8px">
+            <button id="add-selected-local" class="smallbtn">Ajouter sélectionnés</button>
+          <button id="remove-selected" class="smallbtn">← Retirer sélectionnés</button>
+          <button id="clear-selected" class="smallbtn ghost">Vider</button>
+        </div>
+        <ul id="selected" class="selected-list" aria-live="polite"></ul>
+  <div class="hint"></div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="box">
+        <h3>Champs sélectionnés wide</h3>
+        <div style="margin-bottom:8px">
+          <button id="add-wide-selected" class="smallbtn">Ajouter sélectionnés</button>
+          <button id="remove-selected-wide" class="smallbtn">← Retirer sélectionnés</button>
+          <button id="clear-selected-wide" class="smallbtn ghost">Vider</button>
+        </div>
+        <ul id="selected-wide" class="selected-list" aria-live="polite"></ul>
+  <div class="hint"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: propriétés partagées pour un champ -->
+  <div id="props-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal" role="document" aria-labelledby="props-title">
+      <h4 id="props-title">Propriétés du champ</h4>
+      <div class="row">
+        <label>Champ</label>
+        <div id="props-field-name" class="muted"></div>
+      </div>
+      <div class="row">
+        <label for="props-display">Display name</label>
+        <input id="props-display" type="text" placeholder="Nom affiché"/>
+      </div>
+      <!-- future properties can be added here -->
+      <div class="buttons">
+        <button id="props-cancel" class="smallbtn ghost">Annuler</button>
+        <button id="props-save" class="smallbtn">Enregistrer</button>
+      </div>
+    </div>
+      <!-- Expression modal is injected dynamically by createExprModalIfNeeded() -->
+  </div>
+      <!-- Doc modal: shows documentation when clicking the info icon -->
+      <div id="doc-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true">
+        <div class="modal" role="document" aria-labelledby="doc-title">
+          <h4 id="doc-title">Description</h4>
+          <div style="margin-bottom:8px"><strong id="doc-field-name"></strong></div>
+          <div id="doc-body" style="white-space:pre-wrap; color:#ddd; margin-bottom:8px"></div>
+          <div style="text-align:right"><button id="doc-close" class="smallbtn">Fermer</button></div>
+        </div>
+      </div>
+
+<script>
+console.log('field-ui script loaded');
+// inline SVG icons (use currentColor so CSS controls their color)
+const ICON_PENCIL = `
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+  <path fill="currentColor" d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+</svg>`;
+const ICON_TRASH = `
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+  <path fill="currentColor" d="M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+</svg>`;
+async function fetchJSON(u){
+  const r = await fetch(u);
+  const txt = await r.text();
+  let j = null;
+  if (txt && txt.trim() !== "") {
+    try { j = JSON.parse(txt); } catch(e) { j = null; }
+  }
+  if (!r.ok) return j || { error: `${r.status} ${r.statusText}` };
+  return j;
+}
+
+/* Shared state (single declarations) */
+let dragged = null;
+let currentModel = {}; // map object -> ModelEntry
+const LS_KEY = 'fieldui.last';
+let dirty = false;
+
+// map partagée des display names (propriétés communes)
+const displayNames = {};
+
+// modal editing state
+let currentEditingField = null;
+// currently edited expression list item (when editing an existing expression)
+let currentEditingExprLi = null;
+// prevent double-save reentrancy
+let exprSaveInProgress = false;
+// helper to enable/disable the available-area create button
+function updateCreateAvailableButtonState(){
+  const createExprAvail = document.getElementById('create-expression-available');
+  const availEl = document.getElementById('available');
+  if(!createExprAvail || !availEl) return;
+  const count = availEl.querySelectorAll('.field-item.selected').length;
+  createExprAvail.disabled = !(count >= 2);
+}
+
+function setDirty(v){
+  dirty = !!v;
+  const unsaved = document.getElementById('unsaved');
+  const btn = document.getElementById('save-top');
+  if(dirty){
+    unsaved.style.display = 'flex';
+    btn.disabled = false;
+  } else {
+    unsaved.style.display = 'none';
+    btn.disabled = true;
+  }
+}
+
+function saveLast(ns, res, verb){
+  try { localStorage.setItem(LS_KEY, JSON.stringify({ns,res,verb})); } catch {}
+}
+function loadLast(){
+  try {
+    const s = localStorage.getItem(LS_KEY);
+    if(!s) return null;
+    return JSON.parse(s);
+  } catch { return null; }
+}
+
+async function init(){
+  document.getElementById('load').addEventListener('click', loadFields);
+  // wire save button and add OS-specific shortcut hint (⌘S for macOS, Ctrl+S otherwise)
+  const saveTopBtn = document.getElementById('save-top');
+  if(saveTopBtn){
+    try{
+      let shortcut = 'Ctrl+S';
+      if(typeof navigator !== 'undefined'){
+        const p = (navigator.platform || '').toLowerCase();
+        if(p.indexOf('mac') !== -1 || p.indexOf('iphone') !== -1 || p.indexOf('ipad') !== -1) shortcut = '⌘S';
+      }
+      saveTopBtn.textContent = 'Save selection (' + shortcut + ')';
+      saveTopBtn.title = 'Save selection (' + shortcut + ')';
+      saveTopBtn.setAttribute('aria-label', 'Save selection ' + shortcut);
+    }catch(e){ /* ignore */ }
+    saveTopBtn.addEventListener('click', saveSelection);
+  }
+  // 'Ajouter sélectionnés →' and 'Ajouter tout' removed from Available column; local equivalents remain
+  document.getElementById('remove-selected').addEventListener('click', removeSelected);
+  document.getElementById('clear-selected').addEventListener('click', clearSelected);
+  // expression modal
+  const createExprBtn = document.getElementById('create-expression');
+  if (createExprBtn) createExprBtn.addEventListener('click', openExprModal);
+  // available-area create expression button
+  const createExprAvail = document.getElementById('create-expression-available');
+  if(createExprAvail) createExprAvail.onclick = function(){
+    // mark modal target so save will insert to available, not into selected directly
+    const m = createExprModalIfNeeded(); if(m) m.dataset.createTarget = 'available';
+    openExprModal();
+  };
+  // enable the create button only when user has selected >=2 items in available list
+  const availEl = document.getElementById('available');
+  if(availEl){
+    availEl.addEventListener('click', ()=>{
+      const count = availEl.querySelectorAll('.field-item.selected').length;
+      if(createExprAvail) createExprAvail.disabled = !(count >= 2);
+    });
+    // Keyboard shortcut: press 'e' anywhere to create an expression when at least 2 are selected in Available
+    document.addEventListener('keydown', (e)=>{
+      // ignore when typing into inputs/textareas/selects/contenteditable or if modifier keys are down
+      const tag = (e.target && e.target.tagName || '').toLowerCase();
+      if(tag === 'input' || tag === 'textarea' || tag === 'select' || (e.target && e.target.isContentEditable) || e.ctrlKey || e.metaKey || e.altKey) return;
+      // ignore when any modal/overlay is open
+      const modalOpen = document.querySelector('.modal-backdrop[aria-hidden="false"], #expr-add-overlay.open, #expr-confirm.open');
+      if(modalOpen) return;
+      if((e.key === 'e' || e.key === 'E') && createExprAvail){
+        const count = availEl.querySelectorAll('.field-item.selected').length;
+        if(count >= 2){
+          e.preventDefault();
+          const m = createExprModalIfNeeded(); if(m) m.dataset.createTarget = 'available';
+          openExprModal();
+        }
+      }
+    });
+  }
+  else console.log('create-expression button not found during init');
+
+  // wide add button (texte uniformisé) — listener conservé
+  document.getElementById('add-wide-selected').addEventListener('click', addWideSelected);
+
+  // nouveaux listeners pour les boutons ajoutés
+  const addSelectedLocal = document.getElementById('add-selected-local');
+  if(addSelectedLocal) addSelectedLocal.addEventListener('click', addSelected);
+  const removeSelectedWideBtn = document.getElementById('remove-selected-wide');
+  if(removeSelectedWideBtn) removeSelectedWideBtn.addEventListener('click', removeSelectedWide);
+  const clearSelectedWideBtn = document.getElementById('clear-selected-wide');
+  if(clearSelectedWideBtn) clearSelectedWideBtn.addEventListener('click', clearWide);
+
+  // modal bindings (expr modal may be created dynamically, so guard)
+  const propsCancel = document.getElementById('props-cancel'); if(propsCancel) propsCancel.addEventListener('click', closePropsModal);
+  const propsSave = document.getElementById('props-save'); if(propsSave) propsSave.addEventListener('click', savePropsModal);
+  const exprCancelEl = document.getElementById('expr-cancel'); if(exprCancelEl) exprCancelEl.onclick = closeExprModal;
+  const exprSaveEl = document.getElementById('expr-save'); if(exprSaveEl) exprSaveEl.onclick = saveExprModal;
+  const exprModalEl = document.getElementById('expr-modal'); if(exprModalEl) exprModalEl.onclick = (e)=>{ if(e.target === exprModalEl) closeExprModal(); };
+  document.getElementById('props-modal').addEventListener('click', (e)=>{
+    if(e.target === document.getElementById('props-modal')) closePropsModal();
+  });
+  document.addEventListener('keydown', (e)=> {
+    if(e.key === 'Escape') closePropsModal();
+  });
+
+  const nss = await fetchJSON('/api/namespaces');
+  const nsEl = document.getElementById('ns');
+  nsEl.innerHTML = '';
+  if (Array.isArray(nss)) {
+    nss.sort((a,b)=> a.localeCompare(b, undefined, {sensitivity:'base'}));
+    nss.forEach(n=> { const o=document.createElement('option'); o.value=n; o.textContent=n; nsEl.appendChild(o); });
+  }
+  nsEl.addEventListener('change', async ()=>{
+    await loadCommands();
+    const res = document.getElementById('res').value;
+    const verb = document.getElementById('verb').value;
+    saveLast(nsEl.value, res, verb);
+  });
+
+  const last = loadLast();
+  if (last && Array.from(nsEl.options).some(o=>o.value === last.ns)) {
+    nsEl.value = last.ns;
+  } else if (nsEl.options.length) {
+    nsEl.value = nsEl.options[0].value;
+  }
+  await loadCommands();
+  setDirty(false);
+}
+
+// Expression modal handling
+let exprComponents = [];
+// built expression fields created by the user (persisted separately)
+let builtFields = []; // array of { name, display, expression, bindings }
+
+// simple uuidv4 generator (browser-friendly)
+function uuidv4() {
+  if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
+    // use crypto if available
+    const buf = new Uint8Array(16);
+    crypto.getRandomValues(buf);
+    buf[6] = (buf[6] & 0x0f) | 0x40;
+    buf[8] = (buf[8] & 0x3f) | 0x80;
+    const hex = Array.from(buf).map(b=>('00'+b.toString(16)).slice(-2)).join('');
+    return hex.slice(0,8)+'-'+hex.slice(8,12)+'-'+hex.slice(12,16)+'-'+hex.slice(16,20)+'-'+hex.slice(20);
+  }
+  // fallback
+  return 'id-' + Math.random().toString(36).slice(2,10) + Date.now().toString(36);
+}
+// Defensive stubs: ensure helper functions exist on window before they're defined later in the file.
+// This prevents ReferenceError when users click the create/edit expression button very early.
+try {
+  if (typeof window !== 'undefined') {
+    window.makeExprComponentsDraggable = window.makeExprComponentsDraggable || function(list) { /* no-op until implemented */ };
+    window.getDragAfterElement = window.getDragAfterElement || function(container, y) { return null; };
+  }
+} catch(e) { /* ignore */ }
+// ensure the expr-modal element is attached directly to body to avoid ancestor CSS interference
+function ensureExprModalAttachedToBody(){
+  const modal = document.getElementById('expr-modal');
+  if(!modal) return null;
+  try{
+    if(modal.parentElement !== document.body){
+      document.body.appendChild(modal);
+      console.log('moved expr-modal to document.body to avoid ancestor CSS');
+    }
+  }catch(e){ console.warn('cannot move expr-modal', e); }
+  return modal;
+}
+function openExprModal(){
+  _expr_debug_banner();
+  try {
+    // entering create mode by default
+    currentEditingExprLi = null;
+    // ensure the modal exists and is attached to body (create dynamically if needed)
+      const modal = createExprModalIfNeeded();
+      // also attempt to move any static modal to body for older builds
+      try{ ensureExprModalAttachedToBody(); } catch(e){}
+    console.log('openExprModal called, available selected:', Array.from(document.querySelectorAll('#available .field-item.selected')).length, ' ; selected selected:', Array.from(document.querySelectorAll('#selected .field-item.selected')).length);
+    // collect currently selected items in available OR selected lists
+    const availSelected = Array.from(document.querySelectorAll('#available .field-item.selected')).map(n=>n.dataset.value);
+    const selSelected = Array.from(document.querySelectorAll('#selected .field-item.selected')).map(n=>n.dataset.value);
+    // If no per-item selection, default to using all items currently present in the selected list
+    let components = [];
+    if(availSelected.length) components = availSelected;
+    else if(selSelected.length) components = selSelected;
+    else {
+      const allSel = Array.from(document.querySelectorAll('#selected .field-item')).map(n=>n.dataset.value);
+      if(allSel && allSel.length) components = allSel;
+    }
+    exprComponents = components.slice();
+  // components list (ordre) removed from modal UI
+  const list = null;
+      const exprContainer = document.getElementById('expr-expression');
+      if(exprContainer){
+        exprContainer.innerHTML='';
+        // Populate expression badges with the currently selected components
+        if(exprComponents && exprComponents.length){
+          const seenSet = new Set();
+          exprComponents.forEach(v => {
+            const val = (v || '').toString().trim();
+            if(!val || seenSet.has(val)) return;
+            exprContainer.appendChild(createExprBadge(val));
+            seenSet.add(val);
+          });
+        }
+      }
+      const nameEl = document.getElementById('expr-name'); if(nameEl) nameEl.value = '';
+  // wire add-icon button to open overlay
+  const addIconBtnOpen = document.getElementById('expr-add-icon');
+  if(addIconBtnOpen) addIconBtnOpen.onclick = openAddComponentDialog;
+      // enable dropping into expression container
+  enableBadgeDrop(document.getElementById('expr-expression'));
+  // no components list in this layout
+  // enable trash drop target inside modal
+  try{ enableTrashDrop(document.getElementById('expr-trash')); }catch(e){}
+    if(modal){
+      console.log('expr-modal element:', modal);
+      // ensure visible even with hostile global CSS
+      modal.classList.add('open'); modal.setAttribute('aria-hidden','false');
+      modal.style.display = 'flex';
+      modal.style.position = 'fixed';
+      modal.style.inset = '0';
+      modal.style.zIndex = '2147483646';
+      modal.style.background = 'rgba(3,3,3,0.85)';
+      modal.style.pointerEvents = 'auto';
+      // inner modal box
+      const inner = modal.querySelector('.modal');
+      if(inner){
+        inner.style.transform = 'none';
+        inner.style.opacity = '1';
+        inner.style.zIndex = '2147483647';
+        inner.style.position = 'relative';
+        inner.style.display = 'block';
+        inner.style.border = '2px solid #3b82f6';
+        inner.style.background = '#0b0c0d';
+        inner.style.pointerEvents = 'auto';
+      }
+  // focus expression container for keyboard users
+  const exprFocusEl = document.getElementById('expr-expression'); if(exprFocusEl) exprFocusEl.focus?.();
+      // reattach save/cancel handlers (in case element moved)
+  const exprCancel = modal.querySelector('#expr-cancel');
+  const exprSave = modal.querySelector('#expr-save');
+  if(exprCancel){ exprCancel.onclick = (e)=>{ e.stopPropagation(); closeExprModal(); }; exprCancel.style.pointerEvents='auto'; }
+  if(exprSave){ exprSave.onclick = (e)=>{ e.stopPropagation(); saveExprModal(); }; exprSave.style.pointerEvents='auto'; }
+  // ensure save button indicates create when opening in create mode
+  try{ if(currentEditingExprLi == null && exprSave){ exprSave.textContent = 'Créer ⏎'; exprSave.setAttribute('aria-label','Créer (Entrée)'); } }catch(e){}
+    }
+    // if inner modal box is present but not visible on screen, fallback to prompt-based flow
+    try{
+  const innerEl = modal ? modal.querySelector('.modal') : null;
+      let visible = false;
+      if(innerEl){
+        const r = innerEl.getBoundingClientRect();
+        const cs = window.getComputedStyle(innerEl);
+        visible = (r.width > 8 && r.height > 8 && cs.visibility !== 'hidden' && cs.display !== 'none' && cs.opacity !== '0');
+      }
+      if(!visible){
+        console.log('inner modal not visible, using prompt fallback');
+        // use prompt fallback to create expression
+        fallbackPromptFlow(exprComponents);
+      }
+    }catch(e){ console.warn('visibility check failed', e); }
+  // if no components selected, show a hint inside the modal
+    // no dedicated hint area since components list is removed
+  } catch(e) {
+    console.error('openExprModal error', e);
+    alert('Erreur lors de l\'ouverture du modal d\'expression: ' + e);
+  }
+}
+
+// debug helper: show transient banner when modal open is attempted
+function _expr_debug_banner(){
+  try{
+    let b = document.getElementById('expr-debug');
+    if(b) b.remove();
+    b = document.createElement('div'); b.id='expr-debug';
+    b.textContent = 'Expression modal attempted to open';
+    Object.assign(b.style,{position:'fixed',right:'12px',top:'12px',background:'#3b82f6',color:'#000',padding:'8px 12px',borderRadius:'6px',zIndex:200000});
+    document.body.appendChild(b);
+    setTimeout(()=>{ try{ b.remove(); } catch(e){} }, 5000);
+  }catch(e){ }
+}
+// (the draggable implementation is defined later; avoid duplicate definitions)
+
+// Ensure the expression modal exists in the DOM and is attached to document.body.
+function createExprModalIfNeeded(){
+  let modal = document.getElementById('expr-modal');
+  if(modal) return modal; // existing static modal will be reused
+
+  // build modal dynamically and append to body
+  modal = document.createElement('div');
+  modal.id = 'expr-modal';
+  modal.className = 'modal-backdrop';
+  modal.setAttribute('role','dialog');
+  modal.setAttribute('aria-modal','true');
+  modal.setAttribute('aria-hidden','true');
+
+  const inner = document.createElement('div');
+  inner.className = 'modal';
+  inner.setAttribute('role','document');
+  inner.setAttribute('aria-labelledby','expr-title');
+
+  inner.innerHTML = `
+    <h4 id="expr-title">Créer / Éditer une expression</h4>
+    <div class="row">
+      <label>Expression</label>
+      <div style="display:flex; gap:8px; width:100%; align-items:center;">
+        <div id="expr-expression" style="min-height:56px; width:100%; flex:1; border:1px dashed rgba(200,200,200,0.12); padding:8px; border-radius:6px; display:flex; align-items:center; flex-wrap:wrap; gap:6px;"></div>
+        <button id="expr-add-icon" class="iconbtn green" title="Ajouter un composant">
+          <svg width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+        <div id="expr-trash" title="Glisser ici pour supprimer" style="width:48px; min-width:48px; height:48px; border-radius:8px; border:1px dashed rgba(200,200,200,0.12); display:flex; align-items:center; justify-content:center; margin-left:8px;">
+          <!-- simple trash icon -->
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="currentColor" d="M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+        </div>
+      </div>
+    </div>
+    <!-- confirmation overlay (hidden) -->
+    <div id="expr-confirm" class="expr-confirm-overlay" aria-hidden="true">
+      <div class="confirm-inner">
+        <div id="expr-confirm-msg" style="color:#fff; margin-bottom:12px"></div>
+        <div style="text-align:right; display:flex; gap:8px; justify-content:flex-end;">
+          <button id="expr-confirm-cancel" class="smallbtn ghost">Annuler</button>
+          <button id="expr-confirm-ok" class="smallbtn danger">Supprimer</button>
+        </div>
+      </div>
+    </div>
+    <!-- add component overlay (in-modal) -->
+    <div id="expr-add-overlay" class="expr-confirm-overlay" aria-hidden="true">
+      <div class="confirm-inner" style="border-color: rgba(15,115,54,0.22)">
+        <div style="color:#fff; margin-bottom:10px; font-weight:600">Ajouter un composant</div>
+        <div class="row" style="align-items:center;">
+          <label for="expr-add-select">Champ</label>
+          <select id="expr-add-select" style="width:100%">
+            <option value="">— Sélectionner un champ —</option>
+          </select>
+        </div>
+        <div class="row" style="align-items:center;">
+          <label for="expr-add-literal">Texte</label>
+          <input id="expr-add-literal" type="text" placeholder="Ex: ( ) / : | ; %" />
+        </div>
+        <div style="text-align:right; display:flex; gap:8px; justify-content:flex-end; align-items:center; margin-top:8px;">
+          <span style="margin-right:auto; opacity:.7; font-size:12px;">Astuce: appuyez sur Entrée pour valider</span>
+          <button id="expr-add-cancel" class="smallbtn ghost">Annuler</button>
+          <button id="expr-add-ok" class="smallbtn green" disabled title="Appuyez sur Entrée pour valider" aria-label="Ajouter (Entrée)">Ajouter ⏎</button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="row">
+      <label for="expr-name">Nom affiché (optionnel)</label>
+      <input id="expr-name" type="text" placeholder="Nom affiché pour l'expression" />
+    </div>
+    <div class="buttons" style="display:flex; gap:8px; align-items:center; justify-content:flex-end;">
+      <span id="expr-enter-hint" style="margin-right:auto; opacity:.7; font-size:12px;">Astuce: appuyez sur Entrée pour valider</span>
+      <button id="expr-cancel" class="smallbtn ghost">Annuler</button>
+      <button id="expr-save" class="smallbtn" title="Appuyez sur Entrée pour valider" aria-label="Créer (Entrée)">Créer ⏎</button>
+    </div>
+  `;
+
+  modal.appendChild(inner);
+  document.body.appendChild(modal);
+
+  // backdrop click closes modal
+  // backdrop click closes modal (single assignment)
+  modal.onclick = (e)=>{ if(e.target === modal) closeExprModal(); };
+  // ensure confirm overlay buttons exist and close when ESC pressed
+  modal.addEventListener('keydown', (e)=>{ 
+    if(e.key === 'Escape'){
+      const conf=document.getElementById('expr-confirm');
+      if(conf && (conf.classList.contains('open') || conf.style.display === 'flex')){ conf.classList.remove('open'); conf.style.display='none'; }
+      const addOv=document.getElementById('expr-add-overlay');
+      if(addOv && (addOv.classList.contains('open') || addOv.style.display === 'flex')){ addOv.classList.remove('open'); addOv.style.display='none'; }
+    } else if(e.key === 'Enter'){
+      // If any in-modal overlay is open, let it handle Enter
+      const conf=document.getElementById('expr-confirm');
+      const addOv=document.getElementById('expr-add-overlay');
+      const overlayOpen = (node)=> node && (node.classList.contains('open') || node.style.display === 'flex');
+      if(overlayOpen(conf) || overlayOpen(addOv)) return;
+      // Avoid submitting when modifier keys are used (e.g., Shift+Enter)
+      if(e.shiftKey || e.altKey || e.ctrlKey || e.metaKey) return;
+      e.preventDefault(); e.stopPropagation();
+      try{ saveExprModal(); }catch(err){ console.warn('Enter submit failed', err); }
+    }
+  });
+
+  // helper: accessible confirm modal helper (returns Promise<boolean>)
+  window.showConfirm = function(message){
+    return new Promise((resolve)=>{
+      try{
+        const overlay = document.getElementById('expr-confirm');
+        const inner = overlay ? overlay.querySelector('.confirm-inner') : null;
+        const msgEl = document.getElementById('expr-confirm-msg');
+        const ok = document.getElementById('expr-confirm-ok');
+        const cancel = document.getElementById('expr-confirm-cancel');
+        if(!overlay || !msgEl || !ok || !cancel){ resolve(confirm(message)); return; }
+
+        // set ARIA attributes and show overlay
+        overlay.setAttribute('role','dialog');
+        overlay.setAttribute('aria-modal','true');
+        overlay.setAttribute('aria-labelledby','expr-confirm-msg');
+        overlay.setAttribute('aria-hidden','false');
+        overlay.classList.add('open');
+        msgEl.textContent = message;
+
+        // remember previously focused element so we can restore it
+        const previouslyFocused = document.activeElement;
+
+        // build a list of focusable elements inside the overlay (visible ones)
+        const focusableSelector = 'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+        let focusableElements = Array.from(overlay.querySelectorAll(focusableSelector)).filter(function(el){
+          // filter out elements that are not visible
+          return el.offsetWidth > 0 || el.offsetHeight > 0 || el === cancel || el === ok;
+        });
+        if(focusableElements.length === 0){ focusableElements = [cancel, ok]; }
+
+        const firstFocusable = focusableElements[0];
+        const lastFocusable = focusableElements[focusableElements.length - 1];
+
+        // key handler: trap Tab/Shift+Tab and handle Escape
+        const onKeyDown = function(e){
+          if(e.key === 'Tab'){
+            // If there are no focusable elements, prevent tabbing out
+            if(focusableElements.length === 0){ e.preventDefault(); return; }
+            if(e.shiftKey){
+              if(document.activeElement === firstFocusable || document.activeElement === overlay){ e.preventDefault(); lastFocusable.focus(); }
+            } else {
+              if(document.activeElement === lastFocusable){ e.preventDefault(); firstFocusable.focus(); }
+            }
+          } else if(e.key === 'Escape'){
+            e.preventDefault(); cleanup(); resolve(false);
+          }
+        };
+
+        function cleanup(){
+          overlay.classList.remove('open');
+          overlay.setAttribute('aria-hidden','true');
+          document.removeEventListener('keydown', onKeyDown);
+          overlay.removeEventListener('click', overlayClickHandler);
+          ok.onclick = null; cancel.onclick = null;
+          try{ if(previouslyFocused && previouslyFocused.focus) previouslyFocused.focus(); }catch(e){}
+        }
+
+        // don't close when clicking the backdrop accidentally; keep control explicit
+        const overlayClickHandler = function(ev){ if(ev.target === overlay){ ev.stopPropagation(); /* intentionally not closing on backdrop click */ } };
+        overlay.addEventListener('click', overlayClickHandler);
+
+        cancel.onclick = function(ev){ ev.stopPropagation(); cleanup(); resolve(false); };
+        ok.onclick = function(ev){ ev.stopPropagation(); cleanup(); resolve(true); };
+
+        document.addEventListener('keydown', onKeyDown);
+
+        // focus the first meaningful control (cancel) after a short delay so screen readers notice the dialog
+        setTimeout(function(){ try{ (firstFocusable && firstFocusable.focus && firstFocusable.focus()); }catch(e){} }, 30);
+      }catch(e){ resolve(confirm(message)); }
+    });
+  };
+  // wire buttons (use onclick to avoid duplicate addEventListener registrations)
+  const cancel = modal.querySelector('#expr-cancel');
+  const save = modal.querySelector('#expr-save');
+  if(cancel) cancel.onclick = closeExprModal;
+  if(save) save.onclick = saveExprModal;
+
+  // expose a hook so saveExprModal can behave differently when invoked from the available-area create button
+  modal.dataset.createTarget = 'selected';
+
+  return modal;
+}
+
+// Open the in-modal overlay that lets user add either a field (from dropdown) or a literal text
+function openAddComponentDialog(){
+  try{
+    const overlay = document.getElementById('expr-add-overlay');
+    if(!overlay){ console.warn('expr-add-overlay missing'); return; }
+    // populate select with available fields (from both columns + built fields)
+    const sel = overlay.querySelector('#expr-add-select');
+    const txt = overlay.querySelector('#expr-add-literal');
+    const ok = overlay.querySelector('#expr-add-ok');
+    const cancel = overlay.querySelector('#expr-add-cancel');
+    if(sel){
+      // keep only the placeholder, then append options
+      sel.innerHTML = '<option value="">— Sélectionner un champ —</option>';
+      const seen = new Set();
+      const addOpt = (val, label)=>{ if(!val || seen.has(val)) return; seen.add(val); const o = document.createElement('option'); o.value = val; o.textContent = (label || val); sel.appendChild(o); };
+      // all field items present in the lists
+      document.querySelectorAll('#available .field-item, #selected .field-item, #selected-wide .field-item').forEach(li=> {
+        const val = li.dataset.value;
+        const labelEl = li.querySelector('.label');
+        const lbl = labelEl ? labelEl.textContent.trim() : val;
+        addOpt(val, lbl);
+      });
+      // also add components list items currently shown in the modal components area
+      document.querySelectorAll('#expr-components-list .expr-badge').forEach(node=>{
+        const val = node.dataset.value || node.textContent || '';
+        addOpt(val.trim());
+      });
+      // and explicitly add built fields (from memory) with pretty labels
+      try{ if(Array.isArray(builtFields)){ builtFields.forEach(bf=>{ const v = bf.id || bf.name; const lbl = bf.display || bf.name || v; addOpt(v, lbl); }); } }catch(e){}
+      // ensure options are sorted for usability
+      const opts = Array.from(sel.querySelectorAll('option')).slice(1).sort((a,b)=> a.textContent.localeCompare(b.textContent));
+      opts.forEach(o=> sel.appendChild(o));
+    }
+    // reset values
+    if(sel) sel.value = '';
+    if(txt) txt.value = '';
+    // enable/disable OK
+    const reevaluate = ()=>{ if(!ok) return; const has = (sel && sel.value) || (txt && txt.value.trim()); ok.disabled = !has; };
+    if(sel) sel.onchange = reevaluate;
+    if(txt) txt.oninput = reevaluate;
+    const maybeSubmit = (e)=>{ if(e.key === 'Enter'){ e.preventDefault(); if(ok && !ok.disabled) { ok.click(); } } };
+    if(sel) sel.onkeydown = maybeSubmit;
+    if(txt) txt.onkeydown = maybeSubmit;
+    if(cancel) cancel.onclick = closeAddOverlay;
+    if(ok) ok.onclick = addOverlayConfirm;
+  // backdrop click closes overlay
+  overlay.onclick = (e)=>{ if(e.target === overlay) closeAddOverlay(); };
+    // show overlay
+    overlay.classList.add('open');
+    overlay.style.display = 'flex';
+    overlay.setAttribute('aria-hidden','false');
+    // focus the select by default
+    sel?.focus();
+  } catch(e){ console.warn('openAddComponentDialog error', e); }
+}
+
+function closeAddOverlay(){
+  const overlay = document.getElementById('expr-add-overlay');
+  if(!overlay) return;
+  overlay.classList.remove('open');
+  overlay.style.display = 'none';
+  overlay.setAttribute('aria-hidden','true');
+}
+
+function addOverlayConfirm(){
+  try{
+    if(window.__addOverlayInProgress){ return; }
+    window.__addOverlayInProgress = true;
+    const sel = document.getElementById('expr-add-select');
+    const txt = document.getElementById('expr-add-literal');
+    const expr = document.getElementById('expr-expression');
+    const uniq = new Set();
+    if(sel && sel.value) uniq.add(sel.value);
+    if(txt && txt.value && txt.value.trim()) uniq.add(txt.value.trim());
+    uniq.forEach(v=> expr.appendChild(createExprBadge(v)));
+    setDirty(true);
+  } finally {
+    window.__addOverlayInProgress = false;
+    closeAddOverlay();
+  }
+}
+
+// Insert a built-field into the AVAILABLE list at the top and mark it as a built field
+function addBuiltFieldToAvailable(bf){
+  // bf: { name, display, expression, bindings }
+  // ensure bf has an id
+  if(!bf.id) bf.id = uuidv4();
+  // avoid duplicates
+  const avail = document.getElementById('available');
+  // if an existing available item exists with same name but is not a built field, replace it
+  const existingAvail = Array.from(avail.children).find(n=>n.dataset.value === bf.name);
+  if(existingAvail && existingAvail.dataset && existingAvail.dataset.built === 'true') {
+    // already a built item, nothing to do
+    return;
+  }
+  // create li similar to makeAvailableItem but with a built marker
+  const li = document.createElement('li'); li.className='field-item'; li.dataset.value = bf.name; li.dataset.built='true'; li.dataset.expression = bf.expression || ''; li.dataset.bindings = JSON.stringify(bf.bindings || {});
+  // store built-field id for references
+  li.dataset.bfid = bf.id;
+  const lbl = document.createElement('div'); lbl.className='label'; lbl.textContent = bf.display || bf.name;
+  // show display only if it is different from technical name to avoid duplication
+  if(bf.display && bf.display !== bf.name) { const ds = document.createElement('span'); ds.className='display-name'; ds.textContent = ' ('+bf.display+')'; lbl.appendChild(ds); }
+  const actions = document.createElement('div'); actions.className='actions';
+  const editBtn = document.createElement('button'); editBtn.className='smallbtn edit-btn'; editBtn.innerHTML = ICON_PENCIL; editBtn.title='Edit'; editBtn.onclick = function(e){ e.stopPropagation(); openExprEdit(li); };
+  const addBtn = document.createElement('button'); addBtn.className='smallbtn add-btn'; addBtn.innerHTML = '<span class="short">S</span><span class="full">Ajouter à sélectionné</span>'; addBtn.title='Ajouter'; addBtn.onclick = function(e){ e.stopPropagation(); addToSelected(bf.name, bf.display); };
+  const addWideBtn = document.createElement('button'); addWideBtn.className='smallbtn add-wide-btn'; addWideBtn.innerHTML = '<span class="short">W</span><span class="full">Ajouter à wide</span>'; addWideBtn.title='Ajouter wide'; addWideBtn.onclick = function(e){ e.stopPropagation(); addToWide(bf.name, bf.display); };
+  const removeBtn = document.createElement('button'); removeBtn.className='smallbtn danger remove-btn'; removeBtn.innerHTML = ICON_TRASH; removeBtn.title='Retirer'; removeBtn.onclick = function(e){ e.stopPropagation();
+    // remove from DOM and builtFields
+    try{ li.remove(); builtFields = builtFields.filter(x=>x.name !== bf.name); updateCreateAvailableButtonState(); setDirty(true); }catch(e){}
+  };
+  // if this built field is already used in selected/wide, disable removal and show a red trash icon instead
+  try{
+    const used = Array.from(document.querySelectorAll('#selected .field-item, #selected-wide .field-item')).some(n=> n.dataset.bfid === bf.id);
+        if(used){
+      removeBtn.innerHTML = ICON_TRASH;
+      removeBtn.title = 'Impossible de supprimer (utilisé dans une sélection)';
+      removeBtn.disabled = true;
+      removeBtn.classList.add('danger');
+      // replace onclick with noop to be safe
+      removeBtn.onclick = function(e){ e.stopPropagation(); };
+    }
+  }catch(e){}
+  // desired order for builded items in AVAILABLE: +, W, Edition, Suppression
+  actions.appendChild(addBtn);
+  actions.appendChild(addWideBtn);
+  actions.appendChild(editBtn);
+  actions.appendChild(removeBtn);
+  li.appendChild(lbl); li.appendChild(actions);
+  // expose display meta for consumers
+  li.dataset.display = bf.display || bf.name;
+  li.dataset.id = bf.id || '';
+  // if there was an existing non-built available item, remove it so built item replaces it
+  if(existingAvail) existingAvail.remove();
+  // insert at top
+  if(avail.firstChild) avail.insertBefore(li, avail.firstChild); else avail.appendChild(li);
+  // ensure click toggles selection and updates create button state
+    li.onclick = function(e){ if(e.target && e.target.closest && e.target.closest('button')) return; li.classList.toggle('selected'); updateCreateAvailableButtonState(); };
+  // refresh create button state
+  updateCreateAvailableButtonState();
+}
+try{ window.getDragAfterElement = getDragAfterElement; }catch(e){}
+
+// Make expression component nodes draggable and reorderable inside the list
+function makeExprComponentsDraggable(list){
+  if(!list) return;
+  // ensure child nodes have correct attributes
+  Array.from(list.children).forEach((child, idx)=>{
+    child.classList.add('expr-comp');
+    child.draggable = true;
+    child.dataset.index = idx;
+    // (removed explicit up/down buttons - drag to reorder instead)
+    // basic drag events
+    child.addEventListener('dragstart', (e)=>{ child.classList.add('dragging'); dragged = child; e.dataTransfer.effectAllowed = 'move'; });
+    child.addEventListener('dragend', ()=>{ child.classList.remove('dragging'); dragged = null; });
+  });
+
+  list.addEventListener('dragover', (e)=>{
+    e.preventDefault();
+    const after = getDragAfterElement(list, e.clientY);
+    const dragging = list.querySelector('.dragging');
+    if(!dragging) return;
+    if(after == null) list.appendChild(dragging);
+    else list.insertBefore(dragging, after);
+  });
+}
+
+// create a badge element for expression components
+function createExprBadge(value){
+  const b = document.createElement('span');
+  b.className = 'expr-badge';
+  b.draggable = true;
+  b.dataset.value = value;
+  const txt = document.createElement('span'); txt.textContent = value; txt.style.userSelect = 'none';
+  b.appendChild(txt);
+  if(!b.__dndWired){
+    b.addEventListener('dragstart', (e)=>{ dragged = b; b.classList.add('dragging'); try{ e.dataTransfer.setData('text/plain', value); }catch{} e.dataTransfer.effectAllowed = 'move'; });
+    b.addEventListener('dragend', ()=>{ if(b) b.classList.remove('dragging'); dragged = null; setDirty(true); });
+    b.__dndWired = true;
+  }
+  b.tabIndex = 0;
+  b.addEventListener('keydown', (e)=>{
+    if(e.key === 'Delete' || e.key === 'Backspace'){
+      e.preventDefault();
+      const val = b.dataset.value || (b.textContent||'').trim();
+      try{
+        window.showConfirm('Supprimer le composant "' + val + '" ?').then(ok => {
+          if(!ok) return;
+          try{
+            const expr = document.getElementById('expr-expression');
+            if(expr){
+              const nodes = Array.from(expr.querySelectorAll('.expr-badge'));
+              const first = nodes.find(n=> n.dataset.value === val);
+              if(first) first.remove();
+            }
+            try{ updateAvailableControls(val); }catch(e){}
+            if(dragged && dragged.dataset && dragged.dataset.value === val){ try{ if(dragged.classList) dragged.classList.remove('dragging'); }catch(e){} dragged = null; }
+            setDirty(true);
+          }catch(err){ console.warn('delete handler failed', err); }
+        }).catch(()=>{});
+      }catch(err){ console.warn('showConfirm failed', err); }
+    } else if(e.key === 'ArrowLeft' || e.key === 'ArrowRight'){
+      e.preventDefault();
+      const cur = e.currentTarget;
+      if(!cur) return;
+      const sib = e.key === 'ArrowLeft' ? cur.previousElementSibling : cur.nextElementSibling;
+      if(sib && sib.classList && sib.classList.contains('expr-badge')) sib.focus();
+    }
+  });
+  return b;
+}
+
+// enable dropping of badges into a container (supports move from expression and copy from components)
+function enableBadgeDrop(container){
+  if(!container) return;
+  // idempotency: avoid attaching multiple identical listeners which can cause duplicate inserts
+  if(container.__dndWired) return;
+  container.__dndWired = true;
+  container.addEventListener('dragover', (e)=>{
+    e.preventDefault();
+    const after = getDragAfterElement(container, e.clientY);
+    const dragging = container.querySelector('.dragging') || dragged;
+    // if dragging is from within this container, allow reordering
+    if(dragging && dragging.parentElement === container){
+      if(after == null) container.appendChild(dragging);
+      else container.insertBefore(dragging, after);
+    }
+  });
+
+  container.addEventListener('drop', (e)=>{
+    e.preventDefault();
+    try{
+      const after = getDragAfterElement(container, e.clientY);
+      const dtVal = (e.dataTransfer && e.dataTransfer.getData) ? e.dataTransfer.getData('text/plain') : '';
+      // if dragged element already belongs to this container, it has been moved by dragover
+      if(dragged && dragged.parentElement === container){ if(dragged) dragged.classList.remove('dragging'); dragged = null; setDirty(true); return; }
+      // handle drops that originate from components (copy) or from external dataTransfer
+      if((dragged && dragged.dataset && dragged.dataset.origin === 'components') || dtVal){
+        const val = dtVal || (dragged && dragged.dataset && dragged.dataset.value) || '';
+        if(val){
+          // if dropped into components list, prefer move semantics without duplicates
+          if(container.id === 'expr-components-list'){
+            // check if a badge with same value already exists in components
+            let existing = null;
+            try{ const nodes = Array.from(container.querySelectorAll('.expr-badge, .expr-comp')); existing = nodes.find(n=> n.dataset && n.dataset.value === val) || null; }catch(e){}
+            if(existing){
+              // move the existing node to drop position
+              if(after == null) container.appendChild(existing); else container.insertBefore(existing, after);
+              // if original came from expression, remove it
+              if(dragged && dragged.parentElement && dragged.parentElement.id === 'expr-expression'){
+                try{ dragged.remove(); }catch(e){}
+              }
+            } else {
+              // create a new component badge
+              const nb = createExprBadge(val);
+              nb.classList.add('expr-comp'); nb.dataset.origin = 'components';
+              if(!nb.__compWired){ nb.addEventListener('dragstart', (ev)=>{ nb.classList.add('dragging'); dragged = nb; try{ ev.dataTransfer.setData('text/plain', val); }catch{} ev.dataTransfer.effectAllowed='copy'; }); nb.__compWired = true; }
+              if(after == null) container.appendChild(nb); else container.insertBefore(nb, after);
+              // remove from expression (move semantics)
+              if(dragged && dragged.parentElement && dragged.parentElement.id === 'expr-expression'){
+                try{ dragged.remove(); }catch(e){}
+              }
+            }
+          } else if(container.id === 'expr-expression'){
+            // Create and insert the badge into the expression area
+            const nb = createExprBadge(val);
+            if(after == null) container.appendChild(nb); else container.insertBefore(nb, after);
+            // When dropping a component into the expression, the user expects move semantics:
+            // remove the original badge from the components list (if present) to avoid duplication.
+            try{
+              if(dragged && dragged.dataset && dragged.dataset.origin === 'components' && dragged.parentElement && dragged.parentElement.id === 'expr-components-list'){
+                try{ dragged.remove(); }catch(e){}
+                try{ updateAvailableControls(val); }catch(e){}
+                dragged = null;
+              } else if(!dragged){
+                // Fallback: try to find a matching component badge in the components list and remove it
+                try{
+                  const comps = document.getElementById('expr-components-list');
+                  if(comps){ const nodes = Array.from(comps.querySelectorAll('.expr-badge, .expr-comp')); const first2 = nodes.find(n=> n.dataset && n.dataset.value === val); if(first2) first2.remove(); }
+                  try{ updateAvailableControls(val); }catch(e){}
+                }catch(e){}
+              }
+            }catch(e){}
+          }
+          setDirty(true);
+        }
+      }
+    }catch(e){ console.warn('drop handler failed', e); }
+    if(dragged) dragged.classList.remove('dragging');
+    dragged = null;
+  });
+}
+
+// enable a trash drop target where badges can be dropped to delete them (with confirmation)
+function enableTrashDrop(trashEl){
+  if(!trashEl) return;
+  // visual state by toggling class instead of inline style
+  trashEl.addEventListener('dragenter', (e)=>{ e.preventDefault(); trashEl.classList.add('over'); if(e.dataTransfer) e.dataTransfer.dropEffect = 'move'; });
+  trashEl.addEventListener('dragover', (e)=>{ e.preventDefault(); trashEl.classList.add('over'); });
+  trashEl.addEventListener('dragleave', (e)=>{ trashEl.classList.remove('over'); });
+  trashEl.addEventListener('drop', (e)=>{
+    e.preventDefault(); trashEl.classList.remove('over');
+    try{
+      const dtVal = (e.dataTransfer && e.dataTransfer.getData) ? e.dataTransfer.getData('text/plain') : '';
+  const dropping = dragged || document.querySelector('.dragging') || null;
+      const val = dtVal || (dropping && dropping.dataset && dropping.dataset.value) || '';
+      if(!val) return;
+      // use the accessible modal helper (showConfirm) if available
+      try{
+        if(window.showConfirm){
+          window.showConfirm('Supprimer le composant "' + val + '" ?').then(ok => {
+            if(!ok) return;
+            try{
+              // If we have a direct reference to the dragged element, remove it directly
+              if(dropping && dropping instanceof Element){
+                try{ dropping.remove(); }catch(e){ /* ignore */ }
+                try{ if(dropping.classList) dropping.classList.remove('dragging'); }catch(e){}
+                dragged = null;
+              } else {
+                // otherwise remove any matching badges in expression and components lists
+                try{
+                  const expr = document.getElementById('expr-expression');
+                  if(expr){ const nodes = Array.from(expr.querySelectorAll('.expr-badge')); const first = nodes.find(n=> n.dataset.value === val); if(first) first.remove(); }
+                }catch(e){}
+                try{
+                  const comps = document.getElementById('expr-components-list');
+                  if(comps){ const nodes = Array.from(comps.querySelectorAll('.expr-badge, .expr-comp')); const first2 = nodes.find(n=> n.dataset && n.dataset.value === val); if(first2) first2.remove(); }
+                }catch(e){}
+              }
+              // refresh available controls if this value corresponds to a built-field
+              try{ updateAvailableControls(val); }catch(e){}
+              setDirty(true);
+              // clear any lingering dragging state
+              try{ const any = document.querySelector('.dragging'); if(any) any.classList.remove('dragging'); }catch(e){}
+              dragged = null;
+            }catch(e){ console.warn('trash drop failed (ok handler)', e); }
+          }).catch(()=>{});
+          return;
+        }
+      }catch(e){}
+      // fallback path if no modal available: remove directly
+      try{
+        const expr = document.getElementById('expr-expression');
+        if(expr){
+          if(dropping && dropping.parentElement && dropping.parentElement.id === 'expr-expression'){
+            try{ dropping.remove(); }catch(e){}
+          } else {
+            const nodes = Array.from(expr.querySelectorAll('.expr-badge'));
+            const first = nodes.find(n=> n.dataset.value === val);
+            if(first) first.remove();
+          }
+        }
+        try{ updateAvailableControls(val); }catch(e){}
+        setDirty(true);
+      }catch(e){ console.warn('trash drop failed', e); }
+    }catch(e){ console.warn('trash drop failed', e); }
+  });
+}
+
+
+function getDragAfterElement(container, y){
+  const draggableElements = [...container.querySelectorAll('.expr-comp:not(.dragging), .expr-badge:not(.dragging)')];
+  return draggableElements.reduce((closest, child) => {
+    const box = child.getBoundingClientRect();
+    const offset = y - box.top - box.height / 2;
+    if(offset < 0 && offset > (closest.offset || -Infinity)){
+      return { offset, element: child };
+    } else return closest;
+  }, { offset: -Infinity }).element || null;
+
+}
+try{ window.getDragAfterElement = getDragAfterElement; }catch(e){}
+
+// expose makeExprComponentsDraggable as well
+try{ window.makeExprComponentsDraggable = makeExprComponentsDraggable; }catch(e){}
+
+
+// fallback prompt-based flow to create an expression when modal rendering is not possible
+function fallbackPromptFlow(components){
+  try{
+    if(!components || components.length === 0){
+      alert('Aucun composant sélectionné pour créer une expression.');
+      return;
+    }
+  const sep = window.prompt("Séparateur pour l'expression (par ex. / )", '/');
+    if(sep === null) return; // cancelled
+    const display = window.prompt("Nom affiché (optionnel)", components.join(sep));
+    if(display === null) return; // cancelled
+    let tech = window.prompt("Nom technique (laisser vide pour auto-générer)", components.join(sep));
+    if(tech === null) return; // cancelled
+    if(!tech) tech = components.join(sep);
+  const li = document.createElement('li'); li.className='field-item'; li.draggable=true; li.dataset.value = tech; li.dataset.baseLabel = tech; li.dataset.expression = components.map((c,i)=>"${"+i+"}").join('');
+  const bindings = components.slice();
+    li.dataset.bindings = JSON.stringify(bindings);
+    const lbl = document.createElement('div'); lbl.className='label'; lbl.textContent = display || tech;
+    li.appendChild(lbl);
+    const actions = document.createElement('div'); actions.className='actions';
+  const editBtn = document.createElement('button'); editBtn.className='smallbtn edit-btn'; editBtn.innerHTML = ICON_PENCIL; editBtn.title='Edit'; editBtn.onclick = function(e){ e.stopPropagation(); openExprEdit(li); };
+  const removeBtn = document.createElement('button'); removeBtn.className='smallbtn danger remove-btn'; removeBtn.innerHTML = ICON_TRASH; removeBtn.title='Retirer'; removeBtn.onclick = function(){ li.remove(); setDirty(true); };
+  // desired order for fallback prompt: add-wide (not present here), edit, remove
+  actions.appendChild(editBtn); actions.appendChild(removeBtn); li.appendChild(actions);
+    const selList = document.getElementById('selected');
+    const existing = Array.from(selList.children).find(n=>n.dataset.value === tech);
+    if(existing){
+      existing.dataset.bindings = li.dataset.bindings;
+      existing.dataset.expression = li.dataset.expression;
+      const l = existing.querySelector('.label'); if(l) l.textContent = display || tech;
+    } else {
+      selList.appendChild(li);
+    }
+    setDirty(true);
+  }catch(e){ console.error('fallbackPromptFlow error', e); alert('Erreur: '+e); }
+}
+
+function closeExprModal(){ 
+  const modal = document.getElementById('expr-modal'); 
+  try{
+    if(modal){
+      modal.classList.remove('open'); 
+      modal.setAttribute('aria-hidden','true'); 
+      modal.style.display = 'none';
+  try{ const saveBtn = modal.querySelector('#expr-save'); if(saveBtn){ saveBtn.textContent = 'Créer ⏎'; saveBtn.setAttribute('aria-label','Créer (Entrée)'); } }catch(e){}
+      // reset modal create target to default
+      try{ modal.dataset.createTarget = 'selected'; }catch(e){}
+    }
+  }catch(e){}
+  exprComponents = []; 
+  currentEditingExprLi = null;
+}
+
+function saveExprModal(){
+  if(exprSaveInProgress) { console.warn('saveExprModal already in progress, ignoring duplicate call'); return; }
+  exprSaveInProgress = true;
+  try {
+  let display = document.getElementById('expr-name').value || '';
+  // sanitize duplicated pattern: "X (X)"
+  display = String(display).replace(/^(.*)\s*\(\s*\1\s*\)\s*$/, '$1').trim();
+    let tech = '';
+    // compute components from the expression badges first, then fallback to components list or selection
+    let components = [];
+    try{
+      const nodes = Array.from(document.querySelectorAll('#expr-expression .expr-badge'));
+      if(nodes && nodes.length){
+        components = nodes.map(n => n.dataset.value || (n.textContent||'').trim());
+      } else {
+        const nodes2 = Array.from(document.querySelectorAll('#expr-components-list .expr-comp'));
+        if(nodes2 && nodes2.length) components = nodes2.map(n => n.dataset.value || (n.textContent||'').trim());
+      }
+    }catch(e){ console.warn('read components from DOM failed', e); }
+    // fallback to prior exprComponents or page selections
+    if(components.length === 0){
+      if(exprComponents && exprComponents.length) components = exprComponents.slice();
+      else {
+        try{
+          const availSelected = Array.from(document.querySelectorAll('#available .field-item.selected')).map(n=>n.dataset.value);
+          const selSelected = Array.from(document.querySelectorAll('#selected .field-item.selected')).map(n=>n.dataset.value);
+          const fallback = (availSelected.length ? availSelected : selSelected.length ? selSelected : []);
+          if(fallback.length) components = fallback;
+          else {
+            const allSel = Array.from(document.querySelectorAll('#selected .field-item')).map(n=>n.dataset.value);
+            if(allSel.length) components = allSel;
+          }
+        }catch(e){ console.warn('auto-collect components failed', e); }
+      }
+    }
+    if(components.length === 0){
+      alert('Sélectionner au moins un composant (sélectionnez des champs dans la colonne de gauche ou dans la liste sélectionnée).');
+      return;
+    }
+    if(!tech){ tech = components.join('/'); }
+    // store bindings as ordered array
+    const bindings = components.slice();
+    const sel = document.getElementById('selected');
+    if(currentEditingExprLi && currentEditingExprLi instanceof Element){
+      // update existing list item in-place
+      const li = currentEditingExprLi;
+      const oldName = li.dataset.value;
+      li.dataset.value = tech;
+      li.dataset.baseLabel = tech;
+  li.dataset.expression = components.map((c,i)=>"${"+i+"}").join('');
+      li.dataset.bindings = JSON.stringify(bindings);
+  const lbl = li.querySelector('.label'); if(lbl) lbl.textContent = display || tech;
+      // if this was a built field in the available list, update builtFields state
+      try{
+        if(li.dataset.built === 'true'){
+          // find and update builtFields entry by id if possible, else by name
+          const bid = li.dataset.bfid || '';
+          for(let i=0;i<builtFields.length;i++){
+            if((bid && builtFields[i].id === bid) || (!bid && builtFields[i].name === oldName)){
+              builtFields[i].id = builtFields[i].id || bid || uuidv4();
+              builtFields[i].name = tech;
+              builtFields[i].display = display || tech;
+              builtFields[i].expression = li.dataset.expression || '';
+              builtFields[i].bindings = bindings;
+              // ensure DOM stored id
+              li.dataset.bfid = builtFields[i].id;
+              break;
+            }
+          }
+        }
+        // propagate changes to selected and selected-wide lists if present
+        Array.from(document.querySelectorAll('#selected .field-item, #selected-wide .field-item')).forEach(n=>{
+          if(n.dataset.value === oldName){
+            n.dataset.value = tech;
+            n.dataset.expression = li.dataset.expression || '';
+            n.dataset.bindings = li.dataset.bindings || '';
+            // carry built-field id if present
+            if(li.dataset.bfid) n.dataset.bfid = li.dataset.bfid;
+            // update label/display
+            n.dataset.baseLabel = tech;
+            n.dataset.display = display || '';
+            updateSelectedLabel(n);
+          }
+        });
+      }catch(e){ console.warn('update builtFields on edit failed', e); }
+      // clear editing marker
+      currentEditingExprLi = null;
+    } else {
+      // create new LI
+  const li = document.createElement('li'); li.className='field-item'; li.draggable=true; li.dataset.value = tech; li.dataset.baseLabel = tech; li.dataset.expression = components.map((c,i)=>"${"+i+"}").join('');
+      li.dataset.bindings = JSON.stringify(bindings);
+      // label
+  const lbl = document.createElement('div'); lbl.className='label'; lbl.textContent = display || tech;
+      li.appendChild(lbl);
+      // actions
+      const actions = document.createElement('div'); actions.className='actions';
+      const editBtn = document.createElement('button'); editBtn.className='smallbtn edit-btn'; editBtn.innerHTML = ICON_PENCIL; editBtn.title='Edit'; editBtn.onclick = function(e){ e.stopPropagation(); openExprEdit(li); };
+      const removeBtn = document.createElement('button'); removeBtn.className='smallbtn danger remove-btn'; removeBtn.innerHTML = ICON_TRASH; removeBtn.title='Retirer'; removeBtn.onclick = function(){ li.remove(); setDirty(true); };
+      // keep edit then remove (wide button not present in fallback flow)
+      actions.appendChild(editBtn); actions.appendChild(removeBtn);
+      li.appendChild(actions);
+      // Decide where to insert the new expression: if modal was opened from available-area create button,
+      // we add the built expression to the AVAILABLE list (top) and persist in builtFields. Otherwise add to selected.
+      const modal = document.getElementById('expr-modal');
+      const target = modal && modal.dataset && modal.dataset.createTarget ? modal.dataset.createTarget : 'selected';
+      if(target === 'available'){
+        // ensure builtFields state updated - assign id and persist
+        // derive a context-unique internal name to avoid cross-scope name collisions
+        const ns = document.getElementById('ns').value || '';
+        const res = document.getElementById('res').value || '';
+        const verb = document.getElementById('verb').value || '';
+        const ctxName = tech; // keep tech for UI, id provides true uniqueness
+        const bf = { id: uuidv4(), name: ctxName, display: display || tech, expression: li.dataset.expression, bindings };
+        builtFields.unshift(bf);
+        addBuiltFieldToAvailable(bf);
+      } else {
+        // avoid duplicates: update existing item if present
+        const existing = Array.from(sel.children).find(n=>n.dataset.value === tech);
+        if(existing){
+          existing.dataset.bindings = JSON.stringify(bindings);
+          existing.dataset.expression = li.dataset.expression;
+          const l = existing.querySelector('.label'); if(l) l.textContent = display || tech;
+        } else {
+          sel.appendChild(li);
+        }
+      }
+    }
+    closeExprModal();
+    setDirty(true);
+  } finally {
+    exprSaveInProgress = false;
+  }
+}
+
+function openExprEdit(li){
+  // populate modal with existing li
+  try{
+    // mark which LI we're editing so save updates it instead of creating a new one
+    currentEditingExprLi = li;
+    // ensure modal exists so button text can be updated
+    const modalEnsure = createExprModalIfNeeded();
+    const bindings = JSON.parse(li.dataset.bindings || '{}');
+    const comps = Object.values(bindings);
+    // Build candidate pool primarily from AVAILABLE items (primitives),
+    // plus primitive items from SELECTED (exclude expressions),
+    // and exclude the current expression value itself.
+    let pool = [];
+    let allowSet = new Set();
+    try{
+      const availAll = Array.from(document.querySelectorAll('#available .field-item')).map(n=>n.dataset.value);
+      const selPrimitives = Array.from(document.querySelectorAll('#selected .field-item'))
+        .filter(n => !(n.dataset && (n.dataset.expression || n.dataset.bindings)))
+        .map(n=>n.dataset.value);
+      const curExprVal = li && li.dataset ? li.dataset.value : '';
+      pool = availAll.concat(selPrimitives).filter(v => v && v !== curExprVal);
+      allowSet = new Set(pool);
+    }catch(e){ console.warn('collect pool for edit failed', e); }
+    // Ensure current expression components appear in the pool
+    const literalTokens = new Set(['(', ')', '/', ':', '|', ';', '%']);
+    const seen = new Set(pool);
+    comps.forEach(v=>{
+      const val = (v || '').toString().trim();
+      if(!val || seen.has(val)) return;
+      if(literalTokens.has(val)) return; // skip separators in components pool
+      // Prefer only fields we know (available or primitive selected); accept unknowns that look like field ids (contain a dot)
+      const looksLikeField = val.includes('.');
+      if(allowSet.size === 0 || allowSet.has(val) || looksLikeField){
+        pool.push(val); seen.add(val);
+      }
+    });
+    // components list removed; keep pool in memory if needed later
+    exprComponents = pool.slice();
+    // populate expression container from existing bindings/expression
+    const exprContainer = document.getElementById('expr-expression'); if(exprContainer) exprContainer.innerHTML = '';
+    try{
+      const bindingsObj = JSON.parse(li.dataset.bindings || '[]');
+      const ordered = Array.isArray(bindingsObj) ? bindingsObj.slice() : Object.values(bindingsObj);
+      const seenExprVals = new Set();
+      ordered.forEach(raw => {
+        const v = (raw || '').toString().trim();
+        if(!v || seenExprVals.has(v)) return;
+        exprContainer.appendChild(createExprBadge(v));
+        seenExprVals.add(v);
+      });
+    }catch(e){ console.warn('populate expr-expression failed', e); }
+  // wire add-icon button for edit modal
+    const addIconBtn2 = document.getElementById('expr-add-icon');
+    if(addIconBtn2) addIconBtn2.onclick = openAddComponentDialog;
+    // enable dropping into expression container and trash target
+    enableBadgeDrop(document.getElementById('expr-expression'));
+    try{ enableTrashDrop(document.getElementById('expr-trash')); }catch(e){}
+    // prefill display name with the clean display/base (avoid copying label with appended parentheses)
+    try{
+      let prefill = '';
+      // prefer built-field canonical display/name when available
+      if(li.dataset && li.dataset.bfid){
+        const bf = builtFields.find(b => b.id === li.dataset.bfid);
+        if(bf) prefill = (bf.display || bf.name || '');
+      }
+      if(!prefill) prefill = (li.dataset.display || li.dataset.baseLabel || li.dataset.value || '');
+      // strip duplicated pattern: "X (X)"
+      prefill = String(prefill).replace(/^(.*)\s*\(\s*\1\s*\)\s*$/, '$1').trim();
+      document.getElementById('expr-name').value = prefill;
+    }catch(e){
+      document.getElementById('expr-name').value = li.querySelector('.label') ? li.querySelector('.label').textContent : '';
+    }
+  const modal = document.getElementById('expr-modal');
+  if(modal){ modal.classList.add('open'); modal.setAttribute('aria-hidden','false'); modal.style.display='flex'; try{ const saveBtn = modal.querySelector('#expr-save'); if(saveBtn){ saveBtn.textContent = 'Modifier ⏎'; saveBtn.setAttribute('aria-label','Modifier (Entrée)'); } }catch(e){} }
+  }catch(e){ console.error('openExprEdit error', e); alert('Impossible d\'ouvrir l\'éditeur d\'expression: ' + e); return; }
+}
+
+async function loadCommands(){
+  const ns = document.getElementById('ns').value;
+  const resEl = document.getElementById('res');
+  const verbEl = document.getElementById('verb');
+  resEl.innerHTML = '<option value="">(none)</option>';
+  verbEl.innerHTML = '';
+  if (!ns) return;
+  const cmds = await fetchJSON('/api/commands?namespace='+encodeURIComponent(ns));
+  const resources = {};
+  if (Array.isArray(cmds)) {
+    cmds.forEach(c => {
+      const r = c.resource || '';
+      resources[r] = resources[r] || [];
+      if (!resources[r].includes(c.verb)) resources[r].push(c.verb);
+    });
+  }
+  const keys = Object.keys(resources).sort((a,b)=> a.localeCompare(b, undefined, {sensitivity:'base'}));
+  keys.forEach(r=>{
+    const o=document.createElement('option'); o.value=r; o.textContent = r || '(none)'; resEl.appendChild(o);
+    resources[r].sort((x,y)=> x.localeCompare(y, undefined, {sensitivity:'base'}));
+  });
+
+  const last = loadLast();
+  if (last && Array.from(resEl.options).some(o=>o.value === last.res)) {
+    resEl.value = last.res;
+  } else if (resEl.options.length) {
+    resEl.value = resEl.options[0].value;
+  }
+
+  resEl.onchange = async ()=>{
+    const res = resEl.value;
+    verbEl.innerHTML = '';
+    const verbs = resources[res] || [];
+    verbs.forEach(v=>{
+      const o=document.createElement('option'); o.value=v; o.textContent=v; verbEl.appendChild(o);
+    });
+    if (last && last.verb && Array.from(verbEl.options).some(o=>o.value === last.verb)) {
+      verbEl.value = last.verb;
+    } else if (verbEl.options.length) {
+      verbEl.value = verbEl.options[0].value;
+    }
+    saveLast(ns, resEl.value, verbEl.value);
+    setTimeout(loadFields, 50);
+  };
+  resEl.dispatchEvent(new Event('change'));
+}
+
+function makeAvailableItem(obj){
+  const li = document.createElement('li');
+  li.className = 'field-item';
+  li.dataset.value = obj.object;
+  li.dataset.doc = obj.documentation || '';
+
+  const lbl = document.createElement('div');
+  lbl.className='label';
+  // show only the field name, description is available through the info icon
+  lbl.textContent = obj.object;
+  if (obj.documentation) {
+    const icon = createDocIcon(obj.documentation, obj.object);
+    // prepend icon to the label (left side)
+    lbl.insertBefore(icon, lbl.firstChild);
+  }
+
+  const actions = document.createElement('div');
+  actions.className='actions';
+
+  const addBtn = document.createElement('button');
+  addBtn.className='smallbtn add-btn';
+  addBtn.innerHTML = '<span class="short">S</span><span class="full">Ajouter à sélectionné</span>';
+  addBtn.title = 'Ajouter';
+  addBtn.onclick = function(e){ e.stopPropagation(); addToSelected(obj.object); };
+
+  const addWideBtn = document.createElement('button');
+  addWideBtn.className='smallbtn add-wide-btn';
+  addWideBtn.innerHTML = '<span class="short">W</span><span class="full">Ajouter à wide</span>';
+  addWideBtn.title = 'Ajouter wide';
+  addWideBtn.onclick = function(e){ e.stopPropagation(); addToWide(obj.object); };
+
+  // desired order for available (builded fields): +, W, Edition, Suppression — other flows will adapt
+  actions.appendChild(addBtn);
+  actions.appendChild(addWideBtn);
+  li.appendChild(lbl);
+  li.appendChild(actions);
+
+  li.onclick = function(e){ if(e.target && e.target.closest && e.target.closest('button')) return; li.classList.toggle('selected'); };
+
+  return li;
+}
+
+/* makeSelectedItem: add edit button to configure display name (opens modal) */
+function makeSelectedItem(value, label, doc){
+  const li = document.createElement('li');
+  li.className = 'field-item';
+  li.draggable = true;
+  li.dataset.value = value;
+  li.dataset.baseLabel = label || value;
+  li.dataset.doc = doc || '';
+  // use shared display if present
+  if(displayNames[value]) li.dataset.display = displayNames[value];
+
+  const lbl = document.createElement('div');
+  lbl.className='label';
+  lbl.textContent = label || value;
+  if (doc) {
+    const icon = createDocIcon(doc, value);
+    lbl.insertBefore(icon, lbl.firstChild);
+  }
+
+  const actions = document.createElement('div'); actions.className='actions';
+
+  const editBtn = document.createElement('button');
+  editBtn.className='smallbtn edit-btn';
+  editBtn.innerHTML = ICON_PENCIL;
+  editBtn.title = 'Configurer propriétés';
+  editBtn.onclick = function(e){ e.stopPropagation(); openPropsModal(value); };
+
+  const removeBtn = document.createElement('button'); removeBtn.className='smallbtn danger remove-btn'; removeBtn.innerHTML = ICON_TRASH;
+  removeBtn.title = 'Retirer';
+  removeBtn.onclick = function(){ removeFromSelected(value); setDirty(true); };
+
+  const toWideBtn = document.createElement('button'); toWideBtn.className='smallbtn add-wide-btn'; toWideBtn.title = 'Ajouter à wide'; toWideBtn.innerHTML = '<span class="short">W</span><span class="full">Ajouter à wide</span>';
+  toWideBtn.onclick = function(){ addToWide(value); setDirty(true); };
+
+  // desired order for selected items: add-wide (W), edit, remove
+  actions.appendChild(toWideBtn);
+  actions.appendChild(editBtn);
+  actions.appendChild(removeBtn);
+
+  li.appendChild(lbl); li.appendChild(actions);
+
+  li.addEventListener('dragstart', (e)=>{
+    dragged = li;
+    li.classList.add('dragging');
+    try { e.dataTransfer.setData('text/plain', value); } catch {}
+    e.dataTransfer.effectAllowed = 'move';
+  });
+  li.addEventListener('dragend', ()=>{
+    if(li) li.classList.remove('dragging');
+    dragged = null;
+    setDirty(true);
+  });
+  li.onclick = function(e){ if(e.target && e.target.closest && e.target.closest('button')) return; li.classList.toggle('selected'); };
+
+  // ensure initial label reflects possible shared display
+  updateSelectedLabel(li);
+  return li;
+}
+
+/* makeWideItem: same editing affordance as selected items */
+function makeWideItem(value, label, doc){
+  // reuse makeSelectedItem to have consistent markup and behaviour
+  const li = makeSelectedItem(value, label, doc);
+  // ensure dataset.doc is set from provided doc param (makeSelectedItem uses doc param already)
+  if(doc) li.dataset.doc = doc;
+  // remove the 'toWide' button (W) if present — wide items don't need a 'move to wide' action
+  try{
+    const actions = li.querySelector('.actions');
+    if(actions){
+      // remove any toWide buttons by class/title rather than textContent
+      Array.from(actions.querySelectorAll('.add-wide-btn')).forEach(b=>b.remove());
+      // adjust the remove button (by class) to call removeFromWide
+      const removeBtn = actions.querySelector('.remove-btn') || Array.from(actions.children).find(b=> b.classList && b.classList.contains('danger'));
+      if(removeBtn) removeBtn.onclick = function(){ removeFromWide(value); setDirty(true); };
+    }
+  }catch(e){ console.warn('makeWideItem post-adjust failed', e); }
+  return li;
+}
+
+function orderSelectionByIndex(arr){
+  if(!Array.isArray(arr)) return [];
+  const meta = arr.map((item, position)=>{
+    let idx = 0;
+    if(item && typeof item === 'object' && item.index !== undefined && item.index !== null){
+      const parsed = Number(item.index);
+      if(Number.isFinite(parsed) && parsed > 0) idx = parsed;
+    }
+    return { item, idx, position };
+  });
+  meta.sort((a,b)=>{
+    if(a.idx === b.idx) return a.position - b.position;
+    if(a.idx === 0) return 1;
+    if(b.idx === 0) return -1;
+    return a.idx - b.idx;
+  });
+  return meta.map(m=>m.item);
+}
+
+async function loadFields(){
+  const ns = document.getElementById('ns').value;
+  const res = document.getElementById('res').value;
+  const verb = document.getElementById('verb').value;
+  const avail = document.getElementById('available');
+  const sel = document.getElementById('selected');
+  const wide = document.getElementById('selected-wide');
+  avail.innerHTML = '';
+  sel.innerHTML = '';
+  wide.innerHTML = '';
+  currentModel = {};
+  // IMPORTANT: built fields are scoped per (namespace, resource, verb). Always reset here to avoid leaking
+  // built fields from a previous context when the new selection has none.
+  builtFields = [];
+  // reset shared map so loadFields reflect server state
+  for(const k in displayNames) delete displayNames[k];
+
+  if(!ns || !verb) {
+    avail.textContent = 'Select a namespace and verb';
+    setDirty(false);
+    return;
+  }
+
+  const modelResp = await fetchJSON('/api/model?namespace='+encodeURIComponent(ns)+'&resource='+encodeURIComponent(res)+'&verb='+encodeURIComponent(verb));
+  if (modelResp == null) {
+    avail.textContent = 'No model returned from server';
+    setDirty(false);
+    return;
+  }
+  if (modelResp.error) {
+    avail.textContent = modelResp.error;
+    setDirty(false);
+    return;
+  }
+
+  const entries = Array.isArray(modelResp) ? modelResp : (Array.isArray(modelResp.model) ? modelResp.model : []);
+  if (entries.length === 0) {
+    avail.textContent = 'No model fields available';
+    setDirty(false);
+    return;
+  }
+
+  entries.forEach(m=>{
+    currentModel[m.object] = m;
+    avail.appendChild(makeAvailableItem(m));
+  });
+
+  const selResp = await fetchJSON('/api/selection?namespace='+encodeURIComponent(ns)+'&resource='+encodeURIComponent(res)+'&verb='+encodeURIComponent(verb));
+  if (selResp) {
+    // process built/composed fields first so selected entries can reference them by id
+    if (Array.isArray(selResp.builded_fields)) {
+      // build map by id
+      const bfById = {};
+      for(const f of selResp.builded_fields){
+        if(typeof f === 'string') continue; // ignore legacy
+        if(f && typeof f === 'object'){
+          const id = f.id || uuidv4();
+          // bindings come as array of strings; derive a stable technical name for internal referencing
+          const bindingsArr = Array.isArray(f.bindings) ? f.bindings.slice() : [];
+          // derive an internal name for UI references (not persisted): join with '///' to avoid collision
+          const derivedName = bindingsArr.length ? bindingsArr.join('///') : (f.display || ('expr-' + id));
+          const bf = { id: id, name: derivedName, display: f.display || derivedName, expression: f.expression || '', bindings: bindingsArr };
+          builtFields.push(bf);
+          bfById[id] = bf;
+          addBuiltFieldToAvailable(bf);
+        }
+      }
+    }
+    if (Array.isArray(selResp.fields)) {
+      const orderedFields = orderSelectionByIndex(selResp.fields);
+      for(const f of orderedFields) {
+        if(typeof f === 'string') {
+          // legacy: a built field might have been saved as a plain string (its technical name)
+          const bfByName = builtFields.find(b => b.name === f);
+          if (bfByName) {
+            addBuiltFieldToAvailable(bfByName);
+            addToSelected(bfByName.name, bfByName.display);
+            const selList = document.getElementById('selected');
+            const appended = selList.lastElementChild;
+            if (appended) appended.dataset.bfid = bfByName.id;
+            continue;
+          }
+          if(currentModel[f]) addToSelected(f, undefined);
+        } else if (f && typeof f === 'object' && (f.builded_id || f.id)) {
+          // object that only references a built field by id
+          const refId = f.builded_id || f.id;
+          const bf = builtFields.find(b=>b.id === refId);
+          if(bf){
+            addBuiltFieldToAvailable(bf);
+            addToSelected(bf.name, f.display || bf.display);
+            const selList = document.getElementById('selected');
+            const appended = selList.lastElementChild;
+            if(appended) appended.dataset.bfid = bf.id;
+            continue;
+          }
+        } else if (f && typeof f === 'object' && f.name) {
+          // store shared display and add
+          if(f.display) displayNames[f.name] = f.display;
+          if(currentModel[f.name]) addToSelected(f.name, f.display || '');
+        }
+      }
+    }
+    if (Array.isArray(selResp.fields_wide)) {
+      const orderedWide = orderSelectionByIndex(selResp.fields_wide);
+      for(const f of orderedWide) {
+        if(typeof f === 'string') {
+          // legacy string may refer to a built field name
+          const bfByName = builtFields.find(b => b.name === f);
+          if (bfByName) {
+            addBuiltFieldToAvailable(bfByName);
+            addToWide(bfByName.name, bfByName.display);
+            const wideList = document.getElementById('selected-wide');
+            const appended = wideList.lastElementChild;
+            if (appended) appended.dataset.bfid = bfByName.id;
+            continue;
+          }
+          const label = currentModel[f] ? (currentModel[f].object) : f;
+          const doc = currentModel[f] ? (currentModel[f].documentation || '') : '';
+          if(!Array.from(document.getElementById('selected-wide').children).some(n=>n.dataset.value===f)){
+            const li = makeWideItem(f, label, doc);
+            document.getElementById('selected-wide').appendChild(li);
+            updateAvailableControls(f);
+            updateSelectedLabel(li);
+          }
+        } else if (f && typeof f === 'object' && (f.builded_id || f.id)) {
+          const refId = f.builded_id || f.id;
+          const bf = builtFields.find(b=>b.id === refId);
+          if(bf){
+            addBuiltFieldToAvailable(bf);
+            addToWide(bf.name, f.display || bf.display);
+            const wideList = document.getElementById('selected-wide');
+            const appended = wideList.lastElementChild;
+            if(appended) appended.dataset.bfid = bf.id;
+            continue;
+          }
+        } else if (f && typeof f === 'object' && f.name) {
+          // store shared display and add to wide
+          if(f.display) displayNames[f.name] = f.display;
+          // use addToWide which will set baseLabel/display correctly (keeps parity with Selected column)
+          if(!Array.from(document.getElementById('selected-wide').children).some(n=>n.dataset.value===f.name)){
+            addToWide(f.name, f.display || '');
+          }
+        }
+      }
+    }
+  }
+  saveLast(ns, res, verb);
+  // ensure create-expression-available reflects current selection state
+  updateCreateAvailableButtonState();
+  setDirty(false);
+}
+
+/* helper to update available item UI (color + disable buttons) */
+function updateAvailableControls(val){
+  const availItem = Array.from(document.getElementById('available').children).find(n=>n.dataset.value === val);
+  if(!availItem) return;
+  const addBtn = availItem.querySelector('.add-btn');
+  const addWideBtn = availItem.querySelector('.add-wide-btn');
+  const inSel = Array.from(document.querySelectorAll('#selected .field-item')).some(n=>n.dataset.value === val);
+  const inWide = Array.from(document.querySelectorAll('#selected-wide .field-item')).some(n=>n.dataset.value === val);
+
+  // toggle visual states
+  availItem.classList.toggle('in-selected', inSel);
+  availItem.classList.toggle('in-wide', inWide);
+
+  // disable/enable buttons
+  if(addBtn) {
+    addBtn.disabled = !!inSel;
+    addBtn.title = inSel ? 'Déjà dans champs sélectionnés' : 'Ajouter';
+  }
+  if(addWideBtn) {
+    addWideBtn.disabled = !!inWide;
+    addWideBtn.title = inWide ? 'Déjà dans wide' : 'Ajouter wide';
+  }
+  // if this available item is a built-field, toggle its remove button to prevent deletion when used
+  const removeBtn = availItem.querySelector('.remove-btn');
+  try{
+    if(availItem.dataset && availItem.dataset.bfid){
+      const used = Array.from(document.querySelectorAll('#selected .field-item, #selected-wide .field-item')).some(n=> n.dataset.bfid === availItem.dataset.bfid);
+      if(removeBtn){
+        if(used){
+          removeBtn.innerHTML = ICON_TRASH; removeBtn.disabled = true; removeBtn.classList.add('danger'); removeBtn.title = 'Impossible de supprimer (utilisé)';
+        } else {
+          // always keep the danger styling for remove buttons (red trash)
+          removeBtn.innerHTML = ICON_TRASH; removeBtn.disabled = false; removeBtn.classList.add('danger'); removeBtn.title = 'Retirer';
+        }
+      }
+    }
+  }catch(e){}
+}
+
+/* helper: update label to include display name */
+function updateSelectedLabel(li) {
+  if(!li) return;
+  const base = li.dataset.baseLabel || li.dataset.value || '';
+  const lbl = li.querySelector('.label');
+  // clear label and rebuild with icon on the left
+  lbl.innerHTML = '';
+  // create doc icon from li dataset if present
+  if (li.dataset && li.dataset.doc) {
+    const icon = createDocIcon(li.dataset.doc, li.dataset.value);
+    lbl.appendChild(icon);
+  }
+  // append base text
+  lbl.appendChild(document.createTextNode(base));
+  // append display name if present and different from base to avoid duplication
+  const disp = (displayNames[li.dataset.value] || li.dataset.display || '').trim();
+  if(disp && disp !== base) {
+    const ds = document.createElement('span');
+    ds.className = 'display-name';
+    ds.textContent = ' (' + disp + ')';
+    lbl.appendChild(ds);
+  }
+}
+
+/* set display once for a field and update all occurrences in both lists */
+function setDisplayFor(value, display) {
+  display = (display || '').trim();
+  if(display) displayNames[value] = display;
+  else delete displayNames[value];
+  // update DOM nodes in both lists
+  Array.from(document.querySelectorAll('#selected .field-item, #selected-wide .field-item')).forEach(li=>{
+    if(li.dataset.value === value) {
+      li.dataset.display = display || '';
+      updateSelectedLabel(li);
+    }
+  });
+  setDirty(true);
+}
+
+/* Modal functions */
+function openPropsModal(value) {
+  currentEditingField = value;
+  const modal = document.getElementById('props-modal');
+  document.getElementById('props-field-name').textContent = value;
+  const current = displayNames[value] || '';
+  const input = document.getElementById('props-display');
+  input.value = current;
+  modal.classList.add('open');
+  modal.setAttribute('aria-hidden', 'false');
+  setTimeout(()=> input.focus(), 50);
+}
+
+function closePropsModal() {
+  const modal = document.getElementById('props-modal');
+  modal.classList.remove('open');
+  modal.setAttribute('aria-hidden', 'true');
+  currentEditingField = null;
+}
+
+function savePropsModal() {
+  if(!currentEditingField) return closePropsModal();
+  const v = document.getElementById('props-display').value || '';
+  setDisplayFor(currentEditingField, v);
+  closePropsModal();
+}
+
+// create an accessible documentation icon element
+function createDocIcon(doc, name){
+  const icon = document.createElement('span');
+  icon.className = 'doc-icon';
+  icon.setAttribute('role', 'button');
+  icon.setAttribute('aria-label', 'Description du champ ' + (name || '')); 
+  icon.setAttribute('title', doc || '');
+  icon.tabIndex = 0;
+  icon.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>';
+  // click/focus handlers open the doc modal
+  const openDoc = (e)=>{
+    e.stopPropagation();
+    const m = document.getElementById('doc-modal');
+    document.getElementById('doc-field-name').textContent = name || '';
+    document.getElementById('doc-body').textContent = doc || '';
+    m.classList.add('open'); m.setAttribute('aria-hidden','false');
+  };
+  icon.addEventListener('click', openDoc);
+  icon.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' ') { openDoc(e); e.preventDefault(); } });
+  return icon;
+}
+
+// doc modal close handler
+document.addEventListener('click', (e)=>{
+  const dm = document.getElementById('doc-modal');
+  if(!dm) return;
+  if(e.target && e.target.id === 'doc-close'){
+    dm.classList.remove('open'); dm.setAttribute('aria-hidden','true');
+  }
+});
+
+document.addEventListener('keydown', (e)=>{
+  const dm = document.getElementById('doc-modal');
+  if(!dm) return;
+  if(e.key === 'Escape'){
+    dm.classList.remove('open'); dm.setAttribute('aria-hidden','true');
+  }
+});
+
+/* add/remove helpers */
+function addToSelected(val, display) {
+  const avail = document.getElementById('available');
+  const sel = document.getElementById('selected');
+  if(Array.from(sel.children).some(n=>n.dataset.value === val)) return;
+  const availItem = Array.from(avail.children).find(n=>n.dataset.value === val);
+  const label = availItem ? (currentModel[val] ? currentModel[val].object : val) : (currentModel[val] ? currentModel[val].object : val);
+  const doc = availItem ? (availItem.dataset.doc || '') : (currentModel[val] ? (currentModel[val].documentation || '') : '');
+    const li = makeSelectedItem(val, label, doc);
+    // if available item had expression/bindings (built field), copy them so selected item preserves expression
+    try{
+  if(availItem && availItem.dataset && availItem.dataset.expression){ li.dataset.expression = availItem.dataset.expression; }
+  if(availItem && availItem.dataset && availItem.dataset.bindings){ li.dataset.bindings = availItem.dataset.bindings; }
+  if(availItem && availItem.dataset && availItem.dataset.bfid){ li.dataset.bfid = availItem.dataset.bfid; }
+    }catch(e){}
+    sel.appendChild(li);
+    // if caller provided a display (for built fields) prefer showing it as base label
+    if(display !== undefined && display !== null && String(display).trim() !== ''){
+      // set as baseLabel/display and update label
+  // sanitize display to remove duplicated "X (X)" pattern
+  const clean = String(display).replace(/^(.*)\s*\(\s*\1\s*\)\s*$/, '$1').trim();
+  li.dataset.baseLabel = clean;
+  li.dataset.display = clean;
+      updateSelectedLabel(li);
+      setDisplayFor(val, display);
+    } else if(displayNames[val]) { li.dataset.display = displayNames[val]; updateSelectedLabel(li); }
+    // if this item references a built field id, ensure display is taken from builtFields
+    try{
+      if(li.dataset.bfid){
+        const bf = builtFields.find(b => b.id === li.dataset.bfid);
+        if(bf){
+          const clean = String(bf.display || bf.name || '').replace(/^(.*)\s*\(\s*\1\s*\)\s*$/, '$1').trim();
+          li.dataset.baseLabel = clean || bf.name;
+          li.dataset.display = clean || bf.name;
+          updateSelectedLabel(li);
+          setDisplayFor(val, bf.display || bf.name);
+        }
+      }
+    }catch(e){}
+  updateAvailableControls(val);
+  setDirty(true);
+}
+
+function addToWide(val, display){
+  const wide = document.getElementById('selected-wide');
+  if(Array.from(wide.children).some(n=>n.dataset.value === val)) return;
+  const availItem = Array.from(document.getElementById('available').children).find(n=>n.dataset.value === val);
+  const label = availItem ? (currentModel[val] ? currentModel[val].object : val) : (currentModel[val] ? currentModel[val].object : val);
+  const doc = availItem ? (availItem.dataset.doc || '') : (currentModel[val] ? (currentModel[val].documentation || '') : '');
+  const li = makeWideItem(val, label, doc);
+  // preserve expression/bindings for built fields
+  try{
+    if(availItem && availItem.dataset && availItem.dataset.expression){ li.dataset.expression = availItem.dataset.expression; }
+    if(availItem && availItem.dataset && availItem.dataset.bindings){ li.dataset.bindings = availItem.dataset.bindings; }
+    if(availItem && availItem.dataset && availItem.dataset.bfid){ li.dataset.bfid = availItem.dataset.bfid; }
+  }catch(e){}
+  wide.appendChild(li);
+  if(display !== undefined && display !== null && String(display).trim() !== ''){
+  const clean = String(display).replace(/^(.*)\s*\(\s*\1\s*\)\s*$/, '$1').trim();
+  li.dataset.baseLabel = clean;
+  li.dataset.display = clean;
+    updateSelectedLabel(li);
+    setDisplayFor(val, display);
+  } else if(displayNames[val]) { li.dataset.display = displayNames[val]; updateSelectedLabel(li); }
+  // if this item references a built field id, ensure display is taken from builtFields
+  try{
+    if(li.dataset.bfid){
+      const bf = builtFields.find(b => b.id === li.dataset.bfid);
+      if(bf){
+  const clean = String(bf.display || bf.name || '').replace(/^(.*)\s*\(\s*\1\s*\)\s*$/, '$1').trim();
+  li.dataset.baseLabel = clean || bf.name;
+  li.dataset.display = clean || bf.name;
+        updateSelectedLabel(li);
+        setDisplayFor(val, bf.display || bf.name);
+      }
+    }
+  }catch(e){}
+  updateAvailableControls(val);
+  setDirty(true);
+}
+
+function addSelected(){
+  const avail = document.getElementById('available');
+  const items = Array.from(avail.querySelectorAll('.field-item.selected'));
+  items.forEach(i=> addToSelected(i.dataset.value, i.dataset.display));
+}
+
+function addWideSelected(){
+  const avail = document.getElementById('available');
+  const items = Array.from(avail.querySelectorAll('.field-item.selected'));
+  items.forEach(i=> addToWide(i.dataset.value, i.dataset.display));
+}
+
+function addAll(){
+  const avail = document.getElementById('available');
+  const items = Array.from(avail.children || []);
+  items.forEach(n=> addToSelected(n.dataset.value, n.dataset.display));
+}
+
+function removeFromSelected(val){
+  const sel = document.getElementById('selected');
+  const node = Array.from(sel.children).find(n=>n.dataset.value === val);
+  if(node) node.remove();
+  // ne pas recréer l'élément available (il existe déjà) — juste mettre à jour le contrôle
+  updateAvailableControls(val);
+  setDirty(true);
+}
+
+function removeFromWide(val){
+  const wide = document.getElementById('selected-wide');
+  const node = Array.from(wide.children).find(n=>n.dataset.value === val);
+  if(node) node.remove();
+  updateAvailableControls(val);
+  setDirty(true);
+}
+
+/* remove selected items helper for wide-list */
+function removeSelectedWide(){
+  const wide = document.getElementById('selected-wide');
+  const toRemove = Array.from(wide.querySelectorAll('.field-item.selected')).map(n=>n.dataset.value);
+  toRemove.forEach(v=> removeFromWide(v));
+}
+
+function removeSelected(){
+  const sel = document.getElementById('selected');
+  const toRemove = Array.from(sel.querySelectorAll('.field-item.selected')).map(n=>n.dataset.value);
+  toRemove.forEach(v=> removeFromSelected(v));
+}
+
+function clearSelected(){
+  const sel = document.getElementById('selected');
+  const vals = Array.from(sel.children).map(n=>n.dataset.value);
+  sel.innerHTML = '';
+  // mettre à jour l'état visuel des disponibles
+  vals.forEach(v=> updateAvailableControls(v));
+  setDirty(true);
+}
+
+function clearWide(){
+  const wide = document.getElementById('selected-wide');
+  const vals = Array.from(wide.children).map(n=>n.dataset.value);
+  wide.innerHTML = '';
+  vals.forEach(v=> updateAvailableControls(v));
+  setDirty(true);
+}
+
+/* drag & drop reordering helpers for both lists */
+function enableDnDFor(containerId){
+  const container = document.getElementById(containerId);
+  container.addEventListener('dragover', (e)=>{
+    e.preventDefault();
+    const target = e.target.closest('.field-item');
+    if(!target || !dragged || target === dragged) return;
+    const rect = target.getBoundingClientRect();
+    const after = (e.clientY - rect.top) > (rect.height / 2);
+    if(after){
+      if(target.nextSibling !== dragged) target.parentNode.insertBefore(dragged, target.nextSibling);
+    } else {
+      if(target !== dragged.nextSibling) target.parentNode.insertBefore(dragged, target);
+    }
+  });
+  container.addEventListener('drop', (e)=>{
+    e.preventDefault();
+    if(dragged) dragged.classList.remove('dragging');
+    dragged = null;
+    setDirty(true);
+  });
+}
+
+/* Save/load selection (server) */
+async function saveSelection(){
+  const ns = document.getElementById('ns').value;
+  const res = document.getElementById('res').value;
+  const verb = document.getElementById('verb').value;
+  const fields = Array.from(document.querySelectorAll('#selected .field-item')).map((el, idx)=>{
+    let disp = (displayNames[el.dataset.value] || el.dataset.display || '');
+    // sanitize duplicated pattern: "X (X)"
+    disp = String(disp).replace(/^(.*)\s*\(\s*\1\s*\)\s*$/, '$1').trim();
+    if(el.dataset.bfid) {
+      // built reference: send only id + optional display
+      const obj = { id: el.dataset.bfid, index: idx + 1 };
+      if(disp) obj.display = disp;
+      return obj;
+    }
+    return { name: el.dataset.value, display: disp, index: idx + 1 };
+  });
+  const fieldsWide = Array.from(document.querySelectorAll('#selected-wide .field-item')).map((el, idx)=>{
+    const disp = (displayNames[el.dataset.value] || el.dataset.display || '');
+    if(el.dataset.bfid) {
+      const obj = { id: el.dataset.bfid, index: idx + 1 };
+      if(disp) obj.display = disp;
+      return obj;
+    }
+    return { name: el.dataset.value, display: disp, index: idx + 1 };
+  });
+  const statusEl = document.getElementById('status');
+  if(!ns || !verb) { statusEl.textContent = 'namespace and verb required'; return; }
+  // ensure builtFields we send include id and conform to simplified format:
+  // bindings should be an array of field paths and expression should reference them directly
+  const buildedPayload = builtFields.map(b=>{
+    const srcBindings = b.bindings || {};
+    // derive ordered array of binding values
+    let arr = [];
+    if (Array.isArray(srcBindings)) {
+      arr = srcBindings.slice();
+    } else if (srcBindings && typeof srcBindings === 'object') {
+      // support legacy object maps like { v0: 'a', v1: '/' }
+      const entries = Object.entries(srcBindings);
+      entries.sort((a,b)=>{
+        const ka = String(a[0]);
+        const kb = String(b[0]);
+        const na = (ka.match(/(\d+)/) || [0,0])[1];
+        const nb = (kb.match(/(\d+)/) || [0,0])[1];
+        return Number(na) - Number(nb);
+      });
+      arr = entries.map(e=>e[1]);
+    }
+    // transform expression placeholders (${0}, ${.b0}, ${v0}, etc.) into direct references using binding values
+    let expr = b.expression || '';
+    try{
+      expr = String(expr).replace(/\$\{\s*([^}]+)\s*\}/g, (m, inner)=>{
+        // if inner contains a number like 0 or b0 or v0, extract the index
+        const md = inner.match(/(\d+)/);
+        if(md){
+          const idx = Number(md[1]);
+          const replacement = (idx >=0 && idx < arr.length) ? arr[idx] : inner;
+          return '${' + replacement + '}';
+        }
+        // if inner already looks like a field path, keep as-is
+        return m;
+      });
+      // strip any raw '/' separators that were previously auto-inserted between placeholders
+      expr = expr.replace(/}\s*\/\s*\$\{/g, '}${');
+      // remove leading/trailing slashes outside placeholders
+      expr = expr.replace(/^\s*\/+|\/+\s*$/g, '');
+    }catch(e){}
+    // sanitize display as well to avoid duplicates like "X (X)"
+    const cleanDisplay = String(b.display || '').replace(/^(.*)\s*\(\s*\1\s*\)\s*$/, '$1').trim();
+    // persist without name per new schema
+    return { id: b.id, display: cleanDisplay, expression: expr, bindings: arr };
+  });
+  const r = await fetch('/api/save', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({namespace:ns, resource:res, verb:verb, fields:fields, wide_fields: fieldsWide, builded_fields: buildedPayload})
+  });
+  const j = await r.json();
+  if (j && j.file) {
+    statusEl.textContent = 'Saved → ' + j.file;
+    setDirty(false);
+  } else if (j && j.error) {
+    statusEl.textContent = 'Error: ' + j.error;
+  } else {
+    statusEl.textContent = 'Saved';
+    setDirty(false);
+  }
+}
+
+// Keyboard shortcut: Ctrl+S (Windows/Linux) or Cmd+S (macOS) to save selection
+window.addEventListener('keydown', function(e){
+  try{
+    if((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S')){
+      e.preventDefault();
+      const statusEl = document.getElementById('status');
+      if(statusEl) statusEl.textContent = 'Saving...';
+      // call saveSelection (async) and ignore returned promise here
+      try{ saveSelection(); }catch(err){ console.warn('saveSelection failed', err); }
+    }
+  }catch(err){ console.warn('keyboard shortcut handler error', err); }
+});
+
+/* init */
+enableDnDFor('selected');
+enableDnDFor('selected-wide');
+init();
+</script>
+</body>
+</html>

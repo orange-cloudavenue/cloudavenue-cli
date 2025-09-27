@@ -1,35 +1,55 @@
+/*
+ * SPDX-FileCopyrightText: Copyright (c) 2025 Orange
+ * SPDX-License-Identifier: Mozilla Public License 2.0
+ *
+ * This software is distributed under the MPL-2.0 license.
+ * the text of which is available at https://www.mozilla.org/en-US/MPL/2.0/
+ * or see the "LICENSE" file for more details.
+ */
+
 package main
 
 import (
+	"context"
 	"fmt"
 	"os"
+	"slices"
 
-	"github.com/orange-cloudavenue/cloudavenue-cli/cmd"
-	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/errorscustom"
+	"github.com/urfave/cli/v3"
 )
-
-const (
-	errorMessage = "** Error **: "
-)
-
-//go:generate go run tools/tools.go
 
 func main() {
-	if err := cmd.Execute(); err != nil {
-		switch {
-		case errorscustom.IsNoHomeDirectory(err):
-			fmt.Println(errorMessage+"Check your system to set and access write to your home directory.", err)
-		case errorscustom.IsConfigFile(err):
-			fmt.Println(errorMessage+"Please check your configuration file.", err)
-		case errorscustom.IsClient(err):
-			fmt.Println(errorMessage+"Unable to initialize client", err)
-			fmt.Println("Please check your configuration (https://orange-cloudavenue.github.io/cloudavenue-cli/getting-started/configuration/).")
-		case errorscustom.IsNotValidOutput(err):
-			fmt.Println(errorMessage+"Please read help to check format output is possible.", err)
-		default:
-			fmt.Println(errorMessage + err.Error())
-		}
-		os.Exit(1)
+	subCommands := make([]*cli.Command, 0)
+	subCommands = append(subCommands, cmdContext)
+	subCommands = append(subCommands, builder()...)
+
+	cmd := &cli.Command{
+		Name:      "cloudavenue",
+		Version:   "v1.0.0",
+		Copyright: "(c) 2025 Orange Business",
+		Usage:     "A unified CLI for managing Orange Cloudavenue resources and services.",
+		UsageText: "cloudavenue [global options] <command> [command options] [arguments...]",
+		ArgsUsage: "[command arguments]",
+		Commands:  subCommands,
+		Flags: []cli.Flag{
+			&cli.StringFlag{
+				Name:    "logger",
+				Aliases: []string{"l"},
+				Validator: func(level string) error {
+					levels := []string{"info", "debug", "warn", "error", "fatal"}
+					if !slices.Contains(levels, level) {
+						return fmt.Errorf("must be one of %v", levels)
+					}
+					logLevel = level
+					return nil
+				},
+				Local: true,
+			},
+		},
+		EnableShellCompletion: true,
+		HideHelp:              false,
+		HideVersion:           false,
 	}
-	os.Exit(0)
+
+	cmd.Run(context.Background(), os.Args)
 }

@@ -1,0 +1,487 @@
+{
+  "Commands": [
+    {
+      "builded_fields": [
+        {
+          "bindings": [
+            "number_of_running_vms",
+            "/",
+            "number_of_vms"
+          ],
+          "display": "VM Running/Total",
+          "expression": "${number_of_running_vms}${/}${number_of_vms}",
+          "id": "f23e20c4-ad9e-4750-aa49-e557d2def0b8"
+        },
+        {
+          "bindings": [
+            "compute_capacity.cpu.frequency_used",
+            "/",
+            "compute_capacity.cpu.frequency_limit",
+            "Mhz"
+          ],
+          "display": "frequency used/limit",
+          "expression": "${compute_capacity.cpu.frequency_used}${/}${compute_capacity.cpu.frequency_limit}${Mhz}",
+          "id": "86253560-09e7-484d-862c-71c234d07fe6"
+        },
+        {
+          "bindings": [
+            "compute_capacity.memory.used",
+            "/",
+            "compute_capacity.memory.limit"
+          ],
+          "display": "Memory Used/Limit (GiB)",
+          "expression": "${compute_capacity.memory.used}${/}${compute_capacity.memory.limit}",
+          "id": "df9d0f87-a4a1-48c7-999d-212d586c8569"
+        },
+        {
+          "bindings": [
+            "compute_capacity.cpu.used",
+            "/",
+            "compute_capacity.cpu.limit"
+          ],
+          "display": "vCPU used/limit",
+          "expression": "${compute_capacity.cpu.used}${/}${compute_capacity.cpu.limit}",
+          "id": "a389eaf2-afa8-4af6-9f39-2c9979bff01e"
+        }
+      ],
+      "namespace": "VDC",
+      "resource": "",
+      "selected_fields": [
+        {
+          "name": "id",
+          "index": 1
+        },
+        {
+          "name": "name",
+          "index": 2
+        },
+        {
+          "name": "description",
+          "index": 3
+        },
+        {
+          "display": "Storage profile",
+          "name": "number_of_storage_profiles",
+          "index": 4
+        },
+        {
+          "display": "Storage Profiles.ID",
+          "name": "storage_profiles.{index}.id",
+          "index": 5
+        },
+        {
+          "display": "Storage Profiles.Name",
+          "name": "storage_profiles.{index}.name",
+          "index": 6
+        },
+        {
+          "display": "vCPU Used",
+          "name": "compute_capacity.cpu.used",
+          "index": 7
+        },
+        {
+          "display": "vCPU Limit",
+          "name": "compute_capacity.cpu.limit",
+          "index": 8
+        },
+        {
+          "display": "Frequency Used (Mhz)",
+          "name": "compute_capacity.cpu.frequency_used",
+          "index": 9
+        },
+        {
+          "display": "Frequency Limit (Mhz)",
+          "name": "compute_capacity.cpu.frequency_limit",
+          "index": 10
+        },
+        {
+          "display": "Frequency per vCPU (Mhz)",
+          "name": "compute_capacity.cpu.vcpu_frequency",
+          "index": 11
+        },
+        {
+          "display": "Used (GiB)",
+          "name": "compute_capacity.memory.used",
+          "index": 12
+        },
+        {
+          "display": "Limit (GiB)",
+          "name": "compute_capacity.memory.limit",
+          "index": 13
+        },
+        {
+          "name": "properties.disponibility_class",
+          "index": 14
+        },
+        {
+          "name": "properties.service_class",
+          "index": 15
+        },
+        {
+          "name": "properties.billing_model",
+          "index": 16
+        },
+        {
+          "name": "properties.storage_billing_model",
+          "index": 17
+        },
+        {
+          "display": "Networks.ID",
+          "name": "networks.{index}.id",
+          "index": 18
+        },
+        {
+          "display": "Networks.Name",
+          "name": "networks.{index}.name",
+          "index": 19
+        }
+      ],
+      "selected_fields_wide": [
+        {
+          "name": "id",
+          "index": 1
+        },
+        {
+          "name": "name",
+          "index": 2
+        },
+        {
+          "display": "vCPU used/limit",
+          "id": "a389eaf2-afa8-4af6-9f39-2c9979bff01e",
+          "index": 3
+        },
+        {
+          "display": "Memory Used/Limit (GiB)",
+          "id": "df9d0f87-a4a1-48c7-999d-212d586c8569",
+          "index": 4
+        },
+        {
+          "display": "frequency used/limit",
+          "id": "86253560-09e7-484d-862c-71c234d07fe6",
+          "index": 5
+        }
+      ],
+      "verb": "Get"
+    },
+    {
+      "builded_fields": [
+        {
+          "bindings": [
+            "vdcs.{index}.number_of_running_vms",
+            "/",
+            "vdcs.{index}.number_of_vms"
+          ],
+          "display": "vm running/total",
+          "expression": "${vdcs.{index}.number_of_running_vms}${/}${vdcs.{index}.number_of_vms}",
+          "id": "30f45d8e-5f6d-4301-b5ba-641e757ad56a"
+        }
+      ],
+      "namespace": "VDC",
+      "resource": "",
+      "selected_fields": [
+        {
+          "display": "Name",
+          "name": "vdcs.{index}.name",
+          "index": 1
+        },
+        {
+          "display": "description",
+          "name": "vdcs.{index}.description",
+          "index": 2
+        },
+        {
+          "display": "vm running/total",
+          "id": "30f45d8e-5f6d-4301-b5ba-641e757ad56a",
+          "index": 3
+        },
+        {
+          "display": "vapp",
+          "name": "vdcs.{index}.number_of_vapps",
+          "index": 4
+        }
+      ],
+      "selected_fields_wide": [
+        {
+          "display": "id",
+          "name": "vdcs.{index}.id",
+          "index": 1
+        },
+        {
+          "display": "Name",
+          "name": "vdcs.{index}.name",
+          "index": 2
+        },
+        {
+          "display": "description",
+          "name": "vdcs.{index}.description",
+          "index": 3
+        },
+        {
+          "display": "vm running/total",
+          "id": "30f45d8e-5f6d-4301-b5ba-641e757ad56a",
+          "index": 4
+        }
+      ],
+      "verb": "List"
+    },
+    {
+      "builded_fields": [],
+      "namespace": "EdgeGateway",
+      "resource": "",
+      "selected_fields": [
+        {
+          "display": "Name",
+          "name": "edge_gateways.{index}.name",
+          "index": 1
+        },
+        {
+          "display": "VDC/VDCGROUP name",
+          "name": "edge_gateways.{index}.owner_ref.name",
+          "index": 2
+        },
+        {
+          "display": "T0 NAME",
+          "name": "edge_gateways.{index}.uplink_t0.name",
+          "index": 3
+        }
+      ],
+      "selected_fields_wide": [],
+      "verb": "List"
+    },
+    {
+      "builded_fields": [
+        {
+          "bindings": [
+            "t0s.{index}.bandwidth.provisioned",
+            "/",
+            "t0s.{index}.bandwidth.remaining",
+            "/",
+            "t0s.{index}.bandwidth.capacity"
+          ],
+          "display": "BANDWIDTH PROVISIONED/REMAINING/CAPACITY (MBPS)",
+          "expression": "${t0s.{index}.bandwidth.provisioned}${/}${t0s.{index}.bandwidth.remaining}${/}${t0s.{index}.bandwidth.capacity}",
+          "id": "ce06294e-8dce-4414-8fb0-cf5a7eec892e"
+        }
+      ],
+      "namespace": "T0",
+      "resource": "",
+      "selected_fields": [
+        {
+          "display": "Name",
+          "name": "t0s.{index}.name",
+          "index": 1
+        },
+        {
+          "display": "Class of service",
+          "name": "t0s.{index}.class_of_service",
+          "index": 2
+        },
+        {
+          "display": "BANDWIDTH PROVISIONED/REMAINING/CAPACITY (MBPS)",
+          "id": "ce06294e-8dce-4414-8fb0-cf5a7eec892e",
+          "index": 3
+        }
+      ],
+      "selected_fields_wide": [],
+      "verb": "List"
+    },
+    {
+      "builded_fields": [
+        {
+          "bindings": [
+            "bandwidth.provisioned",
+            "/",
+            "bandwidth.remaining",
+            "/",
+            "bandwidth.capacity"
+          ],
+          "display": "bandwidth provisioned/remaining/capacity (mbps)",
+          "expression": "${bandwidth.provisioned}${/}${bandwidth.remaining}${/}${bandwidth.capacity}",
+          "id": "9cee9ff2-b66e-4de6-8d69-51510e553d4b"
+        }
+      ],
+      "namespace": "T0",
+      "resource": "",
+      "selected_fields": [
+        {
+          "name": "name",
+          "index": 1
+        },
+        {
+          "display": "Class of service",
+          "name": "class_of_service",
+          "index": 2
+        },
+        {
+          "display": "bandwidth provisioned/remaining/capacity (mbps)",
+          "id": "9cee9ff2-b66e-4de6-8d69-51510e553d4b",
+          "index": 3
+        }
+      ],
+      "selected_fields_wide": [
+        {
+          "name": "name",
+          "index": 1
+        },
+        {
+          "display": "Class of service",
+          "name": "class_of_service",
+          "index": 2
+        },
+        {
+          "display": "bandwidth provisioned/remaining/capacity",
+          "name": "bandwidth.provisioned///bandwidth.remaining///bandwidth.capacity",
+          "index": 3
+        },
+        {
+          "name": "bandwidth.allowed_bandwidth_values.{index}",
+          "index": 4
+        }
+      ],
+      "verb": "Get"
+    },
+    {
+      "builded_fields": [
+        {
+          "bindings": [
+            "compute_capacity.cpu.limit",
+            "|",
+            "compute_capacity.cpu.frequency_limit"
+          ],
+          "display": "VCPU/FREQUENCY LIMIT",
+          "expression": "${compute_capacity.cpu.limit}${|}${compute_capacity.cpu.frequency_limit}",
+          "id": "430004c3-9622-4b81-a462-ecdb62459934"
+        }
+      ],
+      "namespace": "VDC",
+      "resource": "",
+      "selected_fields": [
+        {
+          "name": "name",
+          "index": 1
+        },
+        {
+          "display": "disponibility class",
+          "name": "properties.disponibility_class",
+          "index": 2
+        },
+        {
+          "display": "service class",
+          "name": "properties.service_class",
+          "index": 3
+        },
+        {
+          "display": "Biling Model",
+          "name": "properties.billing_model",
+          "index": 4
+        },
+        {
+          "display": "storage biling model",
+          "name": "properties.storage_billing_model",
+          "index": 5
+        },
+        {
+          "display": "VCPU/FREQUENCY LIMIT",
+          "id": "430004c3-9622-4b81-a462-ecdb62459934",
+          "index": 6
+        }
+      ],
+      "selected_fields_wide": [],
+      "verb": "Create"
+    },
+    {
+      "builded_fields": null,
+      "namespace": "VDC",
+      "resource": "StorageProfile",
+      "selected_fields": [],
+      "selected_fields_wide": [],
+      "verb": "List"
+    },
+    {
+      "builded_fields": null,
+      "namespace": "VdcGroup",
+      "resource": "",
+      "selected_fields": [
+        {
+          "display": "name",
+          "name": "vdc_groups.{index}.name",
+          "index": 1
+        },
+        {
+          "display": "description",
+          "name": "vdc_groups.{index}.description",
+          "index": 2
+        },
+        {
+          "display": "number vdc",
+          "name": "vdc_groups.{index}.number_of_vdcs",
+          "index": 3
+        }
+      ],
+      "selected_fields_wide": [],
+      "verb": "List"
+    },
+    {
+      "builded_fields": null,
+      "namespace": "VdcGroup",
+      "resource": "",
+      "selected_fields": [
+        {
+          "name": "id",
+          "index": 1
+        },
+        {
+          "name": "name",
+          "index": 2
+        },
+        {
+          "display": "vdc count",
+          "name": "number_of_vdcs",
+          "index": 3
+        }
+      ],
+      "selected_fields_wide": [],
+      "verb": "Create"
+    },
+    {
+      "builded_fields": null,
+      "namespace": "VdcGroup",
+      "resource": "",
+      "selected_fields": [
+        {
+          "name": "name",
+          "index": 1
+        },
+        {
+          "name": "description",
+          "index": 2
+        },
+        {
+          "display": "vdc count",
+          "name": "number_of_vdcs",
+          "index": 3
+        }
+      ],
+      "selected_fields_wide": [
+        {
+          "name": "id",
+          "index": 1
+        },
+        {
+          "name": "name",
+          "index": 2
+        },
+        {
+          "name": "description",
+          "index": 3
+        },
+        {
+          "display": "vdc count",
+          "name": "number_of_vdcs",
+          "index": 4
+        }
+      ],
+      "verb": "Get"
+    }
+  ]
+}
