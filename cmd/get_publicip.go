@@ -4,10 +4,9 @@ import (
 	"fmt"
 	"time"
 
+	v1 "github.com/orange-cloudavenue/cloudavenue-sdk-go/v1"
 	"github.com/orange-cloudavenue/common-go/print"
 	"github.com/spf13/cobra"
-
-	v1 "github.com/orange-cloudavenue/cloudavenue-sdk-go/v1"
 
 	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/errorscustom"
 	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/output"
