@@ -194,8 +194,8 @@ github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e h1:fD57ERR4JtEqsWb
 github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e/go.mod h1:zD1mROLANZcx1PVRCS0qkT7pwLkGfwJo4zjcN/Tysno=
 github.com/oklog/run v1.0.0 h1:Ru7dDtJNOyC66gQ5dQmaCa0qIsAUFY3sFpK1Xk8igrw=
 github.com/oklog/run v1.0.0/go.mod h1:dlhp/R75TPv97u0XWUtDeV/lRKWPKSdTuV0TZvrmrQA=
-github.com/orange-cloudavenue/cloudavenue-sdk-go v0.27.0 h1:4MC1aW97tBWD9R03AskLh8fxGGlENjv+EzW1kJnWTCY=
-github.com/orange-cloudavenue/cloudavenue-sdk-go v0.27.0/go.mod h1:eAXf0Rw0vYeQyPdcd+Bo+A1fekQGwgM7WRl8GdskfyU=
+github.com/orange-cloudavenue/cloudavenue-sdk-go v0.27.1 h1:aGHarDsF6J1FWuAEjhqIQqhaVHv7D7y9yGXAOrJWEGY=
+github.com/orange-cloudavenue/cloudavenue-sdk-go v0.27.1/go.mod h1:eAXf0Rw0vYeQyPdcd+Bo+A1fekQGwgM7WRl8GdskfyU=
 github.com/orange-cloudavenue/common-go/print v0.0.0-20240115212523-43a46e6ad427 h1:jtIRqzqrD1NQMimU+GvkYfyJQrJs6YQEsHRL64/tUng=
 github.com/orange-cloudavenue/common-go/print v0.0.0-20240115212523-43a46e6ad427/go.mod h1:IYtCusqpEGS0dhC6F8X9GHrrt1gp1zHaNhSKGYV59Xg=
 github.com/orange-cloudavenue/common-go/validators v0.2.2 h1:qu8VGNgdp0aq0SSeM8xWXG2+qd+VbblSDGXh0sdRkKA=
