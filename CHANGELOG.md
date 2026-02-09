@@ -1,4 +1,7 @@
 ## 0.1.0 (Unreleased)
+### :rotating_light: **Breaking Changes**
+
+* All releases below [**0.1.0**](https://github.com/orange-cloudavenue/cloudavenue-cli/releases/tag/v0.1.0) are considered outdated after 01/10/2026. **Please update to the latest version** to avoid any issues with the end of life of the legacy authentication method. (GH-173)
 
 ### :rocket: **New Features**
 
