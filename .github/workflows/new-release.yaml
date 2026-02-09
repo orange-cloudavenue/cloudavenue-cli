@@ -20,7 +20,7 @@ jobs:
       TAG_NAME: ${{ steps.set-tag.outputs.TAG_NAME }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           token: ${{ secrets.CHANGELOG_PAT }}
       - name: Check if tag is valid
@@ -41,7 +41,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           token: ${{ secrets.CHANGELOG_PAT }}
       - name: Check if tag not already exists
@@ -54,16 +54,16 @@ jobs:
     needs: [pre-check]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           token: ${{ secrets.CHANGELOG_PAT }}
           ref: ${{ github.ref }}
-      - uses: actions/setup-go@v5.1.0
+      - uses: actions/setup-go@v6.2.0
         with:
           go-version-file: 'go.mod'
       - run: go mod download
       - name: golangci-lint
-        uses: golangci/golangci-lint-action@v7
+        uses: golangci/golangci-lint-action@v9
         with:
           version: latest
   # TODO: Add testsunit / coverage
@@ -71,11 +71,11 @@ jobs:
   #   needs: [pre-check]
   #   runs-on: ubuntu-latest
   #   steps:
-  #   - uses: actions/checkout@v4
+  #   - uses: actions/checkout@v6
   #     with:
   #       token: ${{ secrets.CHANGELOG_PAT }}
   #       ref: ${{ github.ref }}
-  #   - uses: actions/setup-go@v5.1.0
+  #   - uses: actions/setup-go@v6.2.0
   #     with:
   #       go-version-file: 'go.mod'
   #   - run: go mod download
@@ -93,7 +93,7 @@ jobs:
     needs: [golangci-lint, pre-check, tag-already-exist] #testsunit]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           token: ${{ secrets.CHANGELOG_PAT }}
       - uses: rickstaa/action-create-tag@v1
@@ -107,7 +107,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [tag, pre-check]
     steps:
-      - uses: actions/checkout@v4 # v3.5.3
+      - uses: actions/checkout@v6 # v3.5.3
         with:
           fetch-depth: 0
           ref: ${{ needs.pre-check.outputs.TAG_NAME }}
@@ -117,7 +117,7 @@ jobs:
           export PREV_TAG=$(git tag --list 'v*' --sort=-version:refname | grep -E "v[0-9]+\.[0-9]+\.[0-9]+$" | head -n 2 | tail -n 1)
           export PREV_VERSION=${PREV_TAG//v}
           sed -n -e "1{/# /d;}" -e "2{/^$/d;}" -e "/# $PREV_VERSION/q;p" CHANGELOG.md >> release-notes.txt
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         with:
           name: release-notes
           path: release-notes.txt
@@ -127,24 +127,24 @@ jobs:
     needs: [release-notes, golangci-lint, pre-check]
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
           ref:  ${{ needs.pre-check.outputs.TAG_NAME }}
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Go
-        uses: actions/setup-go@v5.1.0
+        uses: actions/setup-go@v6.2.0
         with:
           go-version-file: 'go.mod'
       - id: release-notes-download
         name: Release Notes Download
-        uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16 # v4.1.8
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         with:
           name: release-notes
           path: /tmp
       - name: Run GoReleaser
-        uses: goreleaser/goreleaser-action@v6.0.0
+        uses: goreleaser/goreleaser-action@v6.4.0
         if: success()
         with:
           distribution: goreleaser
@@ -156,7 +156,7 @@ jobs:
     needs: [release-app, golangci-lint, pre-check]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4 # v3.5.3
+      - uses: actions/checkout@v6 # v3.5.3
         with:
           token: ${{ secrets.CHANGELOG_PAT }}
           fetch-depth: 0
@@ -183,7 +183,7 @@ jobs:
           echo New minor version is: v$NEW_RELEASE_LINE
 
           echo -e "## $NEW_RELEASE_LINE (Unreleased)\n$(cat $CHANGELOG_FILE_NAME)" > $CHANGELOG_FILE_NAME
-      - uses: stefanzweifel/git-auto-commit-action@v5
+      - uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: "chore: Update CHANGELOG.md after ${{ github.ref_name }}"
           commit_options: '--no-verify --signoff'

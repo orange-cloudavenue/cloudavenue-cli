@@ -1,0 +1,3 @@
+```release-note:dependency
+deps: bumps actions/checkout, actions/setup-go, github/codeql-action, dependabot/fetch-metadata, sersoft-gmbh/setup-gh-cli-action, actions/setup-python, actions/cache, goreleaser/goreleaser-action, golangci/golangci-lint-action, actions/upload-artifact, actions/download-artifact, stefanzweifel/git-auto-commit-action from  to 
+```
