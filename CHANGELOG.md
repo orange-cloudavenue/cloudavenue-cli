@@ -9,6 +9,7 @@
 
 ### :dependabot: **Dependencies**
 
+* deps: bumps actions/checkout, actions/setup-go, github/codeql-action, dependabot/fetch-metadata, sersoft-gmbh/setup-gh-cli-action, actions/setup-python, actions/cache, goreleaser/goreleaser-action, golangci/golangci-lint-action, actions/upload-artifact, actions/download-artifact, stefanzweifel/git-auto-commit-action from  to (GH-176)
 * deps: bumps actions/download-artifact from 4.1.5 to 4.1.8 (GH-134)
 * deps: bumps actions/setup-go from 5.0.1 to 5.1.0 (GH-132)
 * deps: bumps dependabot/fetch-metadata from 2.1.0 to 2.2.0 (GH-130)
@@ -24,6 +25,7 @@
 * deps: bumps github.com/vmware/go-vcloud-director/v2 from 2.23.0 to 2.26.0 (GH-136)
 * deps: bumps golang.org/x/net from 0.27.0 to 0.33.0 (GH-150)
 * deps: bumps golang.org/x/net from 0.33.0 to 0.36.0 (GH-154)
+* deps: bumps golang.org/x/net from 0.39.0 to 0.49.0 (GH-177)
 * deps: bumps golangci/golangci-lint-action from 5 to 6 (GH-122)
 * deps: bumps golangci/golangci-lint-action from 6 to 7 (GH-155)
 * deps: bumps goreleaser/goreleaser-action from 5.0.0 to 6.0.0 (GH-133)
