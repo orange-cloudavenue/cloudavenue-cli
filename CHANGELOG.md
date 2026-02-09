@@ -16,6 +16,7 @@
 * deps: bumps dependabot/fetch-metadata from 2.2.0 to 2.3.0 (GH-151)
 * deps: bumps github.com/aws/aws-sdk-go from 1.52.2 to 1.55.5 (GH-135)
 * deps: bumps github.com/aws/aws-sdk-go from 1.55.5 to 1.55.6 (GH-148)
+* deps: bumps github.com/aws/aws-sdk-go, github.com/creativeprojects/go-selfupdate, github.com/spf13/cobra, github.com/spf13/pflag, github.com/spf13/viper from  to (GH-178)
 * deps: bumps github.com/briandowns/spinner from 1.23.0 to 1.23.1 (GH-128)
 * deps: bumps github.com/briandowns/spinner from 1.23.1 to 1.23.2 (GH-152)
 * deps: bumps github.com/hashicorp/go-retryablehttp from 0.7.5 to 0.7.7 (GH-129)
