@@ -38,7 +38,12 @@ var addPublicIPCmd = &cobra.Command{
 		fmt.Println("for EdgeGateway name: " + gwName)
 		s.Restart()
 
-		job, err := c.V1.PublicIP.New(gwName)
+		edge, err := c.V1.EdgeGateway.Get(gwName)
+		if err != nil {
+			return fmt.Errorf("unable to get EdgeGateway %v: %w", gwName, err)
+		}
+
+		job, err := c.V1.PublicIP.New(edge.GetID())
 		if err != nil {
 			return fmt.Errorf("unable to add job: %w", err)
 		}

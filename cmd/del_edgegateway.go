@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/orange-cloudavenue/cloudavenue-sdk-go/pkg/uuid"
-	v1 "github.com/orange-cloudavenue/cloudavenue-sdk-go/v1"
 	"github.com/spf13/cobra"
 )
 
@@ -19,13 +17,8 @@ var delEdgeGatewayCmd = &cobra.Command{
 	DisableAutoGenTag: true,
 	SilenceErrors:     true,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		var (
-			gw  *v1.EdgeGw
-			err error
-		)
-
 		// init Config File & Client
-		if err = initConfig(); err != nil {
+		if err := initConfig(); err != nil {
 			return fmt.Errorf("unable to initialize: %w", err)
 		}
 
@@ -38,11 +31,7 @@ var delEdgeGatewayCmd = &cobra.Command{
 			s.Stop()
 			fmt.Println("Delete EdgeGateway resource " + arg)
 			s.Restart()
-			if uuid.IsUUIDV4(arg) {
-				gw, err = c.V1.EdgeGateway.GetByID(arg)
-			} else {
-				gw, err = c.V1.EdgeGateway.GetByName(arg)
-			}
+			gw, err := c.V1.EdgeGateway.Get(arg)
 			if err != nil {
 				return fmt.Errorf("unable to retrieve EdgeGateway: %w", err)
 			}
