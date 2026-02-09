@@ -62,9 +62,9 @@ var getPublicIPCmd = &cobra.Command{
 		w := print.New()
 		switch flag {
 		case flagOutputValueWide:
-			w.SetHeader("public ip", "edge gateway name", "ip natted")
+			w.SetHeader("public ip", "edge gateway name", "announced")
 			for _, i := range ips.NetworkConfig {
-				w.AddFields(i.UplinkIP, i.EdgeGatewayName, i.UplinkIP)
+				w.AddFields(i.UplinkIP, i.EdgeGatewayName, i.Announced)
 			}
 		case flagOutputValueJSON, flagOutputValueYAML:
 			x, err := output.New(stringToTypeFormat(flag), ips)
