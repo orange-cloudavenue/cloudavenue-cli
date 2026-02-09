@@ -4,9 +4,10 @@ import (
 	"fmt"
 	"time"
 
-	v1 "github.com/orange-cloudavenue/cloudavenue-sdk-go/v1"
 	"github.com/orange-cloudavenue/common-go/print"
 	"github.com/spf13/cobra"
+
+	v1 "github.com/orange-cloudavenue/cloudavenue-sdk-go/v1"
 
 	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/errorscustom"
 	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/output"
@@ -61,9 +62,9 @@ var getPublicIPCmd = &cobra.Command{
 		w := print.New()
 		switch flag {
 		case flagOutputValueWide:
-			w.SetHeader("public ip", "edge gateway name", "ip natted")
+			w.SetHeader("public ip", "edge gateway name", "announced")
 			for _, i := range ips.NetworkConfig {
-				w.AddFields(i.UplinkIP, i.EdgeGatewayName, i.TranslatedIP)
+				w.AddFields(i.UplinkIP, i.EdgeGatewayName, i.Announced)
 			}
 		case flagOutputValueJSON, flagOutputValueYAML:
 			x, err := output.New(stringToTypeFormat(flag), ips)

@@ -4,9 +4,10 @@ import (
 	"fmt"
 	"time"
 
-	v1 "github.com/orange-cloudavenue/cloudavenue-sdk-go/v1"
 	"github.com/orange-cloudavenue/common-go/print"
 	"github.com/spf13/cobra"
+
+	v1 "github.com/orange-cloudavenue/cloudavenue-sdk-go/v1"
 
 	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/errorscustom"
 	"github.com/orange-cloudavenue/cloudavenue-cli/pkg/output"
@@ -36,15 +37,15 @@ var getEdgeGatewayCmd = &cobra.Command{
 
 		// Get the list of edgegateway or a specific edgegateway
 		var edgeGateways *v1.EdgeGateways
-		var edgeGw *v1.EdgeGw
+		var edgeGw *v1.EdgeClient
 		if cmd.Flag(flagName) != nil && cmd.Flag(flagName).Value.String() != "" {
 			// Get the specific edgegateway
-			edgeGw, err = c.V1.EdgeGateway.GetByName(cmd.Flag(flagName).Value.String())
+			edgeGw, err = c.V1.EdgeGateway.Get(cmd.Flag(flagName).Value.String())
 			if err != nil {
 				return fmt.Errorf("CloudAvenue Error from EdgeGateway Get: %w", err)
 			}
 			// Create a list of one edgegateway
-			edgeGateways = &v1.EdgeGateways{*edgeGw}
+			edgeGateways = &v1.EdgeGateways{*edgeGw.EdgeGatewayType}
 		} else {
 			// Get the list of edgegateway
 			edgeGateways, err = c.V1.EdgeGateway.List()
