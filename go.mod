@@ -8,7 +8,7 @@ require (
 	github.com/briandowns/spinner v1.23.2
 	github.com/creativeprojects/go-selfupdate v1.5.2
 	github.com/mitchellh/go-homedir v1.1.0
-	github.com/orange-cloudavenue/cloudavenue-sdk-go v0.27.0
+	github.com/orange-cloudavenue/cloudavenue-sdk-go v0.27.1
 	github.com/orange-cloudavenue/common-go/print v0.0.0-20240115212523-43a46e6ad427
 	github.com/spf13/cobra v1.10.2
 	github.com/spf13/pflag v1.0.10
