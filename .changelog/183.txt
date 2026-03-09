@@ -1,0 +1,3 @@
+```release-note:dependency
+deps: bumps actions/setup-go, goreleaser/goreleaser-action, actions/upload-artifact, docker/setup-qemu-action, actions/download-artifact from  to 
+```
