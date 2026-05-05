@@ -66,6 +66,7 @@ type cloudavenueConfig struct {
 	Org      string `yaml:"org"`
 	URL      string `yaml:"url"`
 	Debug    bool   `yaml:"debug"`
+	CoreAPI  string `yaml:"core_api"`
 }
 
 // function to transform String to output.TypeFormat
