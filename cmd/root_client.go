@@ -67,6 +67,7 @@ func initClient(v *viper.Viper) (err error) {
 			Org:      v.GetString("cloudavenue.org"),
 			URL:      v.GetString("cloudavenue.url"),
 			Debug:    v.GetBool("cloudavenue.debug"),
+			CoreAPI:  v.GetString("cloudavenue.core_api"),
 		},
 	})
 	if err != nil {

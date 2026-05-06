@@ -25,6 +25,14 @@ const (
 	edgeGateway string = "edgegateway"
 	publicip    string = "publicip"
 	bms         string = "bms"
+
+	flagWhatever    string = "--whatever"
+	flagOutput      string = "--output"
+	flagName        string = "--name"
+	flagTime        string = "--time"
+	flagVDC         string = "--vdc"
+	argWhatever     string = "whatever"
+	argWhateverTime string = "whatever-time"
 )
 
 type tt struct {
@@ -80,39 +88,39 @@ func TestRootCmd(t *testing.T) {
 					},
 					{
 						name: oneCmd.Use + "_" + cmdSubCmd.Use + " with a whatever flag",
-						args: []string{oneCmd.Use, cmdSubCmd.Use, "--whatever"},
+						args: []string{oneCmd.Use, cmdSubCmd.Use, flagWhatever},
 						fail: true, // Should fail because flag no exist
 					},
 					{
 						name: oneCmd.Use + "_" + cmdSubCmd.Use + " with output flag without args",
-						args: []string{oneCmd.Use, cmdSubCmd.Use, "--output"},
+						args: []string{oneCmd.Use, cmdSubCmd.Use, flagOutput},
 						fail: true, // Should fail because args for flag is empty
 					},
 					{
 						name: oneCmd.Use + "_" + cmdSubCmd.Use + " with output flag wide args",
-						args: []string{oneCmd.Use, cmdSubCmd.Use, "--output", "wide"},
+						args: []string{oneCmd.Use, cmdSubCmd.Use, flagOutput, "wide"},
 					},
 					{
 						name: oneCmd.Use + "_" + cmdSubCmd.Use + " with output flag json args",
-						args: []string{oneCmd.Use, cmdSubCmd.Use, "--output", "json"},
+						args: []string{oneCmd.Use, cmdSubCmd.Use, flagOutput, "json"},
 					},
 					{
 						name: oneCmd.Use + "_" + cmdSubCmd.Use + " with output flag yaml args",
-						args: []string{oneCmd.Use, cmdSubCmd.Use, "--output", "yaml"},
+						args: []string{oneCmd.Use, cmdSubCmd.Use, flagOutput, "yaml"},
 					},
 					{
 						name: oneCmd.Use + "_" + cmdSubCmd.Use + " with resource name flag",
-						args: []string{oneCmd.Use, cmdSubCmd.Use, "--name", "whatever"},
+						args: []string{oneCmd.Use, cmdSubCmd.Use, flagName, argWhatever},
 						fail: true, // Should fail because resource doesn't exist
 					},
 					{
 						name: oneCmd.Use + "_" + cmdSubCmd.Use + " with output flag and a wtf args",
-						args: []string{oneCmd.Use, cmdSubCmd.Use, "--output", "wtf"},
+						args: []string{oneCmd.Use, cmdSubCmd.Use, flagOutput, "wtf"},
 						fail: true, // Should fail because args for flag is unknown
 					},
 					{
 						name: oneCmd.Use + "_" + cmdSubCmd.Use + " with time flag",
-						args: []string{oneCmd.Use, cmdSubCmd.Use, "--time"},
+						args: []string{oneCmd.Use, cmdSubCmd.Use, flagTime},
 					},
 				}
 				getTests = append(getTests, tests...)
@@ -134,22 +142,22 @@ func TestRootCmd(t *testing.T) {
 						},
 						{
 							name: oneCmd.Use + "_" + cmdSubCmd.Use + " with a whatever flag",
-							args: []string{oneCmd.Use, cmdSubCmd.Use, "--whatever"},
+							args: []string{oneCmd.Use, cmdSubCmd.Use, flagWhatever},
 							fail: true, // Should fail because flag no exist
 						},
 						{
 							name: oneCmd.Use + "_" + cmdSubCmd.Use + " with name flag",
-							args: []string{oneCmd.Use, cmdSubCmd.Use, "--name", "whatever"},
+							args: []string{oneCmd.Use, cmdSubCmd.Use, flagName, argWhatever},
 							fail: false,
 						},
 						{
 							name: oneCmd.Use + "_" + cmdSubCmd.Use + " with name flag and an empty args",
-							args: []string{oneCmd.Use, cmdSubCmd.Use, "--name"},
+							args: []string{oneCmd.Use, cmdSubCmd.Use, flagName},
 							fail: true, // Should fail because args for flag is empty
 						},
 						{
 							name: oneCmd.Use + "_" + cmdSubCmd.Use + " with time flag",
-							args: []string{oneCmd.Use, cmdSubCmd.Use, "--time", "--name", "whatever-time"},
+							args: []string{oneCmd.Use, cmdSubCmd.Use, flagTime, flagName, argWhateverTime},
 							fail: false,
 						},
 					}
@@ -163,17 +171,17 @@ func TestRootCmd(t *testing.T) {
 						},
 						{
 							name: oneCmd.Use + "_" + cmdSubCmd.Use + " with a whatever flag",
-							args: []string{oneCmd.Use, cmdSubCmd.Use, "--whatever"},
+							args: []string{oneCmd.Use, cmdSubCmd.Use, flagWhatever},
 							fail: true, // Should fail because flag no exist
 						},
 						{
 							name: oneCmd.Use + "_" + cmdSubCmd.Use + " with name flag and time flag",
-							args: []string{oneCmd.Use, cmdSubCmd.Use, "--name", "whatever", "--time"},
+							args: []string{oneCmd.Use, cmdSubCmd.Use, flagName, argWhatever, flagTime},
 							fail: true, // Should fail because to preserve IP
 						},
 						{
 							name: oneCmd.Use + "_" + cmdSubCmd.Use + " with name flag and an empty args",
-							args: []string{oneCmd.Use, cmdSubCmd.Use, "--name"},
+							args: []string{oneCmd.Use, cmdSubCmd.Use, flagName},
 							fail: true, // Should fail because args for flag is empty
 						},
 					}
@@ -187,27 +195,27 @@ func TestRootCmd(t *testing.T) {
 						},
 						{
 							name: oneCmd.Use + "_" + cmdSubCmd.Use + " with a whatever flag",
-							args: []string{oneCmd.Use, cmdSubCmd.Use, "--whatever"},
+							args: []string{oneCmd.Use, cmdSubCmd.Use, flagWhatever},
 							fail: true, // Should fail because flag no exist
 						},
 						{
 							name: oneCmd.Use + "_" + cmdSubCmd.Use + " with vdc flag",
-							args: []string{oneCmd.Use, cmdSubCmd.Use, "--vdc", "whatever"},
+							args: []string{oneCmd.Use, cmdSubCmd.Use, flagVDC, argWhatever},
 							fail: false,
 						},
 						{
 							name: oneCmd.Use + "_" + cmdSubCmd.Use + " with vdc flag and an empty args",
-							args: []string{oneCmd.Use, cmdSubCmd.Use, "--vdc"},
+							args: []string{oneCmd.Use, cmdSubCmd.Use, flagVDC},
 							fail: true, // Should fail because args for flag is empty
 						},
 						{
 							name: oneCmd.Use + "_" + cmdSubCmd.Use + " with time flag and vdc flag",
-							args: []string{oneCmd.Use, cmdSubCmd.Use, "--time", "--vdc", "whatever-time"},
+							args: []string{oneCmd.Use, cmdSubCmd.Use, flagTime, flagVDC, argWhateverTime},
 							fail: true, // Should fail because too much egw created
 						},
 						{
 							name: oneCmd.Use + "_" + cmdSubCmd.Use + " with time flag",
-							args: []string{oneCmd.Use, cmdSubCmd.Use, "--time"},
+							args: []string{oneCmd.Use, cmdSubCmd.Use, flagTime},
 							fail: true, // Should fail because no vdc
 						},
 					}
@@ -229,17 +237,17 @@ func TestRootCmd(t *testing.T) {
 				},
 				{
 					name: del + " with a whatever flag",
-					args: []string{del, "--whatever"},
+					args: []string{del, flagWhatever},
 					fail: true, // Should fail because flag no exist
 				},
 				{
 					name: del + " a bucket",
-					args: []string{del, "s3", "whatever", "whatever-time"},
+					args: []string{del, s3, argWhatever, argWhateverTime},
 					fail: false,
 				},
 				{
 					name: del + " a publicip",
-					args: []string{del, "publicip", "whatever"},
+					args: []string{del, publicip, argWhatever},
 					fail: true,
 				},
 				{
@@ -249,7 +257,7 @@ func TestRootCmd(t *testing.T) {
 				},
 				{
 					name: del + " a vdc",
-					args: []string{del, "vdc", "whatever", "whatever-time"},
+					args: []string{del, vdc, argWhatever, argWhateverTime},
 					fail: false,
 				},
 			}

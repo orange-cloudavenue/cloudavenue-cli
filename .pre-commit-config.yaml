@@ -9,7 +9,7 @@ repos:
 
 ## GOLANG
 - repo: https://github.com/golangci/golangci-lint
-  rev: v1.61.0
+  rev: v2.12.1
   hooks:
     - id: golangci-lint
       entry: bash -c 'exec golangci-lint run -j=6'
