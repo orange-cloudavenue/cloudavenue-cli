@@ -26,7 +26,7 @@ require (
 	github.com/apparentlymart/go-textseg/v15 v15.0.0 // indirect
 	github.com/araddon/dateparse v0.0.0-20190622164848-0fb0a474d195 // indirect
 	github.com/avast/retry-go/v4 v4.6.1 // indirect
-	github.com/cloudflare/circl v1.6.0 // indirect
+	github.com/cloudflare/circl v1.6.3 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.6 // indirect
 	github.com/creasty/defaults v1.8.0 // indirect
 	github.com/davidmz/go-pageant v1.0.2 // indirect
