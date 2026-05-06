@@ -21,11 +21,21 @@ cloudavenue:
     org: "cav01exxxxxxxxxx"
     url: ""
     debug: false
+    core_api: ""  # Override the backend API endpoint (optional)
 ```
 
 ### Environment Variables
 
-Credentials can be provided by using the `CLOUDAVENUE_ORG`, `CLOUDAVENUE_USERNAME`, and `CLOUDAVENUE_PASSWORD` environment variables, respectively. Other environnement variables related to [List of Environment Variables](https://registry.terraform.io/providers/orange-cloudavenue/cloudavenue/latest/docs#environment-variables) can be configured.
+The following environment variables are supported:
+
+| Variable | Description | Required | Default |
+|---|---|---|---|
+| `CLOUDAVENUE_USERNAME` | CloudAvenue username | Yes | — |
+| `CLOUDAVENUE_PASSWORD` | CloudAvenue password | Yes | — |
+| `CLOUDAVENUE_ORG` | CloudAvenue organization (format: `cav01exxxxxxxxxx`) | Yes | — |
+| `CLOUDAVENUE_URL` | CloudAvenue console URL | No | Computed from org |
+| `CLOUDAVENUE_DEBUG` | Enable debug mode | No | `false` |
+| `CLOUDAVENUE_CORE_API` | Override the backend API endpoint. Must be an `https://` URL. Useful for development or staging environments. | No | `https://api1.cloudavenue.orange-business.com` |
 
 For example:
 
