@@ -46,4 +46,4 @@ export CLOUDAVENUE_PASSWORD="my-password"
 ```
 
 !!! warning
-    If all variables are set, the CLI override the file configuration to use credentials setted in variables.
+    If all variables are set, the CLI overrides the file configuration and uses the credentials set in the environment variables.
